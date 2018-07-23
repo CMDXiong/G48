@@ -1,0 +1,75 @@
+<!--  如果static没有在setting.py配置文件中配置为内置的标签，则为加入下面的一句话  -->
+<!-- {% load static %} -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_743039_6eebyf20ccn.css">
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <link rel="stylesheet" href={%  static 'css/bootstrap.min.css' %}>
+    <link rel="stylesheet" href={%  static 'css/bootstrap-responsive.min.css' %}>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <div class="logo-box">
+            <a href="/"></a>
+        </div>
+
+        <ul class="nav">
+            <li class="active"><a href="#">搜索主页</a></li>
+            <li><a href="#">一键查询</a></li>
+            <li><a href="#">使用说明</a></li>
+            <li><a href="#">保留扩展</a></li>
+        </ul>
+
+        <div class="auth-box" id="btn">
+            <i class="icon-person iconfont"></i>
+            <a href="../common/auth.html">登录/注册</a>
+            <!-- <a href="../common/auth.html">注册</a> -->
+        </div>
+    </div>
+</header>
+{% block main %}{% endblock %}
+<footer class="footer">
+    <div class="top-group">
+        <div class="top-inner-group">
+            <div class="logo-box"></div>
+            <div class="detail-group">
+                <div class="line1">
+                    <ul class="links">
+                        <li><a href="#">关于大航海之路</a></li>
+                        <!--<li><a href="#">创业课堂</a></li>-->
+                        <!--<li><a href="#">寻求报道</a></li>-->
+                        <!--<li><a href="#">创业礼包</a></li>-->
+                    </ul>
+                    <div class="about-us">
+                        <span class="title">关于我们：</span>
+                        <!--<ul class="social-group">
+                            <li class="weixin">
+                                <div class="wx-qrcode"></div>
+                                <span class="text">xfz008
+                                </span>
+                            </li>
+                            <li class="weibo">
+                                <a class="text" href="#">小饭桌创业课堂</a>
+                            </li>
+                        </ul>-->
+                    </div>
+                </div>
+                <div class="line2">
+                    <p class="address">地址：杭州市滨江区西可科技园</p>
+                    <p class="contact">联系方式：*********（工作日10点-18点）</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-group">
+        ©2018 网易（杭州）网络有限公司
+    </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,124 @@
+@import "init.scss";
+@import "constants.scss";
+
+.footer{
+    font-size: 14px;
+    color: #c9c9c9;
+    padding-top: 20px;
+
+    .top-group{
+        background: #555e67;
+        height: 100px;
+        box-sizing: border-box;
+
+        .top-inner-group{
+            width: $pageWidth;
+            margin: 0 auto;
+            //overflow: hidden;
+            position: relative;
+
+            .logo-box{
+                background: #7ed321;
+                width: 168px;
+                height: 100px;
+                float: left;
+                background: url("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531300884976&di=6e24446c93bab96e255be915a8e6a24c&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01717458de033ea801219c77ce034b.jpg%402o.jpg") no-repeat;
+                background-size: 168px 100px;
+                //background-size: 100%;
+            }
+            .detail-group{
+                float: left;
+                margin-left: 300px;
+                padding-top: 26px;
+
+                .line1{
+                    overflow: hidden;
+                    .links{
+                        float: left;
+                        overflow: hidden;
+                        li{
+                            float: left;
+                            padding: 0 10px;
+                            a{
+                                color: #c9c9c9;
+                            }
+                            &:first-of-type{
+                                padding-left: 0;
+                            }
+                            &:last-of-type{
+                                border-right: none;
+                            }
+                            border-right:1px solid #c9c9c9;
+                        }
+                    }
+                    .about-us{
+                        float: left;
+                        margin-left: 40px;
+                        .title{
+                            float: left;
+                        }
+
+                        .social-group{
+                            float: left;
+                            overflow: hidden;
+                            li{
+                                float: left;
+                                color: #fff;
+                                .text{
+                                    margin-left: 24px;
+                                }
+                            }
+                            //.weixin{
+                            //    background: url("https://www.xfz.cn/static/build/images/wx-icon.png");
+                            //    background-repeat: no-repeat;
+                            //    background-size: 30%;
+                            //    cursor: pointer;
+                            //    &:hover .wx-qrcode{
+                            //        display: block;
+                            //    }
+                            //    .wx-qrcode{
+                            //        width: 204px;
+                            //        height: 204px;
+                            //        background: url("https://www.xfz.cn/static/build/images/wxQr.jpg");
+                            //        background-size: 100%;
+                            //        position: absolute;
+                            //        right: 360px;
+                            //        top: -220px;
+                            //        display: none;
+                            //    }
+                            //}
+                            //.weibo{
+                            //    margin-left: 20px;
+                            //    background: url("https://www.xfz.cn/static/build/images/xl-icon.png");
+                            //    background-repeat: no-repeat;
+                            //    background-size: 18%;
+                            //    a{
+                            //        color: #fff;
+                            //    }
+                            //}
+                        }
+                    }
+                }
+
+                .line2{
+                    overflow: hidden;
+                    margin-top: 20px;
+                    .address{
+                        float: left;
+                    }
+                    .contact{
+                        float: left;
+                        margin-left: 40px;
+                    }
+                }
+            }
+        }
+    }
+
+    .bottom-group{
+        background: #383e44;
+        height: 60px;
+        text-align: center;
+        line-height: 60px;
+    }
+}

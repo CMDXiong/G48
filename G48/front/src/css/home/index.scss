@@ -1,0 +1,82 @@
+@import "../common/header.scss";
+@import "../common/footer.scss";
+@import "../common/body.scss";
+@import "../common/constants.scss";
+@import "../common/init.scss";
+
+.main{
+  z-index: 88;
+  .wrapper{
+      width: $pageWidth;
+      background: #fff;
+      .search-form{
+        form{
+          width: 1000px;
+          background: #e6ebef;
+          margin: 20px auto;
+          border-radius: 4px;
+          padding: 20px;
+          .form1{
+            width: 400px;
+            margin: 0 auto;
+            .search{
+              width: 191px;
+              padding: 3px;
+              margin-left: 107px;
+              border-radius: 1px;
+              background: paleturquoise;
+            }
+            select{
+              margin-left: 100px;
+              margin-top: 10px;
+              width: 200px;
+              padding: 3px;
+              border-radius: 1px;
+              background: paleturquoise;
+              }
+            .table-type{
+              margin-left: 107px;
+            }
+            .submit{
+              width: 390px;
+              height: 40px;
+
+              .button1{
+                float: right;
+              }
+
+              .button2{
+                float: right;
+              }
+
+              .button3{
+                float: right;
+              }
+
+              .button{
+                background: #1abc9c;
+                color: #fff;
+                padding: 5px;
+                font-size: 14px;
+                margin-top: 20px;
+                margin-left: 20px;
+                border-radius: 4px;
+              }
+            }
+          }
+        }
+      }
+  }
+  .show_excel{
+    width: $pageWidth;
+    margin: 20px auto;
+    .table_info{
+      background: #1abc9c;
+      height: 32px;
+      width:$pageWidth;
+      color: white;
+      font-size: 16px;
+      line-height: 32px;
+    }
+  }
+}
