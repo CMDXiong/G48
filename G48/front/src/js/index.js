@@ -169,7 +169,7 @@ Test.prototype.run = function () {
     console.log("xxxx");
     var str = '<p style="color: red"> 测试 </p>';
 
-    document.getElementById('test').innerHTML = str;
+    // document.getElementById('test').innerHTML = str;
 };
 
 $(function () {

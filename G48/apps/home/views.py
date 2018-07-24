@@ -11,6 +11,7 @@ import re
 
 import pysvn
 import ConfigParser
+import openpyxl
 
 
 def test(request):
@@ -23,6 +24,7 @@ def search_result(request):
     keyword = request.POST['content']                   # 获取关键字
     keyword = keyword.replace(' ', '')                  # 去掉关键字中的所有空格
     inquiry_mode = request.POST['inquiry_mode']         # 获取查询方式
+    print request.POST['tableType']
     context = {}                                        # 传入到html模板中的数据
     print keyword
     print inquiry_mode
@@ -383,7 +385,7 @@ def config(request):
     # 配置函数
     print '这是itoldskjaf一个测试'
     write_config_file()
-    # update_svn()
+    update_svn()
     return HttpResponse("更新完成")
 
 
