@@ -11,7 +11,13 @@ import re
 
 import pysvn
 import ConfigParser
+import exceptions
+from zipfile import BadZipfile
+
 import openpyxl
+# from openpyxl.reader.excel import load_workbook
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter, column_index_from_string
 
 
 def test(request):
@@ -46,22 +52,57 @@ def search_result(request):
 
 
 def index(request):
-    # context = {}
-    # num = 2
-    # if num == 1:
-    #     keyword = u"普通商团队员满载奖励"    # 查询的关键字
-    #     keyword = keyword.replace(' ', '')
-    #     context = perfect_match(keyword)     # 精确查询
-    # elif num == 2:
-    #     keyword = u"离开战才申加"    # 查询的关键字
-    #     keyword = keyword.replace(' ', '')
-    #     context = fuzzy_query_1(keyword)     # 模糊查询
-    # else:
-    #     keyword1 = u'商会'.replace(' ', '')
-    #     keyword2 = u'队伍'.replace(' ', '')
-    #     context = advanced_search(keyword1,  keyword2)                    # 高级查询，可以同时查询多个关键字
-    # return render(request, 'home/index.html', context=context)
-    return render(request, 'home/index.html')
+    # complete_file_name = ur'F:\Project\H37\H37_xls_search\04GamePlay\02狩猎活动\01异常行为研究\02_c巨兽挑战玩法参数表.xlsx'
+    # file_name = u'02_c巨兽挑战玩法参数表.xlsx'
+    # pattern = building_regular_expressions(u'奖励周期限制类型')
+    # wb = load_workbook(complete_file_name)
+    # table_info = {'row_datas': []}
+    # sheets = wb.worksheets  # 所有的sheet表
+    # for sheet in sheets:
+    #     # 获取行列数
+    #     row1 = sheet.max_row
+    #     column2 = sheet.max_column
+    #     print row1, column2, sheet.min_row, sheet.min_column
+    #     for row in sheet.rows:
+    #         for cell in row:
+    #             row_num = cell.row  # 行号
+    #             col_num = column_index_from_string(cell.column)  # 列号
+    #             # print complete_file_name
+    #             print row_num, col_num, cell.value, type(cell.value)
+    #             resultstr = u''
+    #
+    #             if cell.value is None:
+    #                 continue
+    #             elif isinstance(cell.value, (float, int, long)):
+    #                 resultstr = str(cell.value)
+    #             else:
+    #                 resultstr = cell.value
+    #
+    #             # print row_num, col_num, cell.value, type(cell.value)
+    #             if pattern.match(resultstr):
+    #                 m = pattern.match(resultstr)
+    #                 deal_str = deal_tuple(m.groups())  # 将关键字添加相应的html标签
+    #                 exist = True
+    #                 row_data = [file_name, sheet.title, row_num]
+    #                 temp_data = [i.value for i in row]
+    #                 row_data += temp_data
+    #                 row_data[col_num + 2] = deal_str              # openpyxl中的行，列都是从1开始
+    #                 table_info['row_datas'].append(row_data)
+    #                 table_head = ['表名', 'Sheet名', '行号']
+    #                 temp_head = [i.value for i in list(sheet.rows)[0]]
+    #                 print 'temp_head', temp_head
+    #                 table_info['head'] = table_head + temp_head
+    #                 table_info['colarray'] = ['', '', '']
+    #                 table_info['colarray'] += num_converted_into_letters(len(list(row)))
+    #                 table_info['table_name'] = file_name
+    #                 table_info['sheet_name'] = sheet.title                        # sheet.title 可以获取sheet名
+    # except (BadZipfile, TypeError, IOError):
+    #     print "出错的文件："
+
+    keyword = u'奖励周期限制次数'
+    context = read_xlsx_file(filepath, keyword)
+    # context = {'datas': [table_info]}
+    return render(request, 'home/index.html', context=context)
 
 
 def perfect_match(keyword):
@@ -96,6 +137,7 @@ def perfect_match(keyword):
                             keyword_prefix = u'<span style="color: red">'
                             keyword_suffix = u'</span>'
                             row_data[col+3] = keyword_prefix + row_data[col+3] + keyword_suffix
+                            print row_data
                             table_info['row_datas'].append(row_data)
                             table_head = ['表名', 'Sheet名', '行号']
                             table_info['head'] = table_head + sheet.row_values(0)
@@ -135,6 +177,76 @@ def building_regular_expressions(keyword):
     return re_pattern
 
 
+filepath = ur'F:\Project\H37\H37_xls_search\04GamePlay\02狩猎活动'   # unicode编码
+
+
+def read_xlsx_file(file_path, keyword):
+    pattern = pattern = building_regular_expressions(keyword)
+    exist = False  # 关键字是否存在某一行
+    context = {'datas': []}
+    # context['datas'] = []
+
+    if os.path.isfile(file_path):  # 如果是文件
+        pass
+    elif os.path.isdir(file_path):  # 如果是路径
+        g = os.walk(file_path)
+        # path 一个目录
+        # d:代表path目录所有的目录(只包含名字，不包含前面的路径)
+        # filelist: 代表path目录所有的文件(也只包含名字)
+        for path, dir_list, file_name_list in g:
+            for file_name in file_name_list:
+                if os.path.splitext(file_name)[1] == '.xlsx':  # 是.xlsx文件
+                    complete_file_name = os.path.join(path, file_name)  # 文件的完整路径名
+                    try:
+                        wb = load_workbook(complete_file_name)
+                        table_info = {'row_datas': []}
+                        sheets = wb.worksheets  # 所有的sheet表
+                        for sheet in sheets:
+                            for row in sheet.rows:
+                                for cell in row:
+                                    row_num = cell.row                           # 行号
+                                    col_num = column_index_from_string(cell.column)    # 列号
+                                    resultstr = u''
+                                    if cell.value is None:
+                                        continue
+                                    elif isinstance(cell.value, (float, int, long)):
+                                        resultstr = str(cell.value)
+                                    else:
+                                        resultstr = cell.value
+                                    if pattern.match(resultstr):
+                                        print 'success'
+                                        m = pattern.match(resultstr)
+                                        deal_str = deal_tuple(m.groups())  # 将关键字添加相应的html标签
+                                        exist = True
+                                        row_data = [file_name, sheet.title, row_num]
+                                        temp_data = [i.value for i in row]
+                                        row_data += temp_data
+                                        row_data[col_num + 2] = deal_str  # openpyxl中的行，列都是从1开始
+                                        table_info['row_datas'].append(row_data)
+                                        table_head = ['表名', 'Sheet名', '行号']
+                                        temp_head = [i.value for i in list(sheet.rows)[0]]
+                                        table_info['head'] = table_head + temp_head
+                                        table_info['colarray'] = ['', '', '']
+                                        table_info['colarray'] += num_converted_into_letters(len(list(row)))
+                                        table_info['table_name'] = file_name
+                                        table_info['sheet_name'] = sheet.title  # sheet.title 可以获取sheet名
+                        if exist:
+                            context['datas'].append(table_info)
+                    except (BadZipfile, TypeError, IOError):
+                        print "出错的文件："
+                        print complete_file_name
+                elif os.path.splitext(file_name)[1] == '.xls':  # 是.xls文件
+                    pass
+                elif os.path.splitext(file_name)[1] == '.cvs':  # 是.xls文件
+                    pass
+                else:
+                    print "文件格式不在.xlsx .xls, .cvs之中"
+                    pass
+    else:
+        print "找不到文件或路径"
+    return context
+
+
 # 模糊匹配
 def fuzzy_query_1(keyword):
     if not isinstance(keyword, (str, unicode, int, float)):
@@ -143,13 +255,11 @@ def fuzzy_query_1(keyword):
     context = {}
     context['datas'] = []
     pattern = building_regular_expressions(keyword)
-    start = time.clock()
     filepath = r'F:\Project\G48\导表3'   # 自动转化成utf-8的字节字符串
     filepath = filepath.decode('utf-8')  # 形成无编码的unicode字符集
     pathDir = os.listdir(filepath)       # 目录下的所有文件
 
-    exist = False
-
+    exist = False                        # 关键字是否存在某一行
     for allDir in pathDir:
         child = os.path.join(filepath, allDir)  # 文件的完整路径
         if os.path.isfile(child):               # 判断路径是不是文件
@@ -192,8 +302,6 @@ def fuzzy_query_1(keyword):
                         table_info['col'].append(col_list)  # 显示红色的位置
             if exist:
                 context['datas'].append(table_info)
-    end = time.clock()
-    print "查询所花费的时间：%f" % (end - start)
     return context
 
 
