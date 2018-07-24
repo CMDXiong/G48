@@ -99,7 +99,7 @@ def index(request):
     # except (BadZipfile, TypeError, IOError):
     #     print "出错的文件："
 
-    keyword = u'奖励周期限制次数'
+    keyword = u'玩家每天最多完成'
     context = read_xlsx_file(filepath, keyword)
     # context = {'datas': [table_info]}
     return render(request, 'home/index.html', context=context)
@@ -177,7 +177,7 @@ def building_regular_expressions(keyword):
     return re_pattern
 
 
-filepath = ur'F:\Project\H37\H37_xls_search\04GamePlay\02狩猎活动\01异常行为研究\02_c巨兽挑战玩法参数表.xlsx'   # unicode编码
+filepath = ur'F:\Project\H37\H37_xls_search\04GamePlay\02狩猎活动\01异常行为研究'   # unicode编码
 
 
 def read_xlsx_file(file_path, keyword):
@@ -186,15 +186,18 @@ def read_xlsx_file(file_path, keyword):
     context = {'datas': []}
 
     if os.path.isfile(file_path):                                        # 如果是文件
-        if '/' in file_path:
-            file_name = file_path.split("/")[-1]
+        if '\\' in file_path:
+            file_name = file_path.split('\\')[-1]
         else:
             file_name = file_path
-        print 'file_name',file_name
-        # pattern = building_regular_expressions(u'奖励周期限制类型')
+        print 'file_name', file_name
         wb = load_workbook(file_path)
         table_info = {'row_datas': []}
-        sheets = wb.worksheets  # 所有的sheet表
+        try:
+            sheets = wb.worksheets  # 所有的sheet表
+        except (BadZipfile, TypeError, IOError):
+            print "出错的文件："
+            print file_path
         for sheet in sheets:
             # 获取行列数
             row1 = sheet.max_row
@@ -227,7 +230,6 @@ def read_xlsx_file(file_path, keyword):
                         table_info['row_datas'].append(row_data)
                         table_head = ['表名', 'Sheet名', '行号']
                         temp_head = [i.value for i in list(sheet.rows)[0]]
-                        print 'temp_head', temp_head
                         table_info['head'] = table_head + temp_head
                         table_info['colarray'] = ['', '', '']
                         table_info['colarray'] += num_converted_into_letters(len(list(row)))
@@ -245,42 +247,42 @@ def read_xlsx_file(file_path, keyword):
                     complete_file_name = os.path.join(path, file_name)  # 文件的完整路径名
                     try:
                         wb = load_workbook(complete_file_name)
-                        table_info = {'row_datas': []}
-                        sheets = wb.worksheets  # 所有的sheet表
-                        for sheet in sheets:
-                            for row in sheet.rows:
-                                for cell in row:
-                                    row_num = cell.row                           # 行号
-                                    col_num = column_index_from_string(cell.column)    # 列号
-                                    resultstr = u''
-                                    if cell.value is None:
-                                        continue
-                                    elif isinstance(cell.value, (float, int, long)):
-                                        resultstr = str(cell.value)
-                                    else:
-                                        resultstr = cell.value
-                                    if pattern.match(resultstr):
-                                        print 'success'
-                                        m = pattern.match(resultstr)
-                                        deal_str = deal_tuple(m.groups())  # 将关键字添加相应的html标签
-                                        exist = True
-                                        row_data = [file_name, sheet.title, row_num]
-                                        temp_data = [i.value for i in row]
-                                        row_data += temp_data
-                                        row_data[col_num + 2] = deal_str  # openpyxl中的行，列都是从1开始
-                                        table_info['row_datas'].append(row_data)
-                                        table_head = ['表名', 'Sheet名', '行号']
-                                        temp_head = [i.value for i in list(sheet.rows)[0]]
-                                        table_info['head'] = table_head + temp_head
-                                        table_info['colarray'] = ['', '', '']
-                                        table_info['colarray'] += num_converted_into_letters(len(list(row)))
-                                        table_info['table_name'] = file_name
-                                        table_info['sheet_name'] = sheet.title  # sheet.title 可以获取sheet名
-                        if exist:
-                            context['datas'].append(table_info)
                     except (BadZipfile, TypeError, IOError):
                         print "出错的文件："
                         print complete_file_name
+                    table_info = {'row_datas': []}
+                    sheets = wb.worksheets  # 所有的sheet表
+                    for sheet in sheets:
+                        for row in sheet.rows:
+                            for cell in row:
+                                row_num = cell.row                           # 行号
+                                col_num = column_index_from_string(cell.column)    # 列号
+                                resultstr = u''
+                                if cell.value is None:
+                                    continue
+                                elif isinstance(cell.value, (float, int, long)):
+                                    resultstr = str(cell.value)
+                                else:
+                                    resultstr = cell.value
+                                if pattern.match(resultstr):
+                                    print 'success'
+                                    m = pattern.match(resultstr)
+                                    deal_str = deal_tuple(m.groups())  # 将关键字添加相应的html标签
+                                    exist = True
+                                    row_data = [file_name, sheet.title, row_num]
+                                    temp_data = [i.value for i in row]
+                                    row_data += temp_data
+                                    row_data[col_num + 2] = deal_str  # openpyxl中的行，列都是从1开始
+                                    table_info['row_datas'].append(row_data)
+                                    table_head = ['表名', 'Sheet名', '行号']
+                                    temp_head = [i.value for i in list(sheet.rows)[0]]
+                                    table_info['head'] = table_head + temp_head
+                                    table_info['colarray'] = ['', '', '']
+                                    table_info['colarray'] += num_converted_into_letters(len(list(row)))
+                                    table_info['table_name'] = file_name
+                                    table_info['sheet_name'] = sheet.title  # sheet.title 可以获取sheet名
+                    if exist:
+                        context['datas'].append(table_info)
                 elif os.path.splitext(file_name)[1] == '.xls':  # 是.xls文件
                     pass
                 elif os.path.splitext(file_name)[1] == '.cvs':  # 是.xls文件
