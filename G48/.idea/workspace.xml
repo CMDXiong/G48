@@ -17,14 +17,13 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apps/home/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="206">
-              <caret line="285" column="61" selection-start-line="285" selection-start-column="61" selection-end-line="285" selection-end-column="61" />
+            <state relative-caret-position="162">
+              <caret line="243" column="56" selection-start-line="243" selection-start-column="56" selection-end-line="243" selection-end-column="56" />
               <folding>
                 <element signature="e#66#101#0" expanded="true" />
                 <element signature="e#6197#8490#0" />
                 <element signature="e#8678#9310#0" />
-                <element signature="e#9926#12239#0" />
-                <element signature="e#12165#16765#0" />
+                <element signature="e#15966#18383#0" />
               </folding>
             </state>
           </provider>
@@ -206,7 +205,7 @@
       <path value="$PROJECT_DIR$/front/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="223" />
     <option name="y" value="45" />
     <option name="width" value="1400" />
@@ -480,8 +479,7 @@
             <element signature="e#66#101#0" expanded="true" />
             <element signature="e#6197#8490#0" />
             <element signature="e#8678#9310#0" />
-            <element signature="e#9926#12239#0" />
-            <element signature="e#12165#16765#0" />
+            <element signature="e#15966#18383#0" />
           </folding>
         </state>
       </provider>
@@ -794,14 +792,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/home/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="285" column="61" selection-start-line="285" selection-start-column="61" selection-end-line="285" selection-end-column="61" />
+        <state relative-caret-position="162">
+          <caret line="243" column="56" selection-start-line="243" selection-start-column="56" selection-end-line="243" selection-end-column="56" />
           <folding>
             <element signature="e#66#101#0" expanded="true" />
             <element signature="e#6197#8490#0" />
             <element signature="e#8678#9310#0" />
-            <element signature="e#9926#12239#0" />
-            <element signature="e#12165#16765#0" />
+            <element signature="e#15966#18383#0" />
           </folding>
         </state>
       </provider>

@@ -143,7 +143,7 @@ def index(request):
     #     if exist:
     #         context['datas'].append(table_info)
 
-    keyword = u'击杀间隔'
+    keyword = u'骑士版香吉士'
     context = read_xlsx_file(filepath, keyword)
     # context = {'datas': [table_info]}
     return render(request, 'home/index.html', context=context)
@@ -221,7 +221,9 @@ def building_regular_expressions(keyword):
     return re_pattern
 
 
-filepath = ur'F:\Project\H37\H37_xls_search\05Data\pvp数据表\击杀数据表.csv'   # unicode编码
+# filepath = ur'F:\Project\H37\H37_xls_search\05Data\pvp数据表\击杀数据表.csv'   # unicode编码
+# filepath = ur'F:\Project\H37\H37_xls_search\00BasicalSetting\02人物设定\01伙伴设定\00伙伴设定.xlsx'   # unicode编码
+filepath = ur'F:\Project\H37\H37_xls_search\00BasicalSetting\02人物设定\01伙伴设定'   # unicode编码
 
 
 def read_xlsx_file(file_path, keyword):
@@ -235,59 +237,18 @@ def read_xlsx_file(file_path, keyword):
             file_name = file_path.split('\\')[-1]
         else:
             file_name = file_path
-        table_info = {'row_datas': []}
+
         if os.path.splitext(file_name)[1] == '.xlsx':  # 是.xlsx文件
-            wb = load_workbook(file_path)
-            try:
-                sheets = wb.worksheets  # 所有的sheet表
-            except (BadZipfile, TypeError, IOError):
-                print "出错的文件："
-                print file_path
-            for sheet in sheets:
-                # 获取行列数
-                row1 = sheet.max_row
-                column2 = sheet.max_column
-                print row1, column2, sheet.min_row, sheet.min_column
-                for row in sheet.rows:
-                    for cell in row:
-                        row_num = cell.row  # 行号
-                        col_num = column_index_from_string(cell.column)  # 列号
-                        # print complete_file_name
-                        print row_num, col_num, cell.value, type(cell.value)
-                        resultstr = u''
-
-                        if cell.value is None:
-                            continue
-                        elif isinstance(cell.value, (float, int, long)):
-                            resultstr = str(cell.value)
-                        else:
-                            resultstr = cell.value
-
-                        # print row_num, col_num, cell.value, type(cell.value)
-                        if pattern.match(resultstr):
-                            m = pattern.match(resultstr)
-                            deal_str = deal_tuple(m.groups())  # 将关键字添加相应的html标签
-                            exist = True
-                            row_data = [file_name, sheet.title, row_num]
-                            temp_data = [i.value for i in row]
-                            row_data += temp_data
-                            row_data[col_num + 2] = deal_str  # openpyxl中的行，列都是从1开始
-                            table_info['row_datas'].append(row_data)
-                            table_head = ['表名', 'Sheet名', '行号']
-                            temp_head = [i.value for i in list(sheet.rows)[0]]
-                            table_info['head'] = table_head + temp_head
-                            table_info['colarray'] = ['', '', '']
-                            table_info['colarray'] += num_converted_into_letters(len(list(row)))
-                            table_info['table_name'] = file_name
-                            table_info['sheet_name'] = sheet.title  # sheet.title 可以获取sheet名
-            context['datas'].append(table_info)
+            xlsx_result = parse_file_xlsx(file_path, keyword)
+            if xlsx_result:
+                context['datas'] += xlsx_result['datas']
         elif os.path.splitext(file_name)[1] == '.xls':       # 是.xlsx文件
             pass
         elif os.path.splitext(file_name)[1] == '.csv':       # 是.xlsx文件
             result = parse_file_cvs(file_path, keyword)
             if result:
                 context['datas'].append(result)
-        else:
+        else:                                                # 不属于.xlsx，.xls，.csv文件格式
             print "文件格式不在.xlsx，.xls, .csv之中"
     elif os.path.isdir(file_path):  # 如果是路径
         g = os.walk(file_path)
@@ -300,43 +261,10 @@ def read_xlsx_file(file_path, keyword):
                 table_info = {'row_datas': []}
                 exist = False
                 if os.path.splitext(file_name)[1] == '.xlsx':  # 是.xlsx文件
-                    try:
-                        wb = load_workbook(complete_file_name)
-                    except (BadZipfile, TypeError, IOError):
-                        print "出错的文件："
-                        print complete_file_name
-                    sheets = wb.worksheets  # 所有的sheet表
-                    for sheet in sheets:
-                        for row in sheet.rows:
-                            for cell in row:
-                                row_num = cell.row                           # 行号
-                                col_num = column_index_from_string(cell.column)    # 列号
-                                resultstr = u''
-                                if cell.value is None:
-                                    continue
-                                elif isinstance(cell.value, (float, int, long)):
-                                    resultstr = str(cell.value)
-                                else:
-                                    resultstr = cell.value
-                                if pattern.match(resultstr):
-                                    print 'success'
-                                    m = pattern.match(resultstr)
-                                    deal_str = deal_tuple(m.groups())  # 将关键字添加相应的html标签
-                                    exist = True
-                                    row_data = [file_name, sheet.title, row_num]
-                                    temp_data = [i.value for i in row]
-                                    row_data += temp_data
-                                    row_data[col_num + 2] = deal_str  # openpyxl中的行，列都是从1开始
-                                    table_info['row_datas'].append(row_data)
-                                    table_head = ['表名', 'Sheet名', '行号']
-                                    temp_head = [i.value for i in list(sheet.rows)[0]]
-                                    table_info['head'] = table_head + temp_head
-                                    table_info['colarray'] = ['', '', '']
-                                    table_info['colarray'] += num_converted_into_letters(len(list(row)))
-                                    table_info['table_name'] = file_name
-                                    table_info['sheet_name'] = sheet.title  # sheet.title 可以获取sheet名
-                    if exist:
-                        context['datas'].append(table_info)
+                    print complete_file_name
+                    xlsx_result = parse_file_xlsx(complete_file_name, keyword)
+                    if xlsx_result:
+                        context['datas'] += xlsx_result['datas']
                 elif os.path.splitext(file_name)[1] == '.xls':  # 是.xls文件
                     pass
                 elif os.path.splitext(file_name)[1] == '.csv':  # 是.csv文件
@@ -394,8 +322,54 @@ def parse_file_cvs(file_name, keyword):
         return None
 
 
-def parse_file_xlsx():
-    pass
+def parse_file_xlsx(file_name, keyword):
+    real_file_name = os.path.basename(file_name)          # 得到一个路径下的文件名
+    pattern = building_regular_expressions(keyword)       # 生成关键字查询模式
+    table_info = {'row_datas': []}                        # 用于存储存在关键字的行数据
+    context = {'datas': []}
+    exist = False                                         # 某一行是否匹配了关键字
+    wb = load_workbook(file_name)                         # 得到一个excel表的对象
+    try:
+        sheets = wb.worksheets                            # 所有的sheet表
+    except (BadZipfile, TypeError, IOError):
+        print "出错的文件："
+        print file_name
+    for sheet in sheets:
+        exist = False                                            # 某一行是否匹配了关键字
+        max_col_num = 0                                          # 所有存在关键字行中的最大列数
+        for row in sheet.rows:
+            for cell in row:
+                row_num = cell.row                               # 行号
+                col_num = column_index_from_string(cell.column)  # 列号
+                if cell.value is None:
+                    continue
+                elif isinstance(cell.value, (float, int, long)):
+                    resultstr = str(cell.value)
+                else:
+                    resultstr = cell.value
+
+                is_match = pattern.match(resultstr)              # 匹配结果
+                if is_match:                                     # 如果存在匹配， 则记录该行的所有数据和相关信息
+                    exist = True                                 # 该行存在关键字的匹配
+                    max_col_num = max_col_num if max_col_num > len(list(row)) else len(list(row))  # 取得较大的列值
+                    # 对存在匹配行的一行数据进行存储
+                    row_data = [real_file_name, sheet.title, row_num] + [i.value for i in row]  # 前三个对应于表名，sheet名，行号
+                    deal_str = deal_tuple(is_match.groups())     # 将匹配的关键字添加相应的html标签,以显示红色
+                    row_data[col_num + 2] = deal_str             # 将关键字标红的数据替换原来的数据,openpyxl中的行，列都是从1开始,所以加的是2不是3
+                    table_info['row_datas'].append(row_data)     # 将本行数据添加至存在关键字行列表中
+        # 存储每一个table中sheet的信息
+        if exist:
+            table_info['head'] = ['表名', 'Sheet名', '行号'] + [i.value for i in list(sheet.rows)[0]]  # 存储表头信息
+            table_info['colarray'] = ['', '', ''] + num_converted_into_letters(max_col_num)            # 列标签'',  '', '', 'A', 'B', 'C'...
+            table_info['table_name'] = real_file_name                                                  # 关键字存在的表名
+            table_info['sheet_name'] = sheet.title                                                     # 关键字存在的sheet名
+            context['datas'].append(table_info)
+    if context['datas']:
+        return context
+    else:
+        return None
+
+
 
 
 def parse_file_xls():
