@@ -52,8 +52,8 @@ def search_result(request):
 
 
 def index(request):
-    keyword = u'击杀间隔'
-    context = read_xlsx_file(filepath, keyword)
+    # keyword = keyword
+    context = parse_file(filepath, keyword)
     return render(request, 'home/index.html', context=context)
 
 
@@ -128,19 +128,20 @@ def building_regular_expressions(keyword):
     #     print 'ok'
     return re_pattern
 
+# keyword = u'击杀间隔'
+# filepath = ur'F:\Project\H37\H37_xls_search\05Data\pvp数据表\击杀数据表.csv'   # unicode编码
 
-filepath = ur'F:\Project\H37\H37_xls_search\05Data\pvp数据表\击杀数据表.csv'   # unicode编码
+# keyword = u'骑士版香吉士'
 # filepath = ur'F:\Project\H37\H37_xls_search\00BasicalSetting\02人物设定\01伙伴设定\00伙伴设定.xlsx'   # unicode编码
 # filepath = ur'F:\Project\H37\H37_xls_search\00BasicalSetting\02人物设定\01伙伴设定'   # unicode编码
-# filepath = ur'F:\Project\G48\导表3\07积分兑换导表.xls'   # unicode编码
+
+keyword = u'85级扩建许可证'
+filepath = ur'F:\Project\G48\导表3\07积分兑换导表.xls'   # unicode编码
 # filepath = ur'F:\Project\G48\导表3'   # unicode编码
 
 
-def read_xlsx_file(file_path, keyword):
-    # pattern = pattern = building_regular_expressions(keyword)
-    # exist = False                                                        # 某一个sheet中是否匹配了关键字
+def parse_file(file_path, keyword):
     context = {'datas': []}
-
     if os.path.isfile(file_path):                                        # 如果是文件
         file_name = os.path.basename(file_path)                          # 得到一个路径下的文件名
         name, ext = os.path.splitext(file_path)                          # ext为文件的扩展名
@@ -194,7 +195,7 @@ def parse_file_cvs(file_name, keyword):
     pattern = building_regular_expressions(keyword)       # 生成关键字查询模式
     table_info = {'row_datas': []}                        # 用于存储存在关键字的行数据
     context = {'datas': []}
-    exist = False                                         # 某一个sheet中是否匹配了关键字
+    sheet_exist = False                                         # 某一个sheet中是否匹配了关键字
     # 获取文件的编码方式
     csvfile_test_code = open(file_name, 'r')
     file_encoding = chardet.detect(csvfile_test_code.read())  # 获取文件的编码方式
@@ -204,31 +205,35 @@ def parse_file_cvs(file_name, keyword):
     with open(file_name, 'r') as csvfile:
         reader = csv.reader(csvfile, encoding=file_encoding['encoding'])
         cur_line_num = 1                                      # 当前行号
-        exist = False                                         # 某一个sheet中是否匹配了关键字
+        sheet_exist = False                                         # 某一个sheet中是否匹配了关键字
         max_col_num = 0                                       # 所有存在关键字行中的最大列数
         try:
             head_row = next(reader)                           # 表头数据
             for row in reader:                                # 从第一行开始遍历
                 cur_line_num += 1                             # 当前行号
+                cur_col_num = -1                            # 当前列号
                 row_exist = False                             # 某一行是否匹配了关键字
+                keyword_position = {}
+                row_data = []
                 for cell in row:
+                    cur_col_num += 1
                     is_match = pattern.match(cell)            # 匹配结果
                     if is_match:                              # 如果存在匹配， 则记录该行的所有数据和相关信息
-                        exist = True                          # 某一个sheet中是否匹配了关键字
+                        sheet_exist = True                          # 某一个sheet中是否匹配了关键字
                         row_exist = True                      # 某一行是否匹配了关键字
                         max_col_num = max_col_num if max_col_num > len(row) else len(row)  # 取得较大的列值
                         # 对存在匹配行的一行数据进行存储
                         keyword_red = deal_tuple(is_match.groups())                      # 将匹配的关键字添加相应的html标签,以显示红色
                         row_data = [real_file_name, real_file_name, cur_line_num] + row  # 前三个对应于表名，sheet名，行号
-                        col_num = row.index(cell)                                        # 获取当前关键字所在的列号
-                        row_data[col_num + 3] = keyword_red                              # 将关键字标红的数据替换原来的数据
-                        # table_info['row_datas'].append(row_data)                         # 将本行数据添加至存在关键字行列表中
+                        keyword_position[cur_col_num + 3] = keyword_red                  # 将关键字标红的数据替换原来的数据
                 if row_exist:
+                    for key, value in keyword_position.items():                          # 对所有关键字进行相应的替换
+                        row_data[key] = value
                     table_info['row_datas'].append(row_data)  # 将本行数据添加至存在关键字行列表中
         except UnicodeDecodeError:
             print '编码出错的文件：'
             print file_name
-        if exist:
+        if sheet_exist:
             table_info['head'] = ['表名', 'Sheet名', '行号'] + head_row  # 存储表头信息
             table_info['colarray'] = ['', '', ''] + num_converted_into_letters(max_col_num)  # 列标签'',  '', '', 'A', 'B', 'C'...
             table_info['table_name'] = real_file_name  # 关键字存在的表名
@@ -245,7 +250,7 @@ def parse_file_xlsx(file_name, keyword):
     pattern = building_regular_expressions(keyword)       # 生成关键字查询模式
     table_info = {'row_datas': []}                        # 用于存储存在关键字的行数据
     context = {'datas': []}                               # 用于存储所有表的相关数据信息
-    exist = False                                         # 某一个sheet中是否存在关键字
+    sheet_exist = False                                   # 某一个sheet中是否存在关键字
     wb = load_workbook(file_name)                         # 得到一个excel表的对象
     try:
         sheets = wb.worksheets                            # 所有的sheet表
@@ -253,11 +258,12 @@ def parse_file_xlsx(file_name, keyword):
         print "出错的文件："
         print file_name
     for sheet in sheets:
-        exist = False                                            # 某一个sheet中是否存在关键字
+        sheet_exist = False                                            # 某一个sheet中是否存在关键字
         max_col_num = 0                                          # 所有存在关键字行中的最大列数
         for row in sheet.rows:
             row_exist = False                                    # 某一行是否匹配了关键字
             keyword_position = {}
+            row_data = []
             for cell in row:
                 row_num = cell.row                               # 行号
                 col_num = column_index_from_string(cell.column)  # 列号
@@ -270,20 +276,20 @@ def parse_file_xlsx(file_name, keyword):
 
                 is_match = pattern.match(resultstr)              # 匹配结果
                 if is_match:                                     # 如果存在匹配， 则记录该行的所有数据和相关信息
-                    exist = True                                 # 此sheet中匹配了关键字
+                    sheet_exist = True                                 # 此sheet中匹配了关键字
                     row_exist = True                             # 此行是匹配了关键字
                     max_col_num = max_col_num if max_col_num > len(list(row)) else len(list(row))  # 取得较大的列值
                     # 对存在匹配行的一行数据进行存储
                     row_data = [real_file_name, sheet.title, row_num] + [i.value for i in row]  # 前三个对应于表名，sheet名，行号
                     deal_str = deal_tuple(is_match.groups())     # 将匹配的关键字添加相应的html标签,以显示红色
-                    # row_data[col_num + 2] = deal_str             # 将关键字标红的数据替换原来的数据,openpyxl中的行，列都是从1开始,所以加的是2不是3
-                    keyword_position[col_num + 2] = deal_str  # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
-                    for key, value in keyword_position.items():  # 对所有关键字进行相应的替换
-                        row_data[key] = value
+                    # row_data[col_num + 2] = deal_str           # 将关键字标红的数据替换原来的数据,openpyxl中的行，列都是从1开始,所以加的是2不是3
+                    keyword_position[col_num + 2] = deal_str     # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
             if row_exist:
-                table_info['row_datas'].append(row_data)          # 将本行数据添加至存在关键字行列表中
+                for key, value in keyword_position.items():      # 对所有关键字进行相应的替换
+                    row_data[key] = value
+                table_info['row_datas'].append(row_data)         # 将本行数据添加至存在关键字行列表中
         # 存储每一个table中sheet的信息
-        if exist:
+        if sheet_exist:
             table_info['head'] = ['表名', 'Sheet名', '行号'] + [i.value for i in list(sheet.rows)[0]]  # 存储表头信息
             table_info['colarray'] = ['', '', ''] + num_converted_into_letters(max_col_num)            # 列标签'',  '', '', 'A', 'B', 'C'...
             table_info['table_name'] = real_file_name                                                  # 关键字存在的表名
@@ -300,12 +306,12 @@ def parse_file_xls(file_name, keyword):
     pattern = building_regular_expressions(keyword)    # 生成关键字查询模式
     table_info = {'row_datas': []}                     # 用于存储存在关键字的行数据
     context = {'datas': []}                            # 用于存储所有表的相关数据信息
-    exist = False                                      # 某一个sheet中是否匹配了关键字
+    sheet_exist = False                                # 某一个sheet中是否匹配了关键字
 
     workbook = xlrd.open_workbook(file_name)           # excel表对象
     sheets = workbook.sheets()                         # 表中所有sheet
     for sheet in sheets:
-        exist = False                                  # 某一个sheet中是否匹配了关键字
+        sheet_exist = False                            # 某一个sheet中是否匹配了关键字
         max_col_num = 0                                # 所有存在关键字行中的最大列数
         rows = sheet.nrows  # sheet对应的行
         cols = sheet.ncols  # sheet对应的列
@@ -324,19 +330,18 @@ def parse_file_xls(file_name, keyword):
 
                 is_match = pattern.match(resultstr)               # 匹配结果
                 if is_match:                                      # 如果存在匹配， 则记录该行的所有数据和相关信息
-                    exist = True                                  # 该sheet中是否匹配了关键字
+                    sheet_exist = True                                  # 该sheet中是否匹配了关键字
                     row_exist = True                              # 该行存在关键字的匹配
                     max_col_num = max_col_num if max_col_num > len(sheet.row_values(row)) else len(sheet.row_values(row))  # 取得较大的列值
                     # 对存在匹配行的一行数据进行存储
                     row_data = [real_file_name, sheet.name, row + 1] + sheet.row_values(row)
                     deal_str = deal_tuple(is_match.groups())      # 将匹配的关键字添加相应的html标签,以显示红色
                     keyword_position[col + 3] = deal_str          # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
-                    for key, value in keyword_position.items():   # 对所有关键字进行相应的替换
-                        print type(key), key , value
-                        row_data[key] = value
             if row_exist:
+                for key, value in keyword_position.items():  # 对所有关键字进行相应的替换
+                    row_data[key] = value
                 table_info['row_datas'].append(row_data)          # 将本行数据添加至存在关键字行列表中
-        if exist:
+        if sheet_exist:
             table_info['head'] = ['表名', 'Sheet名', '行号'] + sheet.row_values(0)           # 存储表头信息
             table_info['colarray'] = ['', '', ''] + num_converted_into_letters(max_col_num)  # 列标签'',  '', '', 'A', 'B', 'C'...
             table_info['table_name'] = real_file_name                                        # 关键字存在的表名
