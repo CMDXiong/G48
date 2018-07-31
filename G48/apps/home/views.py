@@ -19,6 +19,10 @@ import unicodecsv as csv
 # import csv
 import chardet
 
+import reader
+
+global_data = {}
+
 
 def test(request):
     context = {'test': "panxiong"}
@@ -30,14 +34,23 @@ def search_result(request):
     keyword = request.POST['content']                   # 获取关键字
     keyword = keyword.replace(' ', '')                  # 去掉关键字中的所有空格
     inquiry_mode = request.POST['inquiry_mode']         # 获取查询方式
-    print request.POST['tableType']
+    filename = request.POST['filename']                 #
+    print filename
+    # print request.POST['tableType']
     context = {}                                        # 传入到html模板中的数据
     print keyword
     print inquiry_mode
 
     if cmp(inquiry_mode, '1') == 0:                      # 模糊查询
         print '1'
-        context = fuzzy_query_1(keyword)
+        # context = fuzzy_query_1(keyword)
+        global global_data
+        # print global_data
+        start1 = time.clock()
+        context = fuzzy_query(keyword, global_data)
+        print context
+        end1 = time.clock()
+        print '查找的时间：', end1 - start1
     elif cmp(inquiry_mode, '2') == 0:                    # 精确查询
         print '2'
         context = perfect_match(keyword)
@@ -51,11 +64,73 @@ def search_result(request):
     return render(request, 'home/index.html', context=context)
 
 
+keyword = u'匹配流言'
+filepath = ur'F:\Project\H37\H37_xls_search\06需求文档\[H37]NPC需求--11月.xlsx'   # unicode编码
+# filepath = ur'F:\Project\H37\H37_xls_search\05Data'   # unicode编码
 def index(request):
-    # keyword = keyword
-    context = parse_file(filepath, keyword)
+    # xls = reader.read_file_xls(filepath)
+    xls = reader.read_file_xlsx(filepath)
+    # xls = reader.read_file_csv(filepath)
+    start = time.clock()
+    global global_data
+    # global_data = datas_form_files(filepath)
+    end = time.clock()
+    print end - start
+    context = {}
+    # context = parse_file(filepath, keyword)
     return render(request, 'home/index.html', context=context)
 
+
+def datas_form_files(file_path):
+    files_counts = 0
+    datas = []                                                           # 每一个元素都是一个表的字典
+    if os.path.isfile(file_path):                                        # 如果是文件
+        files_counts += 1
+        file_name = os.path.basename(file_path)                          # 得到一个路径下的文件名
+        name, ext = os.path.splitext(file_path)                          # ext为文件的扩展名
+        if ext == '.xlsx':                                               # 是.xlsx文件
+            xlsx_data = reader.read_file_xlsx(file_path)
+            if xlsx_data:
+                datas.append(xlsx_data)
+        elif ext == '.xls':                                              # 是.xls文件
+            xls_result = reader.read_file_xls(file_path)
+            if xls_result:
+                datas.append(xls_result)
+        elif ext == '.csv':                                              # 是.xlsx文件
+            csv_result = reader.read_file_csv(file_path)
+            if csv_result:
+                datas.append(csv_result)
+        else:                                                # 不属于.xlsx，.xls，.csv文件格式
+            print "文件格式不在.xlsx，.xls, .csv之中"
+    elif os.path.isdir(file_path):  # 如果是路径
+        g = os.walk(file_path)
+        # path 一个目录
+        # d:代表path目录所有的目录(只包含名字，不包含前面的路径)
+        # filelist: 代表path目录所有的文件(也只包含名字)
+        for path, dir_list, file_name_list in g:
+            for file_name in file_name_list:
+                complete_file_name = os.path.join(path, file_name)  # 文件的完整路径名
+                # table_info = {'row_datas': []}
+                # exist = False
+                files_counts += 1
+                if os.path.splitext(file_name)[1] == '.xlsx':  # 是.xlsx文件
+                    xlsx_data = reader.read_file_xlsx(complete_file_name)
+                    if xlsx_data:
+                        datas.append(xlsx_data)
+                elif os.path.splitext(file_name)[1] == '.xls':  # 是.xls文件
+                    xls_result = reader.read_file_xls(complete_file_name)
+                    if xls_result:
+                        datas.append(xls_result)
+                elif os.path.splitext(file_name)[1] == '.csv':  # 是.csv文件
+                    csv_result = reader.read_file_csv(complete_file_name)
+                    if csv_result:
+                        datas.append(csv_result)
+                else:
+                    print "文件格式不在.xlsx .xls, .cvs之中"
+    else:
+        print "找不到文件或路径"
+    print files_counts
+    return datas
 
 def perfect_match(keyword):
     # 完全匹配
@@ -110,34 +185,14 @@ def perfect_match(keyword):
 # 例如"潘雄"，最后建立的模式为：
 # ur'[\s\w|\u4e00-\u9fa5|，。；？！]*?潘[\s\w|\u4e00-\u9fa5|，。；？！]*?雄[\s\w|\u4e00-\u9fa5|，。；？！]*?'
 def building_regular_expressions(keyword):
-    # 在这里应该首先检查keyword是否是字符串，这点可以留做以后补充
-    if not isinstance(keyword, (str, unicode, int, float)):
+    if not isinstance(keyword, (str, unicode, int, float, long)):
         raise TypeError('bad operand type')
-    # text = u'我是潘sdf是雄'
-    # str1 = u"潘雄"
-    insert_pattern = u'([\s\w|\u4e00-\u9fa5|，。；？！]*?)'     # 非贪婪匹配 基本汉字的unicode编码是4E00-9FA5
+    insert_pattern = u'([\s\w|\u4e00-\u9fa5|，。；;,.:？！]*?)'     # 非贪婪匹配 基本汉字的unicode编码是4E00-9FA5
     pattern = insert_pattern
     for i in range(len(keyword)):
         pattern += (u'(' + keyword[i] + u')' + insert_pattern)
-    # if re.match(pattern, u'我是潘d是s，雄'):  # 这个用例用作测试，暂时不要删除
-    #     print '测试成功'
-    # else:
-    #     print '测试失败'
     re_pattern = re.compile(pattern)
-    # if re_pattern.match(text):
-    #     print 'ok'
     return re_pattern
-
-# keyword = u'击杀间隔'
-# filepath = ur'F:\Project\H37\H37_xls_search\05Data\pvp数据表\击杀数据表.csv'   # unicode编码
-
-# keyword = u'骑士版香吉士'
-# filepath = ur'F:\Project\H37\H37_xls_search\00BasicalSetting\02人物设定\01伙伴设定\00伙伴设定.xlsx'   # unicode编码
-# filepath = ur'F:\Project\H37\H37_xls_search\00BasicalSetting\02人物设定\01伙伴设定'   # unicode编码
-
-keyword = u'85级扩建许可证'
-filepath = ur'F:\Project\G48\导表3\07积分兑换导表.xls'   # unicode编码
-# filepath = ur'F:\Project\G48\导表3'   # unicode编码
 
 
 def parse_file(file_path, keyword):
@@ -299,6 +354,89 @@ def parse_file_xlsx(file_name, keyword):
         return context
     else:
         return None
+
+
+def fuzzy_query(keyword, datas):
+    res = {'datas': []}
+    pattern = building_regular_expressions(keyword)  # 生成关键字查询模式
+    for xls in datas:
+        xls_data = xls['sheets']
+        context = {'datas': []}  # 用于存储所有表的相关数据信息
+        table_info = {'row_datas': []}  # 用于存储存在关键字的行数据
+        for sheet_name, sheet_data in xls_data.items():
+            sheet_exist = False  # 某一个sheet中是否匹配了关键字
+            rows = sheet_data['rows']  # sheet对应的行
+            cols = sheet_data['cols']  # sheet对应的列
+            row_num = -1
+            for row in sheet_data['content']:
+                row_num += 1
+                keyword_position = {}  # 关键字位置，与对应的值
+                row_exist = False  # 某一行是否匹配了关键字
+                for item in row:
+                    resultstr = u''
+                    if item is None:
+                        continue
+                    if isinstance(item, float):
+                        resultstr = str(item)
+                    elif isinstance(item, (int, long)):
+                        resultstr = str(item)
+                    else:
+                        resultstr = item
+
+                    is_match = pattern.match(resultstr)  # 匹配结果
+                    if is_match:  # 如果存在匹配， 则记录该行的所有数据和相关信息
+                        sheet_exist = True  # 该sheet中是否匹配了关键字
+                        row_exist = True  # 该行存在关键字的匹配
+                        # 对存在匹配行的一行数据进行存储
+                        row_data = [xls['tname'], sheet_name, row_num + 1] + sheet_data['content'][row_num]
+                        deal_str = deal_tuple(is_match.groups())  # 将匹配的关键字添加相应的html标签,以显示红色
+                        print deal_str
+                        col = row.index(item)
+                        keyword_position[col + 3] = deal_str  # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
+                if row_exist:
+                    for key, value in keyword_position.items():  # 对所有关键字进行相应的替换
+                        row_data[key] = value
+                    table_info['row_datas'].append(row_data)  # 将本行数据添加至存在关键字行列表中
+
+            # for row in range(rows):
+            #     keyword_position = {}  # 关键字位置，与对应的值
+            #     row_exist = False  # 某一行是否匹配了关键字
+            #     for col in range(cols):
+            #         result = sheet_data['content'][row][col]
+            #         print type(result)
+            #         resultstr = u''
+            #         if result is None:
+            #             continue
+            #         if isinstance(result, float):
+            #             resultstr = str(result)
+            #         elif isinstance(result, (int, long)):
+            #             resultstr = str(result)
+            #         else:
+            #             resultstr = result
+            #         print 'resultstr', type(resultstr)
+            #
+            #         is_match = pattern.match(resultstr)  # 匹配结果
+            #         if is_match:  # 如果存在匹配， 则记录该行的所有数据和相关信息
+            #             sheet_exist = True  # 该sheet中是否匹配了关键字
+            #             row_exist = True  # 该行存在关键字的匹配
+            #             # 对存在匹配行的一行数据进行存储
+            #             row_data = [xls['tname'], sheet_name, row + 1] + sheet_data['content'][row]
+            #             deal_str = deal_tuple(is_match.groups())  # 将匹配的关键字添加相应的html标签,以显示红色
+            #             keyword_position[col + 3] = deal_str      # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
+            #     if row_exist:
+            #         for key, value in keyword_position.items():  # 对所有关键字进行相应的替换
+            #             row_data[key] = value
+            #         table_info['row_datas'].append(row_data)     # 将本行数据添加至存在关键字行列表中
+            if sheet_exist:
+                table_info['head'] = ['表名', 'Sheet名', '行号'] + sheet_data['header']  # 存储表头信息
+                table_info['colarray'] = ['', '', ''] + num_converted_into_letters(
+                    cols)  # 列标签'',  '', '', 'A', 'B', 'C'...
+                table_info['table_name'] = xls['tname']  # 关键字存在的表名
+                table_info['sheet_name'] = sheet_name  # 关键字存在的sheet名
+                context['datas'].append(table_info)  # 将存在关键字的表的相关信息存储
+        if context['datas']:
+            res['datas'] += context['datas']
+    return res
 
 
 def parse_file_xls(file_name, keyword):
@@ -524,46 +662,46 @@ def num_converted_into_letters(num):
         return result
 
 
-def fuzzy_query():
-    # 模糊匹配
-    start = time.clock()
-    filepath = r'F:\Project\G48\导表3'  # 自动转化成utf-8的字节字符串
-    filepath = filepath.decode('utf-8')  # 形成无编码的unicode字符集
-    pathDir = os.listdir(filepath)  # 目录下的所有文件
-
-    searchStr = u"不在商会不能创建队伍"  # 查询的字符串（关键字）
-
-    for allDir in pathDir:
-        child = os.path.join(filepath, allDir)  # 文件的完整路径
-        if os.path.isfile(child):  # 判断路径是不是文件
-            workbook = xlrd.open_workbook(child)  # excel表
-            sheets = workbook.sheets()  # 表中所有sheet
-            for sheet in sheets:
-                rows = sheet.nrows  # sheet对应的行
-                cols = sheet.ncols  # sheet对应的列
-                for row in range(rows):
-                    for col in range(cols):
-                        result = sheet.cell_value(row, col)
-                        resultstr = u''
-                        if isinstance(result, float):
-                            resultstr = str(result)
-                        elif isinstance(result, int):
-                            resultstr = str(result)
-                        else:
-                            resultstr = result
-                        # if resultstr.find(searchStr) != -1:
-                        #     print '潘雄'
-                        if string.find(resultstr, searchStr) != -1:
-                            print "潘雄"
-                            print sheet.row_values(row)  # 得到row行的所有数据
-                            print "关键字：%s" % sheet.cell_value(row, col).encode('utf-8')
-                            print
-                            print "以下是查询结果："
-                            print "表名: %s" % child.encode('utf-8')
-                            print "sheet名：%s" % sheet.name.encode('utf-8')
-                            print "位置：row = %d, col = %d" % (row + 1, col + 1)
-    end = time.clock()
-    print "查询所花费的时间：%f" % (end - start)
+# def fuzzy_query():
+#     # 模糊匹配
+#     start = time.clock()
+#     filepath = r'F:\Project\G48\导表3'  # 自动转化成utf-8的字节字符串
+#     filepath = filepath.decode('utf-8')  # 形成无编码的unicode字符集
+#     pathDir = os.listdir(filepath)  # 目录下的所有文件
+#
+#     searchStr = u"不在商会不能创建队伍"  # 查询的字符串（关键字）
+#
+#     for allDir in pathDir:
+#         child = os.path.join(filepath, allDir)  # 文件的完整路径
+#         if os.path.isfile(child):  # 判断路径是不是文件
+#             workbook = xlrd.open_workbook(child)  # excel表
+#             sheets = workbook.sheets()  # 表中所有sheet
+#             for sheet in sheets:
+#                 rows = sheet.nrows  # sheet对应的行
+#                 cols = sheet.ncols  # sheet对应的列
+#                 for row in range(rows):
+#                     for col in range(cols):
+#                         result = sheet.cell_value(row, col)
+#                         resultstr = u''
+#                         if isinstance(result, float):
+#                             resultstr = str(result)
+#                         elif isinstance(result, int):
+#                             resultstr = str(result)
+#                         else:
+#                             resultstr = result
+#                         # if resultstr.find(searchStr) != -1:
+#                         #     print '潘雄'
+#                         if string.find(resultstr, searchStr) != -1:
+#                             print "潘雄"
+#                             print sheet.row_values(row)  # 得到row行的所有数据
+#                             print "关键字：%s" % sheet.cell_value(row, col).encode('utf-8')
+#                             print
+#                             print "以下是查询结果："
+#                             print "表名: %s" % child.encode('utf-8')
+#                             print "sheet名：%s" % sheet.name.encode('utf-8')
+#                             print "位置：row = %d, col = %d" % (row + 1, col + 1)
+#     end = time.clock()
+#     print "查询所花费的时间：%f" % (end - start)
 
 
 def get_login(realm, username, may_save):
