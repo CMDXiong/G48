@@ -133,5 +133,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # 静态文件的配置
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'front', 'dist')
+    os.path.join(BASE_DIR, 'front', 'dist'),
+    os.path.join(BASE_DIR, 'front', 'src'),
 ]

@@ -20,159 +20,177 @@
 // console.log(banner.person);
 // banner.greet('zhiliao');
 
-function Banner() {
-    this.bannerWidth = 798;
-    this.bannerGroup = $("#banner-group");
-    this.index = 1;
-    this.leftArrow = $(".left-arrow");
-    this.rightArrow = $(".right-arrow");
-    this.bannerUl = $("#banner-ul");
-    this.liList = this.bannerUl.children("li");
-    this.bannerCount = this.liList.length;
-    this.pageControl = $(".page-control");
+// function Banner() {
+//     this.bannerWidth = 798;
+//     this.bannerGroup = $("#banner-group");
+//     this.index = 1;
+//     this.leftArrow = $(".left-arrow");
+//     this.rightArrow = $(".right-arrow");
+//     this.bannerUl = $("#banner-ul");
+//     this.liList = this.bannerUl.children("li");
+//     this.bannerCount = this.liList.length;
+//     this.pageControl = $(".page-control");
+// }
+//
+// Banner.prototype.initBanner = function () {
+//     var self = this;
+//     var firstBanner = self.liList.eq(0).clone();
+//     var lastBanner = self.liList.eq(self.bannerCount-1).clone();
+//     self.bannerUl.append(firstBanner);
+//     self.bannerUl.prepend(lastBanner);
+//     self.bannerUl.css({"width":self.bannerWidth*(self.bannerCount+2),'left':-self.bannerWidth});
+// };
+//
+// Banner.prototype.initPageControl = function () {
+//     var self = this;
+//     for(var i=0; i<self.bannerCount; i++){
+//         var circle = $("<li></li>");
+//         self.pageControl.append(circle);
+//         if(i === 0){
+//             circle.addClass("active");
+//         }
+//     }
+//     self.pageControl.css({"width":self.bannerCount*12+8*2+16*(self.bannerCount-1)});
+// };
+//
+// Banner.prototype.toggleArrow = function (isShow) {
+//     var self = this;
+//     if(isShow){
+//         self.leftArrow.show();
+//         self.rightArrow.show();
+//     }else{
+//         self.leftArrow.hide();
+//         self.rightArrow.hide();
+//     }
+// };
+//
+// Banner.prototype.animate = function () {
+//     var self = this;
+//     self.bannerUl.animate({"left":-798*self.index},500);
+//     var index = self.index;
+//     if(index === 0){
+//         index = self.bannerCount-1;
+//     }else if(index === self.bannerCount+1){
+//         index = 0;
+//     }else{
+//         index = self.index - 1;
+//     }
+//     self.pageControl.children('li').eq(index).addClass("active").siblings().removeClass('active');
+// };
+//
+// Banner.prototype.loop = function () {
+//     var self = this;
+//     this.timer = setInterval(function () {
+//         if(self.index >= self.bannerCount+1){
+//             self.bannerUl.css({"left":-self.bannerWidth});
+//             self.index = 2;
+//         }else{
+//             self.index++;
+//         }
+//         self.animate();
+//     },2000);
+// };
+//
+//
+// Banner.prototype.listenArrowClick = function () {
+//     var self = this;
+//     self.leftArrow.click(function () {
+//         if(self.index === 0){
+//             // ==：1 == '1'：true
+//             // ==== 1 != '1'
+//             self.bannerUl.css({"left":-self.bannerCount*self.bannerWidth});
+//             self.index = self.bannerCount - 1;
+//         }else{
+//             self.index--;
+//         }
+//         self.animate();
+//     });
+//
+//     self.rightArrow.click(function () {
+//         if(self.index === self.bannerCount + 1){
+//             self.bannerUl.css({"left":-self.bannerWidth});
+//             self.index = 2;
+//         }else{
+//             self.index++;
+//         }
+//         self.animate();
+//     });
+// };
+//
+// Banner.prototype.listenBannerHover = function () {
+//     var self = this;
+//     this.bannerGroup.hover(function () {
+//         // 第一个函数是，把鼠标移动到banner上会执行的函数
+//         clearInterval(self.timer);
+//         self.toggleArrow(true);
+//     },function () {
+//         // 第二个函数是，把鼠标从banner上移走会执行的函数
+//         self.loop();
+//         self.toggleArrow(false);
+//     });
+// };
+//
+// Banner.prototype.listenPageControl = function () {
+//     var self = this;
+//     self.pageControl.children("li").each(function (index,obj) {
+//         $(obj).click(function () {
+//             self.index = index;
+//             self.animate();
+//         });
+//     });
+// };
+//
+// Banner.prototype.test = function () {
+//     var show_excels = $('show_excel')
+//     show_excels.append("这是一个测试")
+// };
+//
+// Banner.prototype.run = function () {
+//     console.log("sssss");
+//     this.initBanner();
+//     this.initPageControl();
+//     this.loop();
+//     this.listenBannerHover();
+//     this.listenArrowClick();
+//     this.listenPageControl();
+//     this.test();
+// };
+//
+// $(function () {
+//     var banner = new Banner();
+//     banner.run();
+// });
+function ProgressBar() {
 }
 
-Banner.prototype.initBanner = function () {
-    var self = this;
-    var firstBanner = self.liList.eq(0).clone();
-    var lastBanner = self.liList.eq(self.bannerCount-1).clone();
-    self.bannerUl.append(firstBanner);
-    self.bannerUl.prepend(lastBanner);
-    self.bannerUl.css({"width":self.bannerWidth*(self.bannerCount+2),'left':-self.bannerWidth});
-};
-
-Banner.prototype.initPageControl = function () {
-    var self = this;
-    for(var i=0; i<self.bannerCount; i++){
-        var circle = $("<li></li>");
-        self.pageControl.append(circle);
-        if(i === 0){
-            circle.addClass("active");
-        }
-    }
-    self.pageControl.css({"width":self.bannerCount*12+8*2+16*(self.bannerCount-1)});
-};
-
-Banner.prototype.toggleArrow = function (isShow) {
-    var self = this;
-    if(isShow){
-        self.leftArrow.show();
-        self.rightArrow.show();
-    }else{
-        self.leftArrow.hide();
-        self.rightArrow.hide();
-    }
-};
-
-Banner.prototype.animate = function () {
-    var self = this;
-    self.bannerUl.animate({"left":-798*self.index},500);
-    var index = self.index;
-    if(index === 0){
-        index = self.bannerCount-1;
-    }else if(index === self.bannerCount+1){
-        index = 0;
-    }else{
-        index = self.index - 1;
-    }
-    self.pageControl.children('li').eq(index).addClass("active").siblings().removeClass('active');
-};
-
-Banner.prototype.loop = function () {
-    var self = this;
-    this.timer = setInterval(function () {
-        if(self.index >= self.bannerCount+1){
-            self.bannerUl.css({"left":-self.bannerWidth});
-            self.index = 2;
-        }else{
-            self.index++;
-        }
-        self.animate();
-    },2000);
-};
-
-
-Banner.prototype.listenArrowClick = function () {
-    var self = this;
-    self.leftArrow.click(function () {
-        if(self.index === 0){
-            // ==：1 == '1'：true
-            // ==== 1 != '1'
-            self.bannerUl.css({"left":-self.bannerCount*self.bannerWidth});
-            self.index = self.bannerCount - 1;
-        }else{
-            self.index--;
-        }
-        self.animate();
-    });
-    
-    self.rightArrow.click(function () {
-        if(self.index === self.bannerCount + 1){
-            self.bannerUl.css({"left":-self.bannerWidth});
-            self.index = 2;
-        }else{
-            self.index++;
-        }
-        self.animate();
-    });
-};
-
-Banner.prototype.listenBannerHover = function () {
-    var self = this;
-    this.bannerGroup.hover(function () {
-        // 第一个函数是，把鼠标移动到banner上会执行的函数
-        clearInterval(self.timer);
-        self.toggleArrow(true);
-    },function () {
-        // 第二个函数是，把鼠标从banner上移走会执行的函数
-        self.loop();
-        self.toggleArrow(false);
-    });
-};
-
-Banner.prototype.listenPageControl = function () {
-    var self = this;
-    self.pageControl.children("li").each(function (index,obj) {
-        $(obj).click(function () {
-            self.index = index;
-            self.animate();
+ProgressBar.prototype.listenProgressBarEvent = function() {
+    var self = this
+    // var btn_search = $("#btn-search")
+    $("#btn-search").click(function (event) {
+        console.log('iscoming');
+        var ws = new WebSocket("ws://127.0.0.1:8001");
+        ws.onopen = function (msg) {
+                    alert("连接成功！");
+                };
+        ws.onmessage = function (msg) {
+            $("#progressbar").val(10)
+                    if (typeof msg.data == "int") {
+                        // displayContent(msg.data);
+                        $("#progressbar").val(msg.data)
+                    }
+                    else {
+                        alert("不是整型");
+                    }
+                };
         });
-    });
 };
 
-Banner.prototype.test = function () {
-    var show_excels = $('show_excel')
-    show_excels.append("这是一个测试")
-};
-
-Banner.prototype.run = function () {
-    console.log("sssss");
-    this.initBanner();
-    this.initPageControl();
-    this.loop();
-    this.listenBannerHover();
-    this.listenArrowClick();
-    this.listenPageControl();
-    this.test();
+ProgressBar.prototype.run = function () {
+    console.log('构造函数');
+    // this.listenProgressBarEvent();
 };
 
 $(function () {
-    var banner = new Banner();
-    banner.run();
-});
-
-function Test(){
-    this.test = $("#test");
-};
-
-Test.prototype.run = function () {
-    console.log("xxxx");
-    var str = '<p style="color: red"> 测试 </p>';
-
-    // document.getElementById('test').innerHTML = str;
-};
-
-$(function () {
-    var test1 = new Test();
-    test1.run();
+   var progressbar = new ProgressBar();
+   progressbar.run();
 });

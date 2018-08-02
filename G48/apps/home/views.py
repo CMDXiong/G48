@@ -2,11 +2,17 @@
 # from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
+from utils import restful
+# from websocket import run_websocket
+
+# 一般我是这样去设计json格式的
+# {"code": 200, "message": "", "data": {}, }
+
 
 import xlrd
 import time
 import os
-import string
 import re
 
 import pysvn
@@ -45,7 +51,6 @@ def search_result(request):
         print '1'
         # context = fuzzy_query_1(keyword)
         global global_data
-        # print global_data
         start1 = time.clock()
         context = fuzzy_query(keyword, global_data)
         print context
@@ -65,11 +70,11 @@ def search_result(request):
 
 
 keyword = u'匹配流言'
-filepath = ur'F:\Project\H37\H37_xls_search\06需求文档\[H37]NPC需求--11月.xlsx'   # unicode编码
-# filepath = ur'F:\Project\H37\H37_xls_search\05Data'   # unicode编码
+# filepath = ur'F:\Project\H37\H37_xls_search\06需求文档\[H37]NPC需求--11月.xlsx'   # unicode编码
+filepath = ur'F:\Project\H37\H37_xls_search\05Data\pvp数据表'   # unicode编码
 def index(request):
     # xls = reader.read_file_xls(filepath)
-    xls = reader.read_file_xlsx(filepath)
+    # xls = reader.read_file_xlsx(filepath)
     # xls = reader.read_file_csv(filepath)
     start = time.clock()
     global global_data
@@ -129,8 +134,7 @@ def datas_form_files(file_path):
                     print "文件格式不在.xlsx .xls, .cvs之中"
     else:
         print "找不到文件或路径"
-    print files_counts
-    return datas
+    return files_counts, datas
 
 def perfect_match(keyword):
     # 完全匹配
@@ -356,10 +360,21 @@ def parse_file_xlsx(file_name, keyword):
         return None
 
 
-def fuzzy_query(keyword, datas):
+def fuzzy_query(keyword, datas, connection, files_counts):
+    if datas is None:
+        print "原始数据为空，请检查数据是否导入"
+        return
+
     res = {'datas': []}
     pattern = building_regular_expressions(keyword)  # 生成关键字查询模式
+    files_queried = 0 #已查文件个数
+
     for xls in datas:
+        files_queried += 1
+        result = str(round((float(files_queried)/files_counts), 3) * 100) + '%'
+        length = len(result)
+        connection.send('%c%c%s' % (0x81, length, result))
+
         xls_data = xls['sheets']
         context = {'datas': []}  # 用于存储所有表的相关数据信息
         table_info = {'row_datas': []}  # 用于存储存在关键字的行数据
@@ -789,3 +804,4 @@ def write_config_file():
     # Writing our configuration file to 'example.cfg'
     with open(r'F:\ProjectTest\example1.cfg', 'wb') as configfile:
         config1.write(configfile)
+

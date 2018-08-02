@@ -56,7 +56,6 @@ def read_file_xlsx(file_name):
 
     xlsData = {}
     for sheet in sheets:
-        print 'C6Type:', type(sheet['C6'].value)
         sheet_data = {}
         rows = sheet.max_row
         cols = sheet.max_column
