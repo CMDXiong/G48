@@ -133,16 +133,17 @@
                     </div>
                 </form>
             </div>
-        </div>
 
-        <div class="show_excel" id="show_excel">
             <div id="progress-group" class="form-group" style="display: none;">
             <div class="progress">
                 <div id="progressbar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" >
                     0%
                 </div>
             </div>
-            </div >
+        </div >
+        </div>
+    
+        <div class="show_excel" id="show_excel">
             {% for data in datas %}
                 <div class="table_info">
                     <span><strong>来源表:</strong> {{ data.table_name }} ,  </span>
@@ -261,7 +262,13 @@
                 socket.onopen = function (msg) {
                     {#$("btnConnect").disabled = true;#}
                     {#alert("连接成功——G48！");#}
+                    var progress = jQuery("#progressbar")
+                    progress.text('0.0% Complete (success)');
+                    progress.css({"width": 0});
+                    var show_excel = jQuery("#show_excel");
+                    show_excel.html("");
                     socket.send("你的连接成功");
+
                 };
 
                 socket.onmessage = function (msg) {
