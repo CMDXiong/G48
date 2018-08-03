@@ -29,7 +29,7 @@ class websocket_thread(threading.Thread):
                 print re
             print 'new test'
 
-            fuzzy_query(u"击杀间隔", global_data1, self.connection, files_counts)
+            fuzzy_query(u"宝图名称", global_data1, self.connection, files_counts)
 
 
 def parse_data(msg):

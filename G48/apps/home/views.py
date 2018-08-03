@@ -371,9 +371,9 @@ def fuzzy_query(keyword, datas, connection, files_counts):
 
     for xls in datas:
         files_queried += 1
-        result = str(round((float(files_queried)/files_counts), 3) * 100) + '%'
-        length = len(result)
-        connection.send('%c%c%s' % (0x81, length, result))
+        # result = str(round((float(files_queried)/files_counts), 3) * 100) + '%'
+        # length = len(result)
+        # connection.send('%c%c%s' % (0x81, length, result))
 
         xls_data = xls['sheets']
         context = {'datas': []}  # 用于存储所有表的相关数据信息
@@ -450,8 +450,37 @@ def fuzzy_query(keyword, datas, connection, files_counts):
                 table_info['sheet_name'] = sheet_name  # 关键字存在的sheet名
                 context['datas'].append(table_info)  # 将存在关键字的表的相关信息存储
         if context['datas']:
+            import json
+            json_str = json.dumps(context)
+            send_msg(connection, json_str)
+            # length = len(json_str)
+            # print 'length: ',length
+            # connection.send('%c%c%s' % (0x81, length, json_str))
             res['datas'] += context['datas']
     return res
+
+
+def send_msg(conn, msg_bytes):
+    """
+    WebSocket服务端向客户端发送消息
+    :param conn: 客户端连接到服务器端的socket对象,即： conn,address = socket.accept()
+    :param msg_bytes: 向客户端发送的字节
+    :return:
+    """
+    import struct
+
+    token = b"\x81"
+    length = len(msg_bytes)
+    if length < 126:
+        token += struct.pack("B", length)
+    elif length <= 0xFFFF:
+        token += struct.pack("!BH", 126, length)
+    else:
+        token += struct.pack("!BQ", 127, length)
+
+    msg = token + msg_bytes
+    conn.send(msg)
+    return True
 
 
 def parse_file_xls(file_name, keyword):
