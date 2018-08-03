@@ -190,7 +190,6 @@
             try {
 
                 socket.onopen = function (msg) {
-                    {#$("btnConnect").disabled = true;#}
                     alert("连接成功！");
                     socket.send('返回结果');
                 };
@@ -260,29 +259,30 @@
             progress.text('0% Complete (success)');
             try {
                 socket.onopen = function (msg) {
-                    $("btnConnect").disabled = true;
+                    {#$("btnConnect").disabled = true;#}
                     {#alert("连接成功——G48！");#}
                     socket.send("你的连接成功");
                 };
 
                 socket.onmessage = function (msg) {
                     if (typeof msg.data == "string") {
-                        console.log(msg.data)
                         {#displayContent(msg.data);#}
-
-                        {#进度条的代码#}
-                        var progress = jQuery("#progressbar")
-                        {#progress.text(msg.data + ' Complete (success)');#}
-                        {#progress.css({"width":msg.data});#}
-
-                        {#显示查询结果代码#}
-                        var json_obj = JSON.parse(msg.data);
-                        {#有数据#}
-                        var datas = json_obj["datas"]
-                        var html = template('query-item',{"datas": datas});
-                        var show_excel = jQuery("#show_excel");
-                        show_excel.append(html)
-                        console.log(json_obj);
+                        if  (isNaN(Number(msg.data)))
+                        {
+                            {#显示查询结果代码#}
+                            var json_obj = JSON.parse(msg.data);
+                            {#有数据#}
+                            var datas = json_obj["datas"]
+                            var html = template('query-item',{"datas": datas});
+                            var show_excel = jQuery("#show_excel");
+                            show_excel.append(html)
+                            console.log(json_obj);
+                        }else{
+                            {#进度条的代码#}
+                            var progress = jQuery("#progressbar")
+                            progress.text(msg.data +  '% Complete (success)');
+                            progress.css({"width": msg.data + '%'});
+                        }
                     }
                     else {
                         alert("非文本消息");

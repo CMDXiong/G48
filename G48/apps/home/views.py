@@ -371,9 +371,9 @@ def fuzzy_query(keyword, datas, connection, files_counts):
 
     for xls in datas:
         files_queried += 1
-        # result = str(round((float(files_queried)/files_counts), 3) * 100) + '%'
-        # length = len(result)
-        # connection.send('%c%c%s' % (0x81, length, result))
+        result = str(round((float(files_queried)/files_counts), 3) * 100)
+        length = len(result)
+        connection.send('%c%c%s' % (0x81, length, result))
 
         xls_data = xls['sheets']
         context = {'datas': []}  # 用于存储所有表的相关数据信息
@@ -453,9 +453,6 @@ def fuzzy_query(keyword, datas, connection, files_counts):
             import json
             json_str = json.dumps(context)
             send_msg(connection, json_str)
-            # length = len(json_str)
-            # print 'length: ',length
-            # connection.send('%c%c%s' % (0x81, length, json_str))
             res['datas'] += context['datas']
     return res
 
