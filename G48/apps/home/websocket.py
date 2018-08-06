@@ -67,9 +67,10 @@ if __name__ == '__main__':
     # filepath = ur'F:\Project\H37\H37_xls_search\03SystemSetting\04单位系统\BOSS缩放表.xlsx'
     # filepath = ur'F:\Project\H37\H37_xls_search\05Data'
     # filepath = ur'F:\Project\H37\H37_xls_search\test_file'
-    filepath = ur'F:\Project\H37\H37_xls_search'
+    # filepath = ur'F:\Project\H37\H37_xls_search'
     # filepath = ur'F:\Project\G48\导表3'
     # filepath = ur'F:\Project\G48\导表3\01贸易数值表.xls'
+    filepath = ur'F:\Project\test'
 
     import time
     start = time.clock()

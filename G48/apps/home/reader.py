@@ -97,10 +97,6 @@ def read_file_xlsx(file_name):
         # sheet_data['content'] = [[sheet.cell(row, col).value for col in range(1, cols+1)] for row in range(1, rows+1)]  # 从第一行开始存储
         sheet_data['content'] = [map(xlsxToUnicode, line) for line in list(sheet.rows)]  # 从第一行开始存储
 
-        # for aaa in sheet_data['content']:
-        #     for bbb in aaa:
-        #         print type(bbb),bbb
-
         sheet_data['rows'] = rows
         sheet_data['cols'] = cols
         xlsData[sheet.title] = sheet_data                # 存储数据内容

@@ -13,7 +13,7 @@
     <SUITE FILE_PATH="coverage/G48$client.coverage" NAME="client Coverage Results" MODIFIED="1533028288048" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/apps/home" />
     <SUITE FILE_PATH="coverage/G48$py_test_in_views_py.coverage" NAME="py.test in views.py Coverage Results" MODIFIED="1533190240041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/apps/home" />
     <SUITE FILE_PATH="coverage/G48$websocket_service.coverage" NAME="websocket_service Coverage Results" MODIFIED="1533174242183" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/apps/home" />
-    <SUITE FILE_PATH="coverage/G48$websocket.coverage" NAME="websocket Coverage Results" MODIFIED="1533557859868" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/apps/home" />
+    <SUITE FILE_PATH="coverage/G48$websocket.coverage" NAME="websocket Coverage Results" MODIFIED="1533562591597" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/apps/home" />
   </component>
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
@@ -23,8 +23,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apps/home/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="756" column="20" lean-forward="true" selection-start-line="756" selection-start-column="20" selection-end-line="756" selection-end-column="20" />
+            <state relative-caret-position="286">
+              <caret line="181" column="21" lean-forward="true" selection-start-line="181" selection-start-column="21" selection-end-line="181" selection-end-column="21" />
               <folding>
                 <element signature="e#66#101#0" expanded="true" />
               </folding>
@@ -35,8 +35,8 @@
       <file leaf-file-name="reader.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/home/reader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="222">
-              <caret line="101" column="37" lean-forward="true" selection-start-line="101" selection-start-column="37" selection-end-line="101" selection-end-column="37" />
+            <state relative-caret-position="216">
+              <caret line="8" column="11" lean-forward="true" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
               <folding>
                 <element signature="e#24#33#0" expanded="true" />
               </folding>
@@ -47,8 +47,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/front/templates/home/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="72" column="110" lean-forward="true" selection-start-line="72" selection-start-column="110" selection-end-line="72" selection-end-column="110" />
+            <state relative-caret-position="167">
+              <caret line="195" column="54" lean-forward="true" selection-start-line="195" selection-start-column="54" selection-end-line="195" selection-end-column="54" />
               <folding>
                 <element signature="e#6176#7693#0#HTML" />
               </folding>
@@ -77,8 +77,8 @@
       <file leaf-file-name="websocket.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/home/websocket.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="67" column="57" lean-forward="true" selection-start-line="67" selection-start-column="57" selection-end-line="67" selection-end-column="57" />
+            <state relative-caret-position="316">
+              <caret line="26" column="24" lean-forward="true" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="24" />
               <folding>
                 <element signature="e#25#41#0" expanded="true" />
               </folding>
@@ -109,7 +109,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>btn-search</find>
       <find>websocket_thread</find>
       <find>潘雄</find>
       <find>serverIP</find>
@@ -135,10 +134,11 @@
       <find>.xls</find>
       <find>4s</find>
       <find>datas_form_files_test</find>
-      <find>inputKeyword</find>
-      <find>chardet</find>
-      <find>deal_tuple</find>
       <find>files_counts</find>
+      <find>deal_tuple</find>
+      <find>chardet</find>
+      <find>inputKeyword</find>
+      <find>building_regular_expressions</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -177,10 +177,10 @@
         <option value="$PROJECT_DIR$/apps/home/websocket_service.py" />
         <option value="$PROJECT_DIR$/front/templates/base/front_base.html" />
         <option value="$PROJECT_DIR$/apps/home/urls.py" />
-        <option value="$PROJECT_DIR$/apps/home/reader.py" />
         <option value="$PROJECT_DIR$/front/templates/home/index.html" />
-        <option value="$PROJECT_DIR$/apps/home/views.py" />
+        <option value="$PROJECT_DIR$/apps/home/reader.py" />
         <option value="$PROJECT_DIR$/apps/home/websocket.py" />
+        <option value="$PROJECT_DIR$/apps/home/views.py" />
       </list>
     </option>
   </component>
@@ -199,8 +199,8 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="404" />
-    <option name="y" value="36" />
+    <option name="x" value="177" />
+    <option name="y" value="29" />
     <option name="width" value="1400" />
     <option name="height" value="989" />
   </component>
@@ -467,7 +467,7 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="404" y="36" width="1400" height="989" extended-state="0" />
+    <frame x="177" y="29" width="1400" height="989" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -475,7 +475,7 @@
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="11" weight="0.30827886" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.39365453" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.37367803" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.32897604" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21492538" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
@@ -762,16 +762,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front/templates/home/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="72" column="110" lean-forward="true" selection-start-line="72" selection-start-column="110" selection-end-line="72" selection-end-column="110" />
-          <folding>
-            <element signature="e#6176#7693#0#HTML" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/front/templates/base/front_base.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
@@ -789,6 +779,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/apps/home/websocket.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="26" column="24" lean-forward="true" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="24" />
+          <folding>
+            <element signature="e#25#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/home/reader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="8" column="11" lean-forward="true" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
+          <folding>
+            <element signature="e#24#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/front/dist/arttemplate/template-web.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
@@ -796,30 +806,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/home/reader.py">
+    <entry file="file://$PROJECT_DIR$/front/templates/home/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="101" column="37" lean-forward="true" selection-start-line="101" selection-start-column="37" selection-end-line="101" selection-end-column="37" />
+        <state relative-caret-position="167">
+          <caret line="195" column="54" lean-forward="true" selection-start-line="195" selection-start-column="54" selection-end-line="195" selection-end-column="54" />
           <folding>
-            <element signature="e#24#33#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/home/websocket.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="67" column="57" lean-forward="true" selection-start-line="67" selection-start-column="57" selection-end-line="67" selection-end-column="57" />
-          <folding>
-            <element signature="e#25#41#0" expanded="true" />
+            <element signature="e#6176#7693#0#HTML" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/home/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="756" column="20" lean-forward="true" selection-start-line="756" selection-start-column="20" selection-end-line="756" selection-end-column="20" />
+        <state relative-caret-position="286">
+          <caret line="181" column="21" lean-forward="true" selection-start-line="181" selection-start-column="21" selection-end-line="181" selection-end-column="21" />
           <folding>
             <element signature="e#66#101#0" expanded="true" />
           </folding>
