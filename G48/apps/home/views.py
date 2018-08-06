@@ -405,43 +405,12 @@ def fuzzy_query(keyword, datas, connection, files_counts):
                         # 对存在匹配行的一行数据进行存储
                         row_data = [xls['tname'], sheet_name, row_num + 1] + sheet_data['content'][row_num]
                         deal_str = deal_tuple(is_match.groups())  # 将匹配的关键字添加相应的html标签,以显示红色
-                        print deal_str
                         col = row.index(item)
                         keyword_position[col + 3] = deal_str  # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
                 if row_exist:
                     for key, value in keyword_position.items():  # 对所有关键字进行相应的替换
                         row_data[key] = value
                     table_info['row_datas'].append(row_data)  # 将本行数据添加至存在关键字行列表中
-
-            # for row in range(rows):
-            #     keyword_position = {}  # 关键字位置，与对应的值
-            #     row_exist = False  # 某一行是否匹配了关键字
-            #     for col in range(cols):
-            #         result = sheet_data['content'][row][col]
-            #         print type(result)
-            #         resultstr = u''
-            #         if result is None:
-            #             continue
-            #         if isinstance(result, float):
-            #             resultstr = str(result)
-            #         elif isinstance(result, (int, long)):
-            #             resultstr = str(result)
-            #         else:
-            #             resultstr = result
-            #         print 'resultstr', type(resultstr)
-            #
-            #         is_match = pattern.match(resultstr)  # 匹配结果
-            #         if is_match:  # 如果存在匹配， 则记录该行的所有数据和相关信息
-            #             sheet_exist = True  # 该sheet中是否匹配了关键字
-            #             row_exist = True  # 该行存在关键字的匹配
-            #             # 对存在匹配行的一行数据进行存储
-            #             row_data = [xls['tname'], sheet_name, row + 1] + sheet_data['content'][row]
-            #             deal_str = deal_tuple(is_match.groups())  # 将匹配的关键字添加相应的html标签,以显示红色
-            #             keyword_position[col + 3] = deal_str      # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
-            #     if row_exist:
-            #         for key, value in keyword_position.items():  # 对所有关键字进行相应的替换
-            #             row_data[key] = value
-            #         table_info['row_datas'].append(row_data)     # 将本行数据添加至存在关键字行列表中
             if sheet_exist:
                 table_info['head'] = ['表名', 'Sheet名', '行号'] + sheet_data['header']  # 存储表头信息
                 table_info['colarray'] = ['', '', ''] + num_converted_into_letters(

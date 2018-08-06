@@ -72,15 +72,9 @@
             <div class="search-form">
                 <form class="form-horizontal" action="/search_result/" method="post">
                     <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-2 control-label">关键字：</label>
+                        <label for="inputKeyword" class="col-sm-2 control-label">关键字：</label>
                         <div class="col-sm-10">
-                            <input type="text"  name="content" class="form-control " id="inputEmail3" placeholder="请输入关键字" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="btnConnect" class="col-sm-2 control-label">连接：</label>
-                        <div class="col-sm-10">
-                            <input id="btnConnect" type="button" value="连接" onclick="connect()" />
+                            <input type="text"  name="content" class="form-control " id="inputKeyword" placeholder="请输入关键字" required>
                         </div>
                     </div>
 
@@ -185,90 +179,28 @@
     </div>
     <script>
         var socket;
-        function connect() {
-            var host = "ws://127.0.0.1:9004"
-            socket = new WebSocket(host);
-            try {
-
-                socket.onopen = function (msg) {
-                    alert("连接成功！");
-                    socket.send('返回结果');
-                };
-
-                socket.onmessage = function (msg) {
-                    if (typeof msg.data == "string") {
-                        {#displayContent(msg.data);#}
-                        console.log(msg.data)
-                    }
-                    else {
-                        alert("非文本消息");
-                    }
-                };
-
-                socket.onclose = function (msg) { alert("socket closed!") };
-            }
-            catch (ex) {
-                log(ex);
-            }
-        }
-
-        function send() {
-            var msg = $("sendText").value
-            socket.send(msg);
-        }
-
-        window.onbeforeunload = function () {
-            try {
-                socket.close();
-                socket = null;
-            }
-            catch (ex) {
-            }
-        };
-
-        function $(id) { return document.getElementById(id); }
-
-        Date.prototype.Format = function (fmt) { //author: meizz
-            var o = {
-                "M+": this.getMonth() + 1, //月份
-                "d+": this.getDate(), //日
-                "h+": this.getHours(), //小时
-                "m+": this.getMinutes(), //分
-                "s+": this.getSeconds(), //秒
-                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-                "S": this.getMilliseconds() //毫秒
-            };
-            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-            for (var k in o)
-                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-            return fmt;
-        }
-
-        function displayContent(msg) {
-            $("txtContent").value += "\r\n" +new Date().Format("yyyy/MM/dd hh:mm:ss")+ ":  " + msg;
-        }
-        function onkey(event) { if (event.keyCode == 13) { send(); } }
-    </script>
-    <script>
-        var socket;
         function connect1() {
             var host = "ws://127.0.0.1:9005/"
             socket = new WebSocket(host);
             jQuery("#progress-group").show();
             var progress = jQuery("#progressbar")
             progress.css({"width": 0});
-            progress.text('0% Complete (success)');
+            progress.text('0.0% Complete (success)');
+            var show_excel = jQuery("#show_excel");
+            show_excel.html("");
             try {
                 socket.onopen = function (msg) {
-                    {#$("btnConnect").disabled = true;#}
-                    {#alert("连接成功——G48！");#}
-                    var progress = jQuery("#progressbar")
-                    progress.text('0.0% Complete (success)');
-                    progress.css({"width": 0});
-                    var show_excel = jQuery("#show_excel");
-                    show_excel.html("");
-                    socket.send("你的连接成功");
+                    {#var keyword = jQuery("#inputKeyword").val();#}
+                    var queryInfo = new Object();
+                    queryInfo.keyword = jQuery("#inputKeyword").val();
+                    queryInfo.queryMode = jQuery("#select-type").val();
+                    queryInfo.tableType = jQuery("#table-type1").val();
+                    queryInfo.selectScope = jQuery("#select-scope").val();
 
+                    var jsonQueryInfo =  JSON.stringify(queryInfo)
+                    socket.send(jsonQueryInfo);
+                    {#socket.send(keyword);#}
+                    {#socket.send("你的连接成功");#}
                 };
 
                 socket.onmessage = function (msg) {
@@ -283,7 +215,6 @@
                             var html = template('query-item',{"datas": datas});
                             var show_excel = jQuery("#show_excel");
                             show_excel.append(html)
-                            console.log(json_obj);
                         }else{
                             {#进度条的代码#}
                             var progress = jQuery("#progressbar")

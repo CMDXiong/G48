@@ -20,16 +20,16 @@ class websocket_thread(threading.Thread):
 
     def run(self):
         print 'new websocket client joined!'
-        reply = 'i got u, from websocket server 2222'
-        # length = len(reply)
         while True:
             data = self.connection.recv(1024)
             if data is not None:
-                re = parse_data(data)
-                print re
-            print 'new test'
-
-            fuzzy_query(u"行数", global_data1, self.connection, files_counts)
+                real_data = parse_data(data)
+                # print type(re)
+                # print re
+                import json
+                query_info_dict = json.loads(real_data)
+                print query_info_dict
+                fuzzy_query(query_info_dict['keyword'], global_data1, self.connection, files_counts)
 
 
 def parse_data(msg):
