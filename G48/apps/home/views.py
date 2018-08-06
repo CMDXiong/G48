@@ -165,8 +165,12 @@ def building_regular_expressions(keyword):
         raise TypeError('bad operand type')
     insert_pattern = u'([\s\w|\u4e00-\u9fa5|，。；;,.:？！]*?)'     # 非贪婪匹配 基本汉字的unicode编码是4E00-9FA5
     pattern = insert_pattern
+    last_pattern = u'([\s\w|\u4e00-\u9fa5|，。；;,.:？！]*)'
     for i in range(len(keyword)):
-        pattern += (u'(' + keyword[i] + u')' + insert_pattern)
+        if i != len(keyword)-1:
+            pattern += (u'(' + keyword[i] + u')' + insert_pattern)
+        else:
+            pattern += (u'(' + keyword[i] + u')' + last_pattern)
     re_pattern = re.compile(pattern)
     return re_pattern
 
@@ -337,8 +341,6 @@ def fuzzy_query_test(datas, connection, query_info):
         print "原始数据为空，请检查数据是否导入"
         return
 
-    res = {'datas': []}
-
     # 关键字的处理
     keyword = query_info["keyword"]
     pattern = building_regular_expressions(keyword)  # 生成关键字查询模式
@@ -359,6 +361,8 @@ def fuzzy_query_test(datas, connection, query_info):
     if files_counts == 0:
         return
 
+    # 查询结果
+    res = {'datas': []}
     # 1:模糊查询；2:精确查询; 3: 高级查询；其于保留
     if query_info['queryMode'] == '1':
         for mode in ['xls', 'xlsx', 'csv']:
@@ -382,15 +386,19 @@ def fuzzy_query_test(datas, connection, query_info):
                             keyword_position = {}  # 关键字位置，与对应的值
                             row_exist = False  # 某一行是否匹配了关键字
                             for item in row:
-                                resultstr = u''
-                                if item is None:
-                                    continue
-                                if isinstance(item, float):
-                                    resultstr = str(item)
-                                elif isinstance(item, (int, long)):
-                                    resultstr = str(item)
-                                else:
-                                    resultstr = item
+                                # resultstr = u''
+                                # if item is None:
+                                #     continue
+                                # if isinstance(item, float):
+                                #     resultstr = str(item)
+                                # elif isinstance(item, (int, long)):
+                                #     resultstr = str(item)
+                                # else:
+                                #     resultstr = item
+
+                                # resultstr = item.encode("utf-8")
+                                resultstr = item
+                                # print type(item)
 
                                 is_match = pattern.match(resultstr)  # 匹配结果
                                 if is_match:  # 如果存在匹配， 则记录该行的所有数据和相关信息
@@ -399,16 +407,18 @@ def fuzzy_query_test(datas, connection, query_info):
                                     # 对存在匹配行的一行数据进行存储
                                     row_data = [xls['tname'], sheet_name, row_num + 1] + sheet_data['content'][row_num]
                                     deal_str = deal_tuple(is_match.groups())  # 将匹配的关键字添加相应的html标签,以显示红色
+                                    print is_match.groups()
+                                    print deal_str
                                     col = row.index(item)
                                     keyword_position[col + 3] = deal_str  # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
                             if row_exist:
+                                pass
                                 for key, value in keyword_position.items():  # 对所有关键字进行相应的替换
                                     row_data[key] = value
                                 table_info['row_datas'].append(row_data)  # 将本行数据添加至存在关键字行列表中
                         if sheet_exist:
                             table_info['head'] = ['表名', 'Sheet名', '行号'] + sheet_data['header']  # 存储表头信息
-                            table_info['colarray'] = ['', '', ''] + num_converted_into_letters(
-                                cols)  # 列标签'',  '', '', 'A', 'B', 'C'...
+                            table_info['colarray'] = ['', '', ''] + num_converted_into_letters(cols) # 列标签'',  '', '', 'A', 'B', 'C'...
                             table_info['table_name'] = xls['tname']  # 关键字存在的表名
                             table_info['sheet_name'] = sheet_name  # 关键字存在的sheet名
                             context['datas'].append(table_info)  # 将存在关键字的表的相关信息存储

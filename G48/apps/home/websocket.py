@@ -64,11 +64,18 @@ if __name__ == '__main__':
     sock.listen(5)
 
     # 初始化数据
-    # filepath = ur'F:\Project\H37\H37_xls_search\05Data\pvp数据表'
+    # filepath = ur'F:\Project\H37\H37_xls_search\03SystemSetting\04单位系统\BOSS缩放表.xlsx'
     # filepath = ur'F:\Project\H37\H37_xls_search\05Data'
-    filepath = ur'F:\Project\H37\H37_xls_search\test_file'
+    # filepath = ur'F:\Project\H37\H37_xls_search\test_file'
+    filepath = ur'F:\Project\H37\H37_xls_search'
+    # filepath = ur'F:\Project\G48\导表3'
+    # filepath = ur'F:\Project\G48\导表3\01贸易数值表.xls'
 
+    import time
+    start = time.clock()
     global_data1 = views.datas_form_files_test(filepath)
+    end = time.clock()
+    print "数据载入完成, 载入数据时间：", start - end
 
     while True:
         connection, address = sock.accept()
