@@ -70,11 +70,11 @@
     <div class="main">
         <div class="wrapper">
             <div class="search-form">
-                <form class="form-horizontal" action="/search_result/" method="post">
+                <form class="form-horizontal" action="/search_result/" method="post" onsubmit="return false;">
                     <div class="form-group">
                         <label for="inputKeyword" class="col-sm-2 control-label">关键字：</label>
                         <div class="col-sm-10">
-                            <input type="text"  name="content" class="form-control " id="inputKeyword" placeholder="请输入关键字" required>
+                            <input type="text"  name="content" class="form-control " id="inputKeyword" placeholder="请输入关键字" required onkeypress="connect1()">
                         </div>
                     </div>
 
@@ -98,9 +98,9 @@
                         <label for="table-type1" class="col-sm-2 control-label">表类型：</label>
                         <div class="col-sm-10">
                             <select class="form-control selectpicker" id="table-type1" name="tableType" multiple>
-                                <option value="1">.xls</option>
-                                <option value="2">.xlsx</option>
-                                <option value="3">.cvs</option>
+                                <option value="xls">.xls</option>
+                                <option value="xlsx">.xlsx</option>
+                                <option value="csv">.cvs</option>
                             </select>
                         </div>
                     </div>
@@ -114,7 +114,7 @@
                     </div>
                     <div class="form-group ">
                         <div class="col-sm-2 pull-right">
-                            <input id="btn-search" type="button" class="form-control" value="开始搜索" onclick="connect1()">
+                            <input id="btn-search" type="button" class="form-control" value="开始搜索" onclick="connect1()" onkeydown="connect1()">
                         </div>
                         <div class="col-sm-2 pull-right">
                             <input type="button" class="form-control" value="重置">
@@ -193,12 +193,18 @@
                     {#var keyword = jQuery("#inputKeyword").val();#}
                     var queryInfo = new Object();
                     queryInfo.keyword = jQuery("#inputKeyword").val();
-                    queryInfo.queryMode = jQuery("#select-type").val();
-                    queryInfo.tableType = jQuery("#table-type1").val();
-                    queryInfo.selectScope = jQuery("#select-scope").val();
+                    if(queryInfo.keyword.length !== 0)
+                    {
+                        console.log("not empyt");
+                        queryInfo.queryMode = jQuery("#select-type").val();
+                        queryInfo.tableType = jQuery("#table-type1").val();
+                        queryInfo.selectScope = jQuery("#select-scope").val();
 
-                    var jsonQueryInfo =  JSON.stringify(queryInfo)
-                    socket.send(jsonQueryInfo);
+                        var jsonQueryInfo =  JSON.stringify(queryInfo)
+                        socket.send(jsonQueryInfo);
+                    }else{
+                        console.log("empty");
+                    }
                     {#socket.send(keyword);#}
                     {#socket.send("你的连接成功");#}
                 };

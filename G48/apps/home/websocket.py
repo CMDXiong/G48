@@ -5,12 +5,10 @@ import hashlib
 import socket
 import base64
 import views
-from views import fuzzy_query
+from views import fuzzy_query, fuzzy_query_test
 
 global global_data1
 global_data1 = {}
-global files_counts
-files_counts = 0
 
 
 class websocket_thread(threading.Thread):
@@ -29,7 +27,9 @@ class websocket_thread(threading.Thread):
                 import json
                 query_info_dict = json.loads(real_data)
                 print query_info_dict
-                fuzzy_query(query_info_dict['keyword'], global_data1, self.connection, files_counts)
+                # fuzzy_query(query_info_dict['keyword'], global_data1, self.connection, files_counts)
+                # query_info_dict['keyword'],  query_info_dict['tableType'],
+                fuzzy_query_test(global_data1, self.connection, query_info_dict)
 
 
 def parse_data(msg):
@@ -73,8 +73,8 @@ if __name__ == '__main__':
     # filepath = ur'F:\Project\H37\H37_xls_search\05Data'
     filepath = ur'F:\Project\H37\H37_xls_search\test_file'
 
-    files_counts, global_data1 = views.datas_form_files(filepath)
-    print files_counts
+    # files_counts, global_data1 = views.datas_form_files(filepath)
+    global_data1 = views.datas_form_files_test(filepath)
 
     while True:
         connection, address = sock.accept()

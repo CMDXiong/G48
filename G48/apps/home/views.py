@@ -136,6 +136,55 @@ def datas_form_files(file_path):
         print "找不到文件或路径"
     return files_counts, datas
 
+
+def datas_form_files_test(file_path):
+    datas = {"xlsx": [], "xls": [], "csv": []}                           # 每一个元素都是一个表的字典
+    if os.path.isfile(file_path):                                        # 如果是文件
+        file_name = os.path.basename(file_path)                          # 得到一个路径下的文件名
+        name, ext = os.path.splitext(file_path)                          # ext为文件的扩展名
+        if ext == '.xlsx':                                               # 是.xlsx文件
+            xlsx_data = reader.read_file_xlsx(file_path)
+            if xlsx_data:
+                datas["xlsx"].append(xlsx_data)
+        elif ext == '.xls':                                              # 是.xls文件
+            xls_result = reader.read_file_xls(file_path)
+            if xls_result:
+                datas["xls"].append(xls_result)
+        elif ext == '.csv':                                              # 是.xlsx文件
+            csv_result = reader.read_file_csv(file_path)
+            if csv_result:
+                datas["csv"].append(csv_result)
+        else:                                                # 不属于.xlsx，.xls，.csv文件格式
+            print "文件格式不在.xlsx，.xls, .csv之中"
+    elif os.path.isdir(file_path):  # 如果是路径
+        g = os.walk(file_path)
+        # path 一个目录
+        # d:代表path目录所有的目录(只包含名字，不包含前面的路径)
+        # filelist: 代表path目录所有的文件(也只包含名字)
+        for path, dir_list, file_name_list in g:
+            for file_name in file_name_list:
+                complete_file_name = os.path.join(path, file_name)  # 文件的完整路径名
+                # table_info = {'row_datas': []}
+                # exist = False
+                if os.path.splitext(file_name)[1] == '.xlsx':  # 是.xlsx文件
+                    xlsx_data = reader.read_file_xlsx(complete_file_name)
+                    if xlsx_data:
+                        datas["xlsx"].append(xlsx_data)
+                elif os.path.splitext(file_name)[1] == '.xls':  # 是.xls文件
+                    xls_result = reader.read_file_xls(complete_file_name)
+                    if xls_result:
+                        datas["xls"].append(xls_result)
+                elif os.path.splitext(file_name)[1] == '.csv':  # 是.csv文件
+                    csv_result = reader.read_file_csv(complete_file_name)
+                    if csv_result:
+                        datas["csv"].append(csv_result)
+                else:
+                    print "文件格式不在.xlsx .xls, .cvs之中"
+    else:
+        print "找不到文件或路径"
+    return datas
+
+
 def perfect_match(keyword):
     # 完全匹配
     context = {}
@@ -424,6 +473,101 @@ def fuzzy_query(keyword, datas, connection, files_counts):
             send_msg(connection, json_str)
             res['datas'] += context['datas']
     return res
+
+
+def fuzzy_query_test(datas, connection, query_info):
+    if datas is None:
+        print "原始数据为空，请检查数据是否导入"
+        return
+
+    res = {'datas': []}
+
+    # 关键字的处理
+    keyword = query_info["keyword"]
+    pattern = building_regular_expressions(keyword)  # 生成关键字查询模式
+    files_queried = 0 #已查文件个数
+    files_counts = 0
+
+    # 查表类型的处理
+    query_table_type = query_info["tableType"]
+    # 默认情况是查所有类型的表
+    if not query_table_type:
+        query_table_type = ['xls', 'xlsx', 'csv']
+
+    # 计算所需要查找文件的总数
+    for mode in ['xls', 'xlsx', 'csv']:
+        if mode in query_table_type:
+                files_counts += len(datas[mode])
+    print "files_counts = ", files_counts
+    if files_counts == 0:
+        return
+
+    # 1:模糊查询；2:精确查询; 3: 高级查询；其于保留
+    if query_info['queryMode'] == '1':
+        for mode in ['xls', 'xlsx', 'csv']:
+            if mode in query_table_type:
+                for xls in datas[mode]:
+                    files_queried += 1
+                    result = str(round((float(files_queried) / files_counts), 3) * 100)
+                    length = len(result)
+                    connection.send('%c%c%s' % (0x81, length, result))
+
+                    xls_data = xls['sheets']
+                    context = {'datas': []}  # 用于存储所有表的相关数据信息
+                    table_info = {'row_datas': []}  # 用于存储存在关键字的行数据
+                    for sheet_name, sheet_data in xls_data.items():
+                        sheet_exist = False  # 某一个sheet中是否匹配了关键字
+                        rows = sheet_data['rows']  # sheet对应的行
+                        cols = sheet_data['cols']  # sheet对应的列
+                        row_num = -1
+                        for row in sheet_data['content']:
+                            row_num += 1
+                            keyword_position = {}  # 关键字位置，与对应的值
+                            row_exist = False  # 某一行是否匹配了关键字
+                            for item in row:
+                                resultstr = u''
+                                if item is None:
+                                    continue
+                                if isinstance(item, float):
+                                    resultstr = str(item)
+                                elif isinstance(item, (int, long)):
+                                    resultstr = str(item)
+                                else:
+                                    resultstr = item
+
+                                is_match = pattern.match(resultstr)  # 匹配结果
+                                if is_match:  # 如果存在匹配， 则记录该行的所有数据和相关信息
+                                    sheet_exist = True  # 该sheet中是否匹配了关键字
+                                    row_exist = True  # 该行存在关键字的匹配
+                                    # 对存在匹配行的一行数据进行存储
+                                    row_data = [xls['tname'], sheet_name, row_num + 1] + sheet_data['content'][row_num]
+                                    deal_str = deal_tuple(is_match.groups())  # 将匹配的关键字添加相应的html标签,以显示红色
+                                    col = row.index(item)
+                                    keyword_position[col + 3] = deal_str  # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
+                            if row_exist:
+                                for key, value in keyword_position.items():  # 对所有关键字进行相应的替换
+                                    row_data[key] = value
+                                table_info['row_datas'].append(row_data)  # 将本行数据添加至存在关键字行列表中
+                        if sheet_exist:
+                            table_info['head'] = ['表名', 'Sheet名', '行号'] + sheet_data['header']  # 存储表头信息
+                            table_info['colarray'] = ['', '', ''] + num_converted_into_letters(
+                                cols)  # 列标签'',  '', '', 'A', 'B', 'C'...
+                            table_info['table_name'] = xls['tname']  # 关键字存在的表名
+                            table_info['sheet_name'] = sheet_name  # 关键字存在的sheet名
+                            context['datas'].append(table_info)  # 将存在关键字的表的相关信息存储
+                    if context['datas']:
+                        import json
+                        json_str = json.dumps(context)
+                        send_msg(connection, json_str)
+                        res['datas'] += context['datas']
+        return res
+    elif query_info['queryMode'] == '2':
+        pass
+    elif query_info['queryMode'] == '3':
+        pass
+    else:
+        pass
+
 
 
 def send_msg(conn, msg_bytes):
