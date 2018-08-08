@@ -6,8 +6,8 @@ import socket
 import base64
 import views
 from views import fuzzy_query_test
+from multiprocessing import Process
 
-global global_data1
 global_data1 = {}
 
 
@@ -18,13 +18,64 @@ class websocket_thread(threading.Thread):
 
     def run(self):
         print 'new websocket client joined!'
+
         while True:
             data = self.connection.recv(1024)
-            if data is not None:
+            if data:
                 real_data = parse_data(data)
                 import json
                 query_info_dict = json.loads(real_data)
-                fuzzy_query_test(global_data1, self.connection, query_info_dict)
+                data1 = {}
+                data2 = {}
+                for key, value in global_data1.items():
+                    len_list = len(value)
+                    if len_list >= 1:
+                        data1[key] = value[0:len_list / 2]
+                        data2[key] = value[len_list / 2:]  # 不+1，愕然为空
+
+                # p1 = Process(target=fuzzy_query_test, args=(data1, self.connection, query_info_dict))
+                # p2 = Process(target=fuzzy_query_test, args=(data2, self.connection, query_info_dict))
+                # p1.start()
+                # p2.start()
+                # p1.join()
+                # p2.join()
+                t1 = threading.Thread(target=fuzzy_query_test, args=(data1, self.connection, query_info_dict))
+                t2 = threading.Thread(target=fuzzy_query_test, args=(data2, self.connection, query_info_dict))
+                t1.start()
+                t2.start()
+                t1.join()
+                t2.join()
+                # fuzzy_query_test(global_data1, self.connection, query_info_dict)
+
+
+class websocket_process(Process):
+    def __init__(self, connection):
+        super(websocket_process, self).__init__()
+        self.connection = connection
+
+    def run(self):
+        print 'new websocket client joined!'
+
+        while True:
+            data = self.connection.recv(1024)
+            if data:
+                real_data = parse_data(data)
+                import json
+                query_info_dict = json.loads(real_data)
+                data1 = {}
+                data2 = {}
+                for key, value in global_data1.items():
+                    len_list = len(value)
+                    if len_list >= 1:
+                        data1[key] = value[0:len_list / 2]
+                        data2[key] = value[len_list / 2:]  # 不+1，愕然为空
+                p1 = Process(target=fuzzy_query_test, args=(data1, self.connection, query_info_dict))
+                p2 = Process(target=fuzzy_query_test, args=(data2, self.connection, query_info_dict))
+                p1.start()
+                p2.start()
+                p1.join()
+                p2.join()
+                # fuzzy_query_test(global_data1, self.connection, query_info_dict)
 
 
 def parse_data(msg):
@@ -57,10 +108,12 @@ def generate_token(msg):
     return base64.b64encode(ser_key)
 
 
-if __name__ == '__main__':
+def init_server_websocket():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind(('127.0.0.1', 9005))
+    # sock.bind(('127.0.0.1', 9005))
+    # sock.bind(('10.240.113.164', 9005))
+    sock.bind(('0.0.0.0', 9005))
     sock.listen(5)
 
     # 初始化数据
@@ -71,9 +124,11 @@ if __name__ == '__main__':
     # filepath = ur'F:\Project\G48\导表3'
     # filepath = ur'F:\Project\G48\导表3\01贸易数值表.xls'
     filepath = ur'F:\Project\test'
+    # filepath = ur'F:\Project\数据表'
 
     import time
     start = time.clock()
+    global global_data1
     global_data1 = views.datas_form_files_test(filepath)
     end = time.clock()
     print "数据载入完成, 载入数据时间：", start - end
@@ -91,5 +146,50 @@ Connection: Upgrade\r\n\
 Sec-WebSocket-Accept: %s\r\n\r\n' % token)
             thread = websocket_thread(connection)
             thread.start()
+            # process1 = websocket_process(connection)
+            # process1.start()
         except socket.timeout:
             print 'websocket connection timeout'
+
+
+# if __name__ == '__main__':
+#     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#     # sock.bind(('127.0.0.1', 9005))
+#     sock.bind(('10.240.113.164', 9005))
+#     # sock.bind(('0.0.0.0', 9005))
+#     sock.listen(5)
+#
+#     # 初始化数据
+#     # filepath = ur'F:\Project\H37\H37_xls_search\03SystemSetting\04单位系统\BOSS缩放表.xlsx'
+#     # filepath = ur'F:\Project\H37\H37_xls_search\05Data'
+#     # filepath = ur'F:\Project\H37\H37_xls_search\test_file'
+#     # filepath = ur'F:\Project\H37\H37_xls_search'
+#     # filepath = ur'F:\Project\G48\导表3'
+#     # filepath = ur'F:\Project\G48\导表3\01贸易数值表.xls'
+#     filepath = ur'F:\Project\test'
+#     # filepath = ur'F:\Project\数据表'
+#
+#
+#     import time
+#     start = time.clock()
+#     global global_data1
+#     global_data1 = views.datas_form_files_test(filepath)
+#     end = time.clock()
+#     print "数据载入完成, 载入数据时间：", start - end
+#
+#     while True:
+#         connection, address = sock.accept()
+#         try:
+#             data = connection.recv(1024)
+#             headers = parse_headers(data)
+#             token = generate_token(headers['Sec-WebSocket-Key'])
+#             connection.send('\
+# HTTP/1.1 101 WebSocket Protocol Hybi-10\r\n\
+# Upgrade: WebSocket\r\n\
+# Connection: Upgrade\r\n\
+# Sec-WebSocket-Accept: %s\r\n\r\n' % token)
+#             thread = websocket_thread(connection)
+#             thread.start()
+#         except socket.timeout:
+#             print 'websocket connection timeout'

@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from utils import restful
 # from websocket import run_websocket
+from openpyxl.utils import get_column_letter
 
 # 一般我是这样去设计json格式的
 # {"code": 200, "message": "", "data": {}, }
@@ -37,7 +38,6 @@ def search_result(request):
         print '1'
     elif cmp(inquiry_mode, '2') == 0:                    # 精确查询
         print '2'
-        context = perfect_match(keyword)
     elif cmp(inquiry_mode, '3') == 0:                    # 高级查询
         print '3'
         keyword1 = u'商会'.replace(' ', '')
@@ -101,55 +101,6 @@ def datas_form_files_test(file_path):
     return datas
 
 
-def perfect_match(keyword):
-    # 完全匹配
-    context = {}
-    context['datas'] = []
-    # table_head = []
-    start = time.clock()
-    filepath = r'F:\Project\G48\导表3'   # 自动转化成utf-8的字节字符串
-    filepath = filepath.decode('utf-8')  # 形成无编码的unicode字符集
-    pathDir = os.listdir(filepath)       # 目录下的所有文件
-    exist = False                        # 某一行中存在关键字
-
-    for allDir in pathDir:
-        child = os.path.join(filepath, allDir)  # 文件的完整路径
-        if os.path.isfile(child):  # 判断路径是不是文件
-            exist = False
-            table_info = {}
-            table_info['row_datas'] = []
-            table_info['col'] = []
-            workbook = xlrd.open_workbook(child)  # excel表
-            sheets = workbook.sheets()  # 表中所有sheet
-            for sheet in sheets:
-                rows = sheet.nrows  # sheet对应的行
-                cols = sheet.ncols  # sheet对应的列
-                for row in range(rows):
-                    col_list = []          # 一行中存在关键字的col集合
-                    for col in range(cols):
-                        if cmp(sheet.cell_value(row, col), keyword) == 0:  # 查询row行，col列的值是否与关键字匹配
-                            exist = True
-                            row_data = [allDir, sheet.name, row + 1] + sheet.row_values(row)
-                            keyword_prefix = u'<span style="color: red">'
-                            keyword_suffix = u'</span>'
-                            row_data[col+3] = keyword_prefix + row_data[col+3] + keyword_suffix
-                            print row_data
-                            table_info['row_datas'].append(row_data)
-                            table_head = ['表名', 'Sheet名', '行号']
-                            table_info['head'] = table_head + sheet.row_values(0)
-                            # table_info['col'] += [col + 3, ]
-                            col_list.append(col+3)
-                            table_info['colarray'] = ['', '', '']
-                            table_info['colarray'] += num_converted_into_letters(len(sheet.row_values(row)))
-                            table_info['table_name'] = allDir
-                            table_info['sheet_name'] = sheet.name
-                    if exist:
-                        table_info['col'].append(col_list)  # 显示红色的位置
-            if exist:
-                context['datas'].append(table_info)
-    return context
-
-
 # 为keyword关键字的模糊查询建立查询模式。
 # 例如"潘雄"，最后建立的模式为：
 # ur'[\s\w|\u4e00-\u9fa5|，。；？！]*?潘[\s\w|\u4e00-\u9fa5|，。；？！]*?雄[\s\w|\u4e00-\u9fa5|，。；？！]*?'
@@ -179,7 +130,7 @@ def building_regular_expressions(keyword, query_mode):
 
 
 def fuzzy_query_test(datas, connection, query_info):
-    if datas is None:
+    if not datas:
         print "原始数据为空，请检查数据是否导入"
         return
 
@@ -199,7 +150,8 @@ def fuzzy_query_test(datas, connection, query_info):
     # 计算所需要查找文件的总数
     for mode in ['xls', 'xlsx', 'csv']:
         if mode in query_table_type:
-                files_counts += len(datas[mode])
+            files_counts += len(datas[mode])
+
     print "files_counts = ", files_counts
     if files_counts == 0:
         return
@@ -392,17 +344,10 @@ def contain(pattern, row_elements):
 def num_converted_into_letters(num):
     # 如将数字1，2，3...转化成A，B，C... 27转化成AA....
     # 最大列为26*26
-    if num > 26*26 or num <= 0:
-        return None
-    chart_list = list('abcdefghijklmnopqrstuvwxyz'.upper())
-    if num <= 26:
-        return list('abcdefghijklmnopqrstuvwxyz'.upper()[:num])
-    else:
-        result = chart_list
-        for i in range(num-26):
-            temp_str = chart_list[(i+27)/26 - 1] + chart_list[(i+27) % 26 - 1]
-            result.append(temp_str)
-        return result
+    result = []
+    for i in range(num):
+        result.append(get_column_letter(i+1))
+    return result
 
 
 def get_login(realm, username, may_save):
@@ -430,8 +375,21 @@ def update_svn():
     svnurl = 'https://github.com/CMDXiong/excel.git'               # 远程仓库
     outpath = 'C:\Users\panxiong\Desktop\pan_test_4'               # 下拉存储到本地的位置
 
-    changes = client.status('./examples/pysvn')
-    client.checkout(svnurl, outpath)
+    client.checkout(svnurl, outpath)                  # 检出最新版本
+    #client.checkout(svnurl, outpath, revision=rv)    # 检出指定版本
+
+    # changes = client.status('./test') # 检测状态，获取各种新增、删除、修改、冲突、未版本化的状态
+    # for f in changes:
+    #     if f.text_status == pysvn.wc_status_kind.added:
+    #         print f.path, 'A'
+    #     elif f.text_status == pysvn.wc_status_kind.deleted:
+    #         print f.path, 'D'
+    #     elif f.text_status == pysvn.wc_status_kind.modified:
+    #         print f.path, 'M'
+    #     elif f.text_status == pysvn.wc_status_kind.conflicted:
+    #         print f.path, 'C'
+    #     elif f.text_status == pysvn.wc_status_kind.unversioned:
+    #         print f.path, 'U'
 
 
 def config(request):

@@ -27,8 +27,7 @@ SECRET_KEY = 'a_1v_^2h==b)y=z9e8e^mt(36r-$fas8*adr+9%xunya%pkdl$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*', '10.240.113.164']
 
 # Application definition
 # 安装app
@@ -135,4 +134,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'front', 'dist'),
     os.path.join(BASE_DIR, 'front', 'src'),
+    os.path.join(BASE_DIR, 'front', 'templates'),
 ]

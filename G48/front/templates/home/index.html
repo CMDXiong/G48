@@ -7,11 +7,11 @@
 
 {% block head %}
     <link rel="stylesheet" href="{%  static 'css/home/index.min.css' %}">
-{#    <script src="{%  static 'js/index.min.js' %}"></script>#}
+    {#    <script src="{%  static 'js/index.min.js' %}"></script>#}
     <script src="{%  static 'js/index.js' %}"></script>
     <script src="{% static 'arttemplate/template-web.js' %}"></script>
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-{#    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>#}
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- Latest compiled and minified CSS -->
@@ -25,7 +25,7 @@
 
     {% verbatim %}
     <script id="query-item" type="text/html">
-    {{ each datas data index }}
+        {{ each datas data index }}
         <div class="table_info">
             <span><strong>来源表:</strong> {{ data.table_name }} ,  </span>
             <span> <strong>来源SHEET: </strong>{{ data.sheet_name }}</span>
@@ -34,32 +34,32 @@
             <thead>
             <tr>
                 {{ each data.head item index }}
-                    <th >
-                        {{item }}
-                    </th>
+                <th >
+                    {{item }}
+                </th>
                 {{ /each }}
             </tr>
             </thead>
             <tbody>
             <tr>
                 {{ each data.colarray colnum index }}
-                    <td>
-                        {{ colnum }}
-                    </td>
+                <td>
+                    {{ colnum }}
+                </td>
                 {{ /each }}
             </tr>
-                {{ each data.row_datas row_data index }}
-                    <tr>
-                        {{ each row_data item index1 }}
-                            <td>
-                                {{#item }}
-                        </td>
-                        {{ /each }}
-                    </tr>
+            {{ each data.row_datas row_data index }}
+            <tr>
+                {{ each row_data item index1 }}
+                <td>
+                    {{#item }}
+                </td>
                 {{ /each }}
+            </tr>
+            {{ /each }}
             </tbody>
         </table>
-    {{ /each }}
+        {{ /each }}
     </script>
     {% endverbatim %}
 
@@ -70,18 +70,11 @@
     <div class="main">
         <div class="wrapper">
             <div class="search-form">
-                <form class="form-horizontal" action="/search_result/" method="post" onsubmit="return false;">
+                <form class="form-horizontal" action="javascript: void(0);" method="post" onsubmit="return false;">
                     <div class="form-group">
                         <label for="inputKeyword" class="col-sm-2 control-label">关键字：</label>
                         <div class="col-sm-10">
-                            <input type="text"  name="content" class="form-control " id="inputKeyword" placeholder="请输入关键字" required onkeypress="connect1()">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="search-path" class="col-sm-2 control-label">搜索路径：</label>
-                        <div class="col-sm-10">
-                            <input type="file"  name="filename" class="form-control " id="search-path" >
+                            <input type="text"  name="content" class="form-control " id="inputKeyword" placeholder="请输入关键字" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -97,10 +90,10 @@
                     <div class="form-group">
                         <label for="table-type1" class="col-sm-2 control-label">表类型：</label>
                         <div class="col-sm-10">
-                            <select class="form-control selectpicker" id="table-type1" name="tableType" multiple>
+                            <select class="form-control selectpicker" id="table-type1" name="tableType" multiple title="default: .xls .xlsx .csv">
                                 <option value="xls">.xls</option>
                                 <option value="xlsx">.xlsx</option>
-                                <option value="csv">.cvs</option>
+                                <option value="csv">.csv</option>
                             </select>
                         </div>
                     </div>
@@ -114,29 +107,93 @@
                     </div>
                     <div class="form-group ">
                         <div class="col-sm-2 pull-right">
-                            <input id="btn-search" type="button" class="form-control" value="开始搜索" onclick="connect1()" onkeydown="connect1()">
+                            <input id="btn-search" type="button" class="form-control" value="开始搜索"  >
                         </div>
                         <div class="col-sm-2 pull-right">
-                            <input type="button" class="form-control" value="重置">
+                            <input type="button" class="form-control" value="重置" onclick="reset_search()">
                         </div>
                         <div class="col-sm-2 pull-right">
-                            <a href="/config/">
-                                <input type="button" class="form-control" value="热更新">
-                            </a>
+                            <input type="button" class="form-control btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" value="热更新" id="update" >
+
                         </div>
                     </div>
                 </form>
             </div>
 
             <div id="progress-group" class="form-group" style="display: none;">
-            <div class="progress">
-                <div id="progressbar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" >
-                    0%
+                <div class="progress">
+                    <div id="progressbar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" >
+                        0%
+                    </div>
+                </div>
+            </div >
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">项目配置</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="project-name-addon">项目名称 *</span>
+                                <input type="text" class="form-control" placeholder="在这里填写项目名称"
+                                       aria-describedby="project-name-addon" id="project-name">
+                            </div>
+                        </div>
+                        <div class="row">
+                            &nbsp;
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="svn-host-addon">SVN连接 *</span>
+                                <input type="url" class="form-control" placeholder="在这里填写远程仓库连接的HTTP或SSH"
+                                       aria-describedby="svn-host-addon" id="svn-host">
+                            </div>
+                        </div>
+                        <div class="row">
+                            &nbsp;
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="svn-save-addon">保存位置 *</span>
+                                <input type="file" class="form-control" placeholder="在这里填写本地保存位置"
+                                       aria-describedby="svn-save-addon" id="svn-save">
+                            </div>
+                        </div>
+                        <div class="row">
+                            &nbsp;
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="git-username-addon">Git用户名 *</span>
+                                <input type="text" class="form-control" placeholder="在这里填写Git用户名"
+                                       aria-describedby="git-username-addon" id="git-username">
+                            </div>
+                        </div>
+                        <div class="row">
+                            &nbsp;
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="git-password-addon">Git密码 *</span>
+                                <input type="password" class="form-control" placeholder="在这里填写Git密码"
+                                       aria-describedby="git-password-addon" id="git-password">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="submit-local">提交</button>
+                    </div>
                 </div>
             </div>
-        </div >
         </div>
-    
+
         <div class="show_excel" id="show_excel">
             {% for data in datas %}
                 <div class="table_info">
@@ -177,104 +234,120 @@
             {% endfor %}
         </div>
     </div>
-    <script>
-        var socket;
-        function connect1() {
-            var host = "ws://127.0.0.1:9005/"
-            socket = new WebSocket(host);
-            jQuery("#progress-group").show();
-            var progress = jQuery("#progressbar")
-            progress.css({"width": 0});
-            progress.text('0.0% Complete (success)');
-            var show_excel = jQuery("#show_excel");
-            show_excel.html("");
-            try {
-                socket.onopen = function (msg) {
-                    {#var keyword = jQuery("#inputKeyword").val();#}
-                    var queryInfo = new Object();
-                    queryInfo.keyword = jQuery("#inputKeyword").val();
-                    if(queryInfo.keyword.length !== 0)
-                    {
-                        console.log("not empyt");
-                        queryInfo.queryMode = jQuery("#select-type").val();
-                        queryInfo.tableType = jQuery("#table-type1").val();
-                        queryInfo.selectScope = jQuery("#select-scope").val();
-
-                        var jsonQueryInfo =  JSON.stringify(queryInfo)
-                        socket.send(jsonQueryInfo);
-                    }else{
-                        console.log("empty");
-                    }
-                    {#socket.send(keyword);#}
-                    {#socket.send("你的连接成功");#}
-                };
-
-                socket.onmessage = function (msg) {
-                    if (typeof msg.data == "string") {
-                        {#displayContent(msg.data);#}
-                        if  (isNaN(Number(msg.data)))
-                        {
-                            {#显示查询结果代码#}
-                            var json_obj = JSON.parse(msg.data);
-                            {#有数据#}
-                            var datas = json_obj["datas"]
-                            var html = template('query-item',{"datas": datas});
-                            var show_excel = jQuery("#show_excel");
-                            show_excel.append(html)
-                        }else{
-                            {#进度条的代码#}
-                            var progress = jQuery("#progressbar")
-                            progress.text(msg.data +  '% Complete (success)');
-                            progress.css({"width": msg.data + '%'});
-                        }
-                    }
-                    else {
-                        alert("非文本消息");
-                    }
-                };
-
-                socket.onclose = function (msg) { alert("socket closed!") };
-            }
-            catch (ex) {
-                log(ex);
-            }
-        }
-
-        function send() {
-            var msg = $("sendText").value
-            socket.send(msg);
-        }
-
-        window.onbeforeunload = function () {
-            try {
-                socket.close();
-                socket = null;
-            }
-            catch (ex) {
-            }
-        };
-
-        function $(id) { return document.getElementById(id); }
-
-        Date.prototype.Format = function (fmt) { //author: meizz
-            var o = {
-                "M+": this.getMonth() + 1, //月份
-                "d+": this.getDate(), //日
-                "h+": this.getHours(), //小时
-                "m+": this.getMinutes(), //分
-                "s+": this.getSeconds(), //秒
-                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-                "S": this.getMilliseconds() //毫秒
-            };
-            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-            for (var k in o)
-                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-            return fmt;
-        }
-
-        function displayContent(msg) {
-            $("txtContent").value += "\r\n" +new Date().Format("yyyy/MM/dd hh:mm:ss")+ ":  " + msg;
-        }
-        function onkey(event) { if (event.keyCode == 13) { send(); } }
-    </script>
+{#    <script>#}
+{#        var socket;#}
+{#        function connect1() {#}
+{#            var host = "ws://10.240.113.164:9005/";#}
+{#            socket = new WebSocket(host);#}
+{#            console.log(socket.upgrade);#}
+{#            jQuery("#progress-group").show();#}
+{#            var progress = jQuery("#progressbar")#}
+{#            progress.css({"width": 0});#}
+{#            progress.text('0.0% Complete (success)');#}
+{#            var show_excel = jQuery("#show_excel");#}
+{#            show_excel.html("");#}
+{#            try {#}
+{#                socket.onopen = function (msg) {#}
+{#                    var keyword = jQuery("#inputKeyword").val();#}
+{#                    var queryInfo = new Object();#}
+{#                    queryInfo.keyword = jQuery("#inputKeyword").val();#}
+{#                    if(queryInfo.keyword.length !== 0)#}
+{#                    {#}
+{#                        console.log("not empyt");#}
+{#                        queryInfo.queryMode = jQuery("#select-type").val();#}
+{#                        queryInfo.tableType = jQuery("#table-type1").val();#}
+{#                        queryInfo.selectScope = jQuery("#select-scope").val();#}
+{##}
+{#                        var jsonQueryInfo =  JSON.stringify(queryInfo)#}
+{#                        socket.send(jsonQueryInfo);#}
+{#                    }else{#}
+{#                        console.log("empty");#}
+{#                    }#}
+{#                    socket.send(keyword);#}
+{#                    socket.send("你的连接成功");#}
+{#                };#}
+{##}
+{#                socket.onmessage = function (msg) {#}
+{#                    if (typeof msg.data == "string") {#}
+{#                        displayContent(msg.data);#}
+{#                        if  (isNaN(Number(msg.data)))#}
+{#                        {#}
+{#                            显示查询结果代码#}
+{#                            var json_obj = JSON.parse(msg.data);#}
+{#                            有数据#}
+{#                            var datas = json_obj["datas"]#}
+{#                            var html = template('query-item',{"datas": datas});#}
+{#                            var show_excel = jQuery("#show_excel");#}
+{#                            show_excel.append(html)#}
+{#                        }else{#}
+{#                            进度条的代码#}
+{#                            var progress = jQuery("#progressbar")#}
+{#                            progress.text(msg.data +  '% Complete (success)');#}
+{#                            progress.css({"width": msg.data + '%'});#}
+{#                        }#}
+{#                    }#}
+{#                    else {#}
+{#                        alert("非文本消息");#}
+{#                    }#}
+{#                };#}
+{##}
+{#                socket.onclose = function (msg) { alert("socket closed!") };#}
+{#            }#}
+{#            catch (ex) {#}
+{#                log(ex);#}
+{#            }#}
+{#        }#}
+{##}
+{#        function send() {#}
+{#            var msg = $("sendText").value#}
+{#            socket.send(msg);#}
+{#        }#}
+{##}
+{#        function search_key_press(e)#}
+{#        {#}
+{#            console.log(e.keyCode);#}
+{#            if (e.keyCode == 13)#}
+{#                connect1();#}
+{#        }#}
+{##}
+{#        function reset_search()#}
+{#        {#}
+{#            console.log("coming");#}
+{#            var reset_form = jQuery(".form-horizontal");#}
+{#            reset_form[0].reset();#}
+{#        }#}
+{##}
+{##}
+{#        window.onbeforeunload = function () {#}
+{#            try {#}
+{#                socket.close();#}
+{#                socket = null;#}
+{#            }#}
+{#            catch (ex) {#}
+{#            }#}
+{#        };#}
+{##}
+{#        function $(id) { return document.getElementById(id); }#}
+{##}
+{#        Date.prototype.Format = function (fmt) { //author: meizz#}
+{#            var o = {#}
+{#                "M+": this.getMonth() + 1, //月份#}
+{#                "d+": this.getDate(), //日#}
+{#                "h+": this.getHours(), //小时#}
+{#                "m+": this.getMinutes(), //分#}
+{#                "s+": this.getSeconds(), //秒#}
+{#                "q+": Math.floor((this.getMonth() + 3) / 3), //季度#}
+{#                "S": this.getMilliseconds() //毫秒#}
+{#            };#}
+{#            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));#}
+{#            for (var k in o)#}
+{#                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));#}
+{#            return fmt;#}
+{#        }#}
+{##}
+{#        function displayContent(msg) {#}
+{#            $("txtContent").value += "\r\n" +new Date().Format("yyyy/MM/dd hh:mm:ss")+ ":  " + msg;#}
+{#        }#}
+{#        function onkey(event) { if (event.keyCode == 13) { send(); } }#}
+{#    </script>#}
 {% endblock %}

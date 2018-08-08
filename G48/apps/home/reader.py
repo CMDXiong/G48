@@ -73,7 +73,6 @@ def read_file_xlsx(file_name):
         if end - start > 4:
             print "4s:文件:", file_name, "时间：", end-start
             print "**************************"
-            return
         sheets = workbook.worksheets                   # 所有的sheet表
     except BadZipfile:
         print "坏文件："
