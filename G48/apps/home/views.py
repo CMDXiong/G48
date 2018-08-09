@@ -360,7 +360,7 @@ def num_converted_into_letters(num):
 #     return realm, username, password, may_save
 
 def get_login(realm, username, may_save):
-    return True, '***', '***', False
+    return True, '1357211280@qq.com', 'p1357211280x', False
 
 
 def ssl_server_trust_prompt( trust_dict ):
@@ -368,11 +368,11 @@ def ssl_server_trust_prompt( trust_dict ):
 
 
 def update_svn(update_info):
-    # svnurl = 'https://github.com/CMDXiong/excel.git'  # 远程仓库
-    # outpath = 'C:\Users\panxiong\Desktop\pan_test_4'  # 下拉存储到本地的位置
+    svnurl = 'https://github.com/CMDXiong/excel.git'  # 远程仓库
+    outpath = 'F:\Project\pan_test_7'  # 下拉存储到本地的位置
     name = update_info['name']
-    svnurl = update_info['host']
-    outpath = update_info['localRoad']
+    # svnurl = update_info['host']
+    # outpath = update_info['localRoad']
     username = update_info['username']
     password = update_info['password']
 

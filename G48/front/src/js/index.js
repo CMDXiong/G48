@@ -18,36 +18,70 @@ UpdateData.prototype.listenShowHideEvent = function() {
     var submitLocal =  jQuery('#submit-local');
     submitLocal.click(function (e) {
         e.preventDefault();
-        var prjName = jQuery("#project-name").val().trim();
-        var svnHost = jQuery("#svn-host").val().trim();
-        var user    = jQuery("#git-username").val().trim();
-        var password = jQuery("#git-password").val().trim();
-        // var localSaveRoad = "C:\\Users\\panxiong\\Desktop\\pan_test_5";
-        var localSaveRoad = jQuery("#svn-save").val().trim();
-        console.log("******************")
-        console.log(prjName);
-        console.log(svnHost);
-        console.log(user);
-        console.log(password);
-        console.log(localSaveRoad);
+        if (window.socket == null)
+        {
+            var host = "ws://10.240.113.164:9005/";
+            window.socket = new WebSocket(host);
+            window.socket.onopen = function (msg) {
+                console.log("1");
+                var prjName = jQuery("#project-name").val().trim();
+                var svnHost = jQuery("#svn-host").val().trim();
+                var user    = jQuery("#git-username").val().trim();
+                var password = jQuery("#git-password").val().trim();
+                // var localSaveRoad = "C:\\Users\\panxiong\\Desktop\\pan_test_5";
+                var localSaveRoad = jQuery("#svn-save").val().trim();
+                console.log("******************")
+                console.log(prjName);
+                console.log(svnHost);
+                console.log(user);
+                console.log(password);
+                console.log(localSaveRoad);
 
-        var data = {
-            type: "svnUpdate",
-            name: prjName,
-            host: svnHost,
-            username: user,
-            password: password,
-            localRoad: localSaveRoad
-        };
+                var data = {
+                    type: "svnUpdate",
+                    name: prjName,
+                    host: svnHost,
+                    username: user,
+                    password: password,
+                    localRoad: localSaveRoad
+                };
 
-        var jsonQueryInfo =  JSON.stringify(data);
-        window.socket.send(jsonQueryInfo);
-        window.location.reload(true);
+                var jsonQueryInfo =  JSON.stringify(data);
+                window.socket.send(jsonQueryInfo);
+                // window.location.reload(true);
+            }
+        }else{
+            console.log("2");
+            var prjName = jQuery("#project-name").val().trim();
+            var svnHost = jQuery("#svn-host").val().trim();
+            var user    = jQuery("#git-username").val().trim();
+            var password = jQuery("#git-password").val().trim();
+            // var localSaveRoad = "C:\\Users\\panxiong\\Desktop\\pan_test_5";
+            var localSaveRoad = jQuery("#svn-save").val().trim();
+            console.log("******************")
+            console.log(prjName);
+            console.log(svnHost);
+            console.log(user);
+            console.log(password);
+            console.log(localSaveRoad);
+
+            var data = {
+                type: "svnUpdate",
+                name: prjName,
+                host: svnHost,
+                username: user,
+                password: password,
+                localRoad: localSaveRoad
+            };
+
+            var jsonQueryInfo =  JSON.stringify(data);
+            window.socket.send(jsonQueryInfo);
+            // window.location.reload(true);
+            }
     });
 };
 
 UpdateData.prototype.run = function () {
-    console.log("1");
     var self = this;
     self.listenShowHideEvent();
 };
@@ -76,63 +110,123 @@ QueryBtn.prototype.listenClickEnterEvent = function (){
 
 QueryBtn.prototype.connectionEvent = function () {
     var self = this;
-    var host = "ws://10.240.113.164:9005/";
-    self.socket = new WebSocket(host);
-    window.socket = self.socket;
-    jQuery("#progress-group").show();
-    var progress = jQuery("#progressbar")
-    progress.css({"width": 0});
-    progress.text('0.0% Complete (success)');
-    var show_excel = jQuery("#show_excel");
-    show_excel.html("");
-    try {
-        self.socket.onopen = function (msg) {
-            var queryInfo = new Object();
-            queryInfo.keyword = jQuery("#inputKeyword").val();
-            if(queryInfo.keyword.length !== 0)
-            {
-                console.log("not empyt");
-                queryInfo.queryMode = jQuery("#select-type").val();
-                queryInfo.tableType = jQuery("#table-type1").val();
-                queryInfo.selectScope = jQuery("#select-scope").val();
-
-                var jsonQueryInfo =  JSON.stringify(queryInfo);
-                self.socket.send(jsonQueryInfo);
-            }else{
-                console.log("empty");
-            }
-            // socket.send(keyword);
-            // socket.send("你的连接成功");
-        };
-
-        self.socket.onmessage = function (msg) {
-            if (typeof msg.data == "string") {
-                // displayContent(msg.data);
-                if  (isNaN(Number(msg.data)))
+    if(window.socket == null){
+        console.log("1");
+        var host = "ws://10.240.113.164:9005/";
+        self.socket = new WebSocket(host);
+        window.socket = self.socket;
+        jQuery("#progress-group").show();
+        var progress = jQuery("#progressbar")
+        progress.css({"width": 0});
+        progress.text('0.0% Complete (success)');
+        var show_excel = jQuery("#show_excel");
+        show_excel.html("");
+        try {
+            self.socket.onopen = function (msg) {
+                var queryInfo = new Object();
+                queryInfo.type = "queryInfo";
+                queryInfo.keyword = jQuery("#inputKeyword").val();
+                if(queryInfo.keyword.length !== 0)
                 {
-                    // 显示查询结果代码
-                    var json_obj = JSON.parse(msg.data);
-                    // 有数据
-                    var datas = json_obj["datas"];
-                    var html = template('query-item',{"datas": datas});
-                    var show_excel = jQuery("#show_excel");
-                    show_excel.append(html);
-                }else{
-                    // {#进度条的代码#}
-                    // var progress = jQuery("#progressbar")
-                    progress.text(msg.data +  '% Complete (success)');
-                    progress.css({"width": msg.data + '%'});
-                }
-            }
-            else {
-                alert("非文本消息");
-            }
-        };
+                    console.log("not empyt");
+                    queryInfo.queryMode = jQuery("#select-type").val();
+                    queryInfo.tableType = jQuery("#table-type1").val();
+                    queryInfo.selectScope = jQuery("#select-scope").val();
 
-        self.socket.onclose = function (msg) { alert("socket closed!") };
-    }
-    catch (ex) {
-        log(ex);
+                    var jsonQueryInfo =  JSON.stringify(queryInfo);
+                    self.socket.send(jsonQueryInfo);
+                }else{
+                    console.log("empty");
+                }
+            };
+
+            self.socket.onmessage = function (msg) {
+                if (typeof msg.data == "string") {
+                    // displayContent(msg.data);
+                    if  (isNaN(Number(msg.data)))
+                    {
+                        // 显示查询结果代码
+                        var json_obj = JSON.parse(msg.data);
+                        // 有数据
+                        var datas = json_obj["datas"];
+                        var html = template('query-item',{"datas": datas});
+                        var show_excel = jQuery("#show_excel");
+                        show_excel.append(html);
+                    }else{
+                        // {#进度条的代码#}
+                        // var progress = jQuery("#progressbar")
+                        progress.text(msg.data +  '% Complete (success)');
+                        progress.css({"width": msg.data + '%'});
+                    }
+                }
+                else {
+                    alert("非文本消息");
+                }
+            };
+
+            self.socket.onclose = function (msg) { alert("socket closed!") };
+        }
+        catch (ex) {
+            log(ex);
+        }
+    }else{
+        console.log("2");
+        self.socket = window.socket;
+        jQuery("#progress-group").show();
+        var progress = jQuery("#progressbar")
+        progress.css({"width": 0});
+        progress.text('0.0% Complete (success)');
+        var show_excel = jQuery("#show_excel");
+        show_excel.html("");
+        try {
+            // self.socket.onopen = function (msg) {
+                var queryInfo = new Object();
+                queryInfo.type = "queryInfo";
+                queryInfo.keyword = jQuery("#inputKeyword").val();
+                if(queryInfo.keyword.length !== 0)
+                {
+                    console.log("not empyt");
+                    queryInfo.queryMode = jQuery("#select-type").val();
+                    queryInfo.tableType = jQuery("#table-type1").val();
+                    queryInfo.selectScope = jQuery("#select-scope").val();
+
+                    var jsonQueryInfo =  JSON.stringify(queryInfo);
+                    self.socket.send(jsonQueryInfo);
+                }else{
+                    console.log("empty");
+                }
+            // };
+
+            self.socket.onmessage = function (msg) {
+                if (typeof msg.data == "string") {
+                    // displayContent(msg.data);
+                    if  (isNaN(Number(msg.data)))
+                    {
+                        // 显示查询结果代码
+                        var json_obj = JSON.parse(msg.data);
+                        // 有数据
+                        var datas = json_obj["datas"];
+                        var html = template('query-item',{"datas": datas});
+                        var show_excel = jQuery("#show_excel");
+                        show_excel.append(html);
+                    }else{
+                        // {#进度条的代码#}
+                        // var progress = jQuery("#progressbar")
+                        progress.text(msg.data +  '% Complete (success)');
+                        progress.css({"width": msg.data + '%'});
+                        console.log(progress.width);
+                    }
+                }
+                else {
+                    alert("非文本消息");
+                }
+            };
+
+            self.socket.onclose = function (msg) { alert("socket closed!") };
+        }
+        catch (ex) {
+            log(ex);
+        }
     }
 };
 
@@ -152,6 +246,8 @@ $(function () {
     jQuery("#reset-search").click(function () {
         jQuery(".form-horizontal")[0].reset();
     });
+
+    window.socket = null;
 
     // jQuery("#svn-save").click(function () {
     //     console.log("这是一个点击事件");
