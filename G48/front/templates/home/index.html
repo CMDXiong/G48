@@ -161,7 +161,7 @@
                         <div class="row">
                             <div class="input-group">
                                 <span class="input-group-addon" id="svn-save-addon">保存位置 *</span>
-                                <input type="file" class="form-control" placeholder="在这里填写本地保存位置"
+                                <input type="text" class="form-control" placeholder="在这里填写本地保存位置"
                                        aria-describedby="svn-save-addon" id="svn-save">
                             </div>
                         </div>
@@ -234,120 +234,4 @@
             {% endfor %}
         </div>
     </div>
-{#    <script>#}
-{#        var socket;#}
-{#        function connect1() {#}
-{#            var host = "ws://10.240.113.164:9005/";#}
-{#            socket = new WebSocket(host);#}
-{#            console.log(socket.upgrade);#}
-{#            jQuery("#progress-group").show();#}
-{#            var progress = jQuery("#progressbar")#}
-{#            progress.css({"width": 0});#}
-{#            progress.text('0.0% Complete (success)');#}
-{#            var show_excel = jQuery("#show_excel");#}
-{#            show_excel.html("");#}
-{#            try {#}
-{#                socket.onopen = function (msg) {#}
-{#                    var keyword = jQuery("#inputKeyword").val();#}
-{#                    var queryInfo = new Object();#}
-{#                    queryInfo.keyword = jQuery("#inputKeyword").val();#}
-{#                    if(queryInfo.keyword.length !== 0)#}
-{#                    {#}
-{#                        console.log("not empyt");#}
-{#                        queryInfo.queryMode = jQuery("#select-type").val();#}
-{#                        queryInfo.tableType = jQuery("#table-type1").val();#}
-{#                        queryInfo.selectScope = jQuery("#select-scope").val();#}
-{##}
-{#                        var jsonQueryInfo =  JSON.stringify(queryInfo)#}
-{#                        socket.send(jsonQueryInfo);#}
-{#                    }else{#}
-{#                        console.log("empty");#}
-{#                    }#}
-{#                    socket.send(keyword);#}
-{#                    socket.send("你的连接成功");#}
-{#                };#}
-{##}
-{#                socket.onmessage = function (msg) {#}
-{#                    if (typeof msg.data == "string") {#}
-{#                        displayContent(msg.data);#}
-{#                        if  (isNaN(Number(msg.data)))#}
-{#                        {#}
-{#                            显示查询结果代码#}
-{#                            var json_obj = JSON.parse(msg.data);#}
-{#                            有数据#}
-{#                            var datas = json_obj["datas"]#}
-{#                            var html = template('query-item',{"datas": datas});#}
-{#                            var show_excel = jQuery("#show_excel");#}
-{#                            show_excel.append(html)#}
-{#                        }else{#}
-{#                            进度条的代码#}
-{#                            var progress = jQuery("#progressbar")#}
-{#                            progress.text(msg.data +  '% Complete (success)');#}
-{#                            progress.css({"width": msg.data + '%'});#}
-{#                        }#}
-{#                    }#}
-{#                    else {#}
-{#                        alert("非文本消息");#}
-{#                    }#}
-{#                };#}
-{##}
-{#                socket.onclose = function (msg) { alert("socket closed!") };#}
-{#            }#}
-{#            catch (ex) {#}
-{#                log(ex);#}
-{#            }#}
-{#        }#}
-{##}
-{#        function send() {#}
-{#            var msg = $("sendText").value#}
-{#            socket.send(msg);#}
-{#        }#}
-{##}
-{#        function search_key_press(e)#}
-{#        {#}
-{#            console.log(e.keyCode);#}
-{#            if (e.keyCode == 13)#}
-{#                connect1();#}
-{#        }#}
-{##}
-{#        function reset_search()#}
-{#        {#}
-{#            console.log("coming");#}
-{#            var reset_form = jQuery(".form-horizontal");#}
-{#            reset_form[0].reset();#}
-{#        }#}
-{##}
-{##}
-{#        window.onbeforeunload = function () {#}
-{#            try {#}
-{#                socket.close();#}
-{#                socket = null;#}
-{#            }#}
-{#            catch (ex) {#}
-{#            }#}
-{#        };#}
-{##}
-{#        function $(id) { return document.getElementById(id); }#}
-{##}
-{#        Date.prototype.Format = function (fmt) { //author: meizz#}
-{#            var o = {#}
-{#                "M+": this.getMonth() + 1, //月份#}
-{#                "d+": this.getDate(), //日#}
-{#                "h+": this.getHours(), //小时#}
-{#                "m+": this.getMinutes(), //分#}
-{#                "s+": this.getSeconds(), //秒#}
-{#                "q+": Math.floor((this.getMonth() + 3) / 3), //季度#}
-{#                "S": this.getMilliseconds() //毫秒#}
-{#            };#}
-{#            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));#}
-{#            for (var k in o)#}
-{#                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));#}
-{#            return fmt;#}
-{#        }#}
-{##}
-{#        function displayContent(msg) {#}
-{#            $("txtContent").value += "\r\n" +new Date().Format("yyyy/MM/dd hh:mm:ss")+ ":  " + msg;#}
-{#        }#}
-{#        function onkey(event) { if (event.keyCode == 13) { send(); } }#}
-{#    </script>#}
 {% endblock %}

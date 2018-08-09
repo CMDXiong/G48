@@ -181,15 +181,16 @@ def fuzzy_query_test(datas, connection, query_info):
                             keyword_position = {}  # 关键字位置，与对应的值
                             row_exist = False  # 某一行是否匹配了关键字
                             for item in row:
-                                resultstr = item
-                                is_match = pattern.match(resultstr)  # 匹配结果
+                                if not item:
+                                    continue
+                                # resultstr = item
+                                is_match = pattern.match(item)  # 匹配结果
                                 if is_match:  # 如果存在匹配， 则记录该行的所有数据和相关信息
                                     sheet_exist = True  # 该sheet中是否匹配了关键字
                                     row_exist = True  # 该行存在关键字的匹配
                                     # 对存在匹配行的一行数据进行存储
                                     row_data = [xls['tname'], sheet_name, row_num + 1] + sheet_data['content'][row_num]
                                     deal_str = deal_tuple(is_match.groups(), query_mode)  # 将匹配的关键字添加相应的html标签,以显示红色
-                                    print is_match.groups()
                                     col = row.index(item)
                                     keyword_position[col + 3] = deal_str  # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
                             if row_exist:
@@ -350,30 +351,40 @@ def num_converted_into_letters(num):
     return result
 
 
+# def get_login(realm, username, may_save):
+#     # retcode = True    #True，如果需要验证；否则用False
+#     # username = '1357211280@qq.com'    #用户名
+#     # password = 'p1357211280x'    #密码
+#     # save = False    #True，如果想之后都不用验证；否则用False
+#     # return retcode, username, password, save
+#     return realm, username, password, may_save
+
 def get_login(realm, username, may_save):
-    retcode = True    #True，如果需要验证；否则用False
-    username = '1357211280@qq.com'    #用户名
-    password = 'p1357211280x'    #密码
-    save = False    #True，如果想之后都不用验证；否则用False
-    return retcode, username, password, save
+    return True, '***', '***', False
 
 
 def ssl_server_trust_prompt( trust_dict ):
     return (True, trust_dict["failures"], True)
 
 
-def update_svn():
+def update_svn(update_info):
+    # svnurl = 'https://github.com/CMDXiong/excel.git'  # 远程仓库
+    # outpath = 'C:\Users\panxiong\Desktop\pan_test_4'  # 下拉存储到本地的位置
+    name = update_info['name']
+    svnurl = update_info['host']
+    outpath = update_info['localRoad']
+    username = update_info['username']
+    password = update_info['password']
+
     client = pysvn.Client()
     client.callback_get_login = get_login
+    # client.callback_get_login = get_login(username=username, save=False, retcode=True, password=password)
     client.callback_ssl_server_trust_prompt = ssl_server_trust_prompt
 
     # 如果没有配置文件，提示建立配置文件
     # 否则，读取配置文件的相关信息
     # 判断相关地方的状态是否有改变，如果有，点击更新才有更新，否则直接退出，并且报告，已经是最新
     # changes = client.status('./examples/pysvn')
-
-    svnurl = 'https://github.com/CMDXiong/excel.git'               # 远程仓库
-    outpath = 'C:\Users\panxiong\Desktop\pan_test_4'               # 下拉存储到本地的位置
 
     client.checkout(svnurl, outpath)                  # 检出最新版本
     #client.checkout(svnurl, outpath, revision=rv)    # 检出指定版本
