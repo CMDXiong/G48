@@ -23,46 +23,47 @@ class websocket_thread(threading.Thread):
             data = self.connection.recv(1024)
             if data:
                 real_data = parse_data(data)
-                import json
-                query_info_dict = json.loads(real_data)
-                print query_info_dict
-                if query_info_dict.has_key('type'):
-                    if query_info_dict["type"] == "svnUpdate":
-                        name = query_info_dict['name']
-                        host = query_info_dict['host']
-                        username = query_info_dict['username']
-                        password = query_info_dict['password']
-                        local_road = query_info_dict['localRoad']
-                        update_svn(query_info_dict)
-                        print local_road
-                        global global_data1
-                        global_data1 = views.datas_form_files_test(local_road)
-                        print "完成"
-                else:
-                    data1 = {}
-                    data2 = {}
-                    for key, value in global_data1.items():
-                        len_list = len(value)
-                        if len_list >= 1:
-                            data1[key] = value[0:len_list / 2]
-                            data2[key] = value[len_list / 2:]  # 不+1，愕然为空
-                        else:
-                            data1[key] = []
-                            data2[key] = []
+                if real_data:
+                    import json
+                    query_info_dict = json.loads(real_data)
+                    print query_info_dict
+                    if query_info_dict.has_key('type'):
+                        if query_info_dict["type"] == "svnUpdate":
+                            name = query_info_dict['name']
+                            host = query_info_dict['host']
+                            username = query_info_dict['username']
+                            password = query_info_dict['password']
+                            local_road = query_info_dict['localRoad']
+                            update_svn(query_info_dict)
+                            print local_road
+                            global global_data1
+                            global_data1 = views.datas_form_files_test(local_road)
+                            print "完成"
+                    else:
+                        data1 = {}
+                        data2 = {}
+                        for key, value in global_data1.items():
+                            len_list = len(value)
+                            if len_list >= 1:
+                                data1[key] = value[0:len_list / 2]
+                                data2[key] = value[len_list / 2:]  # 不+1，愕然为空
+                            else:
+                                data1[key] = []
+                                data2[key] = []
 
-                    # p1 = Process(target=fuzzy_query_test, args=(data1, self.connection, query_info_dict))
-                    # p2 = Process(target=fuzzy_query_test, args=(data2, self.connection, query_info_dict))
-                    # p1.start()
-                    # p2.start()
-                    # p1.join()
-                    # p2.join()
-                    t1 = threading.Thread(target=fuzzy_query_test, args=(data1, self.connection, query_info_dict))
-                    t2 = threading.Thread(target=fuzzy_query_test, args=(data2, self.connection, query_info_dict))
-                    t1.start()
-                    t2.start()
-                    t1.join()
-                    t2.join()
-                    # fuzzy_query_test(global_data1, self.connection, query_info_dict)
+                        # p1 = Process(target=fuzzy_query_test, args=(data1, self.connection, query_info_dict))
+                        # p2 = Process(target=fuzzy_query_test, args=(data2, self.connection, query_info_dict))
+                        # p1.start()
+                        # p2.start()
+                        # p1.join()
+                        # p2.join()
+                        t1 = threading.Thread(target=fuzzy_query_test, args=(data1, self.connection, query_info_dict))
+                        t2 = threading.Thread(target=fuzzy_query_test, args=(data2, self.connection, query_info_dict))
+                        t1.start()
+                        t2.start()
+                        t1.join()
+                        t2.join()
+                        # fuzzy_query_test(global_data1, self.connection, query_info_dict)
 
 
 class websocket_process(Process):

@@ -149,6 +149,10 @@ $(function () {
         if (e.keyCode == 13)
             queryBtnOj.connectionEvent();
     });
+    jQuery("#reset-search").click(function () {
+        jQuery(".form-horizontal")[0].reset();
+    });
+
     // jQuery("#svn-save").click(function () {
     //     console.log("这是一个点击事件");
     //      var fileSave = new ActiveXObject("MSComDlg.CommonDialog");
