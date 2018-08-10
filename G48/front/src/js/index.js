@@ -147,6 +147,15 @@ QueryBtn.prototype.connectionEvent = function () {
                     {
                         // 显示查询结果代码
                         var json_obj = JSON.parse(msg.data);
+                        if ("type" in json_obj)
+                        {
+                            var type = json_obj["type"];
+                            if (type === "not_found")
+                            {
+                                console.log("not_found");
+                                jQuery("#not-found").show();
+                            }
+                        }
                         // 有数据
                         var datas = json_obj["datas"];
                         var html = template('query-item',{"datas": datas});
@@ -171,6 +180,7 @@ QueryBtn.prototype.connectionEvent = function () {
         }
     }else{
         console.log("2");
+        jQuery("#not-found").hide();
         self.socket = window.socket;
         jQuery("#progress-group").show();
         var progress = jQuery("#progressbar")
@@ -204,6 +214,15 @@ QueryBtn.prototype.connectionEvent = function () {
                     {
                         // 显示查询结果代码
                         var json_obj = JSON.parse(msg.data);
+                        if ("type" in json_obj)
+                        {
+                            var type = json_obj["type"];
+                            if (type === "not_found")
+                            {
+                                console.log("not_found");
+                                jQuery("#not-found").show();
+                            }
+                        }
                         // 有数据
                         var datas = json_obj["datas"];
                         var html = template('query-item',{"datas": datas});

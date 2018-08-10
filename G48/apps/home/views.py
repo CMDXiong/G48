@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from utils import restful
 # from websocket import run_websocket
 from openpyxl.utils import get_column_letter
+import json
 
 # 一般我是这样去设计json格式的
 # {"code": 200, "message": "", "data": {}, }
@@ -138,8 +139,9 @@ def fuzzy_query_test(datas, connection, query_info):
     keyword = query_info["keyword"]
     query_mode = query_info["queryMode"]
     pattern = building_regular_expressions(keyword, query_mode)  # 生成关键字查询模式
-    files_queried = 0 #已查文件个数
-    files_counts = 0
+    files_queried = 0  # 已查文件个数
+    files_counts = 0  # 查询的总数
+    not_found = True
 
     # 查表类型的处理
     query_table_type = query_info["tableType"]
@@ -204,10 +206,14 @@ def fuzzy_query_test(datas, connection, query_info):
                             table_info['sheet_name'] = sheet_name  # 关键字存在的sheet名
                             context['datas'].append(table_info)  # 将存在关键字的表的相关信息存储
                     if context['datas']:
-                        import json
+                        not_found = False
                         json_str = json.dumps(context)
                         send_msg(connection, json_str)
                         res['datas'] += context['datas']
+        if not_found:
+            context['type'] = 'not_found'
+            json_str = json.dumps(context)
+            send_msg(connection, json_str)
         return res
     elif query_info['queryMode'] == '3':
         pass
