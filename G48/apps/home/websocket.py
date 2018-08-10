@@ -6,7 +6,7 @@ import socket
 import base64
 import views
 from views import fuzzy_query_test, update_svn
-from multiprocessing import Process
+import time
 
 global_data1 = {}
 
@@ -41,64 +41,32 @@ class websocket_thread(threading.Thread):
                             global_data1 = views.datas_form_files_test(local_road)
                             print "完成"
                         elif query_info_dict["type"] == "queryInfo":
-                            data1 = {}
-                            data2 = {}
-                            for key, value in global_data1.items():
-                                len_list = len(value)
-                                if len_list >= 1:
-                                    data1[key] = value[0:len_list / 2]
-                                    data2[key] = value[len_list / 2:]  # 不+1，愕然为空
-                                else:
-                                    data1[key] = []
-                                    data2[key] = []
+                            start = time.clock()
+                            # data1 = {}
+                            # data2 = {}
+                            # for key, value in global_data1.items():
+                            #     len_list = len(value)
+                            #     if len_list >= 1:
+                            #         data1[key] = value[0:len_list / 2]
+                            #         data2[key] = value[len_list / 2:]  # 不+1，愕然为空
+                            #     else:
+                            #         data1[key] = []
+                            #         data2[key] = []
+                            #
 
-                            # p1 = Process(target=fuzzy_query_test, args=(data1, self.connection, query_info_dict))
-                            # p2 = Process(target=fuzzy_query_test, args=(data2, self.connection, query_info_dict))
-                            # p1.start()
-                            # p2.start()
-                            # p1.join()
-                            # p2.join()
-                            t1 = threading.Thread(target=fuzzy_query_test,
-                                                  args=(data1, self.connection, query_info_dict))
-                            t2 = threading.Thread(target=fuzzy_query_test,
-                                                  args=(data2, self.connection, query_info_dict))
-                            t1.start()
-                            t2.start()
-                            t1.join()
-                            t2.join()
-                            # fuzzy_query_test(global_data1, self.connection, query_info_dict)
+                            # t1 = threading.Thread(target=fuzzy_query_test,
+                            #                       args=(data1, self.connection, query_info_dict))
+                            # t2 = threading.Thread(target=fuzzy_query_test,
+                            #                       args=(data2, self.connection, query_info_dict))
+                            # t1.start()
+                            # t2.start()
+                            # t1.join()
+                            # t2.join()
+                            fuzzy_query_test(global_data1, self.connection, query_info_dict)
+                            end = time.clock()
+                            print "查询时间：", start - end
                     else:
                         pass
-
-
-class websocket_process(Process):
-    def __init__(self, connection):
-        super(websocket_process, self).__init__()
-        self.connection = connection
-
-    def run(self):
-        print 'new websocket client joined!'
-
-        while True:
-            data = self.connection.recv(1024)
-            if data:
-                real_data = parse_data(data)
-                import json
-                query_info_dict = json.loads(real_data)
-                data1 = {}
-                data2 = {}
-                for key, value in global_data1.items():
-                    len_list = len(value)
-                    if len_list >= 1:
-                        data1[key] = value[0:len_list / 2]
-                        data2[key] = value[len_list / 2:]  # 不+1，愕然为空
-                p1 = Process(target=fuzzy_query_test, args=(data1, self.connection, query_info_dict))
-                p2 = Process(target=fuzzy_query_test, args=(data2, self.connection, query_info_dict))
-                p1.start()
-                p2.start()
-                p1.join()
-                p2.join()
-                # fuzzy_query_test(global_data1, self.connection, query_info_dict)
 
 
 def parse_data(msg):
@@ -147,10 +115,9 @@ def init_server_websocket():
     # filepath = ur'F:\Project\G48\导表3'
     # filepath = ur'F:\Project\G48\导表3\01贸易数值表.xls'
     # filepath = ur'F:\Project\test'
-    # filepath = ur'F:\Project\数据表'
-    filepath = ur'F:\Project\pan_test_6'
+    filepath = ur'F:\Project\数据表'
+    # filepath = ur'F:\Project\pan_test_6'
 
-    import time
     start = time.clock()
     global global_data1
     global_data1 = views.datas_form_files_test(filepath)
