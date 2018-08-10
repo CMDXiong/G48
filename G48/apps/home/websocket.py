@@ -53,15 +53,6 @@ class websocket_thread(threading.Thread):
                             #         data1[key] = []
                             #         data2[key] = []
                             #
-
-                            # t1 = threading.Thread(target=fuzzy_query_test,
-                            #                       args=(data1, self.connection, query_info_dict))
-                            # t2 = threading.Thread(target=fuzzy_query_test,
-                            #                       args=(data2, self.connection, query_info_dict))
-                            # t1.start()
-                            # t2.start()
-                            # t1.join()
-                            # t2.join()
                             fuzzy_query_test(global_data1, self.connection, query_info_dict)
                             end = time.clock()
                             print "查询时间：", start - end
@@ -115,8 +106,8 @@ def init_server_websocket():
     # filepath = ur'F:\Project\G48\导表3'
     # filepath = ur'F:\Project\G48\导表3\01贸易数值表.xls'
     # filepath = ur'F:\Project\test'
-    filepath = ur'F:\Project\数据表'
-    # filepath = ur'F:\Project\pan_test_6'
+    # filepath = ur'F:\Project\数据表'
+    filepath = ur'F:\Project\福哥'
 
     start = time.clock()
     global global_data1
