@@ -23,8 +23,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/home/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="117" column="52" selection-start-line="117" selection-start-column="52" selection-end-line="117" selection-end-column="52" />
+            <state relative-caret-position="188">
+              <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
               <folding>
                 <element signature="e#66#101#0" expanded="true" />
                 <element signature="e#10166#10647#0" />
@@ -59,24 +59,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/front/src/js/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="157" column="33" selection-start-line="157" selection-start-column="33" selection-end-line="157" selection-end-column="33" />
-              <folding>
-                <element signature="e#310#318#0" />
-              </folding>
+            <state relative-caret-position="448">
+              <caret line="42" column="48" lean-forward="true" selection-start-line="42" selection-start-column="48" selection-end-line="42" selection-end-column="48" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/front/templates/home/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="155">
-              <caret line="138" column="31" selection-start-line="138" selection-start-column="21" selection-end-line="138" selection-end-column="31" />
+            <state relative-caret-position="270">
+              <caret line="34" column="69" selection-start-line="34" selection-start-column="69" selection-end-line="34" selection-end-column="69" />
               <folding>
+                <element signature="e#5457#5479#0#HTML" expanded="true" />
                 <element signature="e#6077#6095#0#HTML" expanded="true" />
                 <element signature="e#5936#5957#0#HTML" expanded="true" />
                 <element signature="e#6047#6068#0#HTML" expanded="true" />
@@ -89,8 +87,8 @@
       <file leaf-file-name="websocket.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/home/websocket.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
+            <state relative-caret-position="1188">
+              <caret line="53" column="81" selection-start-line="53" selection-start-column="81" selection-end-line="53" selection-end-column="81" />
               <folding>
                 <element signature="e#25#41#0" expanded="true" />
               </folding>
@@ -139,7 +137,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>print</find>
       <find>fuzzy_query_test</find>
       <find>global_data</find>
       <find>5s:</find>
@@ -165,10 +162,11 @@
       <find>找不到文件或路径</find>
       <find>listenShowHideEvent</find>
       <find>update_svn</find>
-      <find>modal_info</find>
       <find>sub</find>
       <find>datas_form_files_test</find>
       <find>progress</find>
+      <find>finish_data_update</find>
+      <find>modal_info</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -215,10 +213,10 @@
         <option value="$PROJECT_DIR$/front/templates/base/front_base.html" />
         <option value="$PROJECT_DIR$/apps/home/reader.py" />
         <option value="$PROJECT_DIR$/front/src/css/common/init.scss" />
-        <option value="$PROJECT_DIR$/front/templates/home/index.html" />
         <option value="$PROJECT_DIR$/apps/home/views.py" />
         <option value="$PROJECT_DIR$/apps/home/websocket.py" />
         <option value="$PROJECT_DIR$/front/src/js/index.js" />
+        <option value="$PROJECT_DIR$/front/templates/home/index.html" />
       </list>
     </option>
   </component>
@@ -236,8 +234,9 @@
       <path value="$PROJECT_DIR$/front/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="525" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="190" />
+    <option name="y" value="37" />
     <option name="width" value="1400" />
     <option name="height" value="989" />
   </component>
@@ -518,7 +517,7 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="525" y="0" width="1400" height="989" extended-state="0" />
+    <frame x="190" y="37" width="1400" height="989" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -526,7 +525,7 @@
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="11" weight="0.30827886" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.346651" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.37132785" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.32897604" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2455224" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
@@ -834,8 +833,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/home/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="117" column="52" selection-start-line="117" selection-start-column="52" selection-end-line="117" selection-end-column="52" />
+        <state relative-caret-position="188">
+          <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
           <folding>
             <element signature="e#66#101#0" expanded="true" />
             <element signature="e#10166#10647#0" />
@@ -845,33 +844,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/home/websocket.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
+        <state relative-caret-position="1188">
+          <caret line="53" column="81" selection-start-line="53" selection-start-column="81" selection-end-line="53" selection-end-column="81" />
           <folding>
             <element signature="e#25#41#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/front/src/js/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="448">
+          <caret line="42" column="48" lean-forward="true" selection-start-line="42" selection-start-column="48" selection-end-line="42" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/front/templates/home/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="138" column="31" selection-start-line="138" selection-start-column="21" selection-end-line="138" selection-end-column="31" />
+        <state relative-caret-position="270">
+          <caret line="34" column="69" selection-start-line="34" selection-start-column="69" selection-end-line="34" selection-end-column="69" />
           <folding>
+            <element signature="e#5457#5479#0#HTML" expanded="true" />
             <element signature="e#6077#6095#0#HTML" expanded="true" />
             <element signature="e#5936#5957#0#HTML" expanded="true" />
             <element signature="e#6047#6068#0#HTML" expanded="true" />
             <element signature="e#6068#6087#0#HTML" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front/src/js/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="157" column="33" selection-start-line="157" selection-start-column="33" selection-end-line="157" selection-end-column="33" />
-          <folding>
-            <element signature="e#310#318#0" />
           </folding>
         </state>
       </provider>

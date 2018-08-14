@@ -49,23 +49,6 @@ UpdateData.prototype.onmessage = function(msg){
                     console.log("not_found");
                     jQuery("#not-found").show();
                 }
-                // 显示错误文件的信息
-                if (type === "badFiles")
-                {
-                    // var show_error_info = jQuery("#show_error_info");
-                    // show_error_info.show();
-                    // var show_error_file = jQuery("#show_error_files");
-                    // var error_file_list = json_obj["badFiles"];
-                    // for (var i = 0; i < error_file_list.length; ++i)
-                    // {
-                    //     show_error_file.append("<li>"+ error_file_list[i] + "</li>");
-                    // }
-                }
-                if (type === "finish_data_update")
-                {
-                    jQuery("#modal_info").hide();
-
-                }
                 if(type === "update_files")
                 {
                     console.log(json_obj["finish_precent"]);
@@ -77,10 +60,10 @@ UpdateData.prototype.onmessage = function(msg){
 
 
                     var show_error_info = jQuery("#show_error_info");
-                    show_error_info.show();
                     var show_error_file = jQuery("#show_error_files");
                     if (json_obj["filename"])
                     {
+                        show_error_info.show();
                         show_error_file.append("<li>"+ json_obj["filename"] + "</li>");
                     }
                 }
@@ -91,8 +74,7 @@ UpdateData.prototype.onmessage = function(msg){
             var show_excel = jQuery("#show_excel");
             show_excel.append(html);
         }else{
-            // {#进度条的代码#}
-            // var progress = jQuery("#progressbar")
+            // 进度条的代码
             progress.text(msg.data +  '% Complete (success)');
             progress.css({"width": msg.data + '%'});
         }
@@ -109,6 +91,8 @@ UpdateData.prototype.listenShowHideEvent = function() {
         e.preventDefault();
         var show_error_file = jQuery("#show_error_files");
         show_error_file.children('li').remove();
+        jQuery("#progress-group").hide();
+        jQuery("#not-found").hide();
         if (window.socket == null)
         {
             var host = "ws://10.240.113.164:9005/";
