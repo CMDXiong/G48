@@ -13,70 +13,106 @@ UpdateData.prototype.hideEvent = function() {
     var self = this;
 };
 
+UpdateData.prototype.onopen = function () {
+    var prjName = jQuery("#project-name").val().trim();
+    var svnHost = jQuery("#svn-host").val().trim();
+    var user    = jQuery("#git-username").val().trim();
+    var password = jQuery("#git-password").val().trim();
+    var localSaveRoad = jQuery("#svn-save").val().trim();
+
+    var data = {
+        type: "svnUpdate",
+        name: prjName,
+        host: svnHost,
+        username: user,
+        password: password,
+        localRoad: localSaveRoad
+    };
+
+    var jsonQueryInfo =  JSON.stringify(data);
+    window.socket.send(jsonQueryInfo);
+    jQuery("#myModal").modal('hide');
+    jQuery("#modal_info").show();
+    // window.location.reload(true);
+};
+UpdateData.prototype.onmessage = function(msg){
+    if (typeof msg.data == "string") {
+        if  (isNaN(Number(msg.data)))
+        {
+            // 显示查询结果代码
+            var json_obj = JSON.parse(msg.data);
+            if ("type" in json_obj)
+            {
+                var type = json_obj["type"];
+                if (type === "not_found")
+                {
+                    console.log("not_found");
+                    jQuery("#not-found").show();
+                }
+                // 显示错误文件的信息
+                if (type === "badFiles")
+                {
+                    var show_error_info = jQuery("#show_error_info");
+                    show_error_info.show();
+                    var show_error_file = jQuery("#show_error_files");
+                    var error_file_list = json_obj["badFiles"];
+                    for (var i = 0; i < error_file_list.length; ++i)
+                    {
+                        show_error_file.append("<li>"+ error_file_list[i] + "</li>");
+                    }
+                }
+                if (type === "finish_data_update")
+                {
+                    jQuery("#modal_info").hide();
+
+                }
+                if(type === "update_files")
+                {
+                    console.log(json_obj["finish_precent"]);
+                    var update_progress_group = jQuery("#update-progress-group");
+                    update_progress_group.show();
+                    var update_progressbar = jQuery("#update-progressbar");
+                    update_progressbar.width(json_obj["finish_precent"]);
+                    update_progressbar.text("已更新:" + json_obj["finish_precent"]);
+                }
+
+            }
+            // 有数据
+            var datas = json_obj["datas"];
+            var html = template('query-item',{"datas": datas});
+            var show_excel = jQuery("#show_excel");
+            show_excel.append(html);
+        }else{
+            // {#进度条的代码#}
+            // var progress = jQuery("#progressbar")
+            progress.text(msg.data +  '% Complete (success)');
+            progress.css({"width": msg.data + '%'});
+        }
+    }
+    else {
+        alert("非文本消息");
+    }
+};
+
 UpdateData.prototype.listenShowHideEvent = function() {
     var self = this;
     var submitLocal =  jQuery('#submit-local');
     submitLocal.click(function (e) {
         e.preventDefault();
+        var show_error_file = jQuery("#show_error_files");
+        show_error_file.children('li').remove();
         if (window.socket == null)
         {
             var host = "ws://10.240.113.164:9005/";
             window.socket = new WebSocket(host);
             window.socket.onopen = function (msg) {
-                console.log("1");
-                var prjName = jQuery("#project-name").val().trim();
-                var svnHost = jQuery("#svn-host").val().trim();
-                var user    = jQuery("#git-username").val().trim();
-                var password = jQuery("#git-password").val().trim();
-                // var localSaveRoad = "C:\\Users\\panxiong\\Desktop\\pan_test_5";
-                var localSaveRoad = jQuery("#svn-save").val().trim();
-                console.log("******************")
-                console.log(prjName);
-                console.log(svnHost);
-                console.log(user);
-                console.log(password);
-                console.log(localSaveRoad);
-
-                var data = {
-                    type: "svnUpdate",
-                    name: prjName,
-                    host: svnHost,
-                    username: user,
-                    password: password,
-                    localRoad: localSaveRoad
-                };
-
-                var jsonQueryInfo =  JSON.stringify(data);
-                window.socket.send(jsonQueryInfo);
-                // window.location.reload(true);
+                self.onopen();
             }
         }else{
-            console.log("2");
-            var prjName = jQuery("#project-name").val().trim();
-            var svnHost = jQuery("#svn-host").val().trim();
-            var user    = jQuery("#git-username").val().trim();
-            var password = jQuery("#git-password").val().trim();
-            // var localSaveRoad = "C:\\Users\\panxiong\\Desktop\\pan_test_5";
-            var localSaveRoad = jQuery("#svn-save").val().trim();
-            console.log("******************")
-            console.log(prjName);
-            console.log(svnHost);
-            console.log(user);
-            console.log(password);
-            console.log(localSaveRoad);
-
-            var data = {
-                type: "svnUpdate",
-                name: prjName,
-                host: svnHost,
-                username: user,
-                password: password,
-                localRoad: localSaveRoad
-            };
-
-            var jsonQueryInfo =  JSON.stringify(data);
-            window.socket.send(jsonQueryInfo);
-            // window.location.reload(true);
+            self.onopen();
+        }
+        window.socket.onmessage = function (msg) {
+                self.onmessage(msg);
             }
     });
 };
@@ -107,11 +143,9 @@ QueryBtn.prototype.listenClickEnterEvent = function (){
     });
 };
 
-
 QueryBtn.prototype.connectionEvent = function () {
     var self = this;
     if(window.socket == null){
-        console.log("1");
         var host = "ws://10.240.113.164:9005/";
         self.socket = new WebSocket(host);
         window.socket = self.socket;
@@ -154,6 +188,10 @@ QueryBtn.prototype.connectionEvent = function () {
                             {
                                 console.log("not_found");
                                 jQuery("#not-found").show();
+                            }
+                            if (type === "badFiles")
+                            {
+                                console.log("badFiles Test");
                             }
                         }
                         // 有数据
@@ -221,6 +259,10 @@ QueryBtn.prototype.connectionEvent = function () {
                             {
                                 console.log("not_found");
                                 jQuery("#not-found").show();
+                            }
+                            if (type === "badFiles")
+                            {
+                                console.log("badFiles Test");
                             }
                         }
                         // 有数据

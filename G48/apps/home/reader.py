@@ -21,6 +21,7 @@ def xlsxToUnicode(x):
         y = unicode(y)
     return y
 
+
 def read_file_xls(file_name):
     '''
     读取xls表格内容，按照格式返回信息
@@ -64,6 +65,7 @@ def read_file_xlsx(file_name):
 
     real_file_name = os.path.basename(file_name)       # 得到一个路径下的文件名
     res = {}
+    res["badFile"] = ""                                # 如果是一个坏文件，则存储
     res['tname'] = real_file_name                      # 存储表名
     sheets = []
     try:
@@ -77,12 +79,18 @@ def read_file_xlsx(file_name):
     except BadZipfile:
         print "坏文件："
         print file_name
+        res["badFile"] = file_name
+        return res
     except TypeError:
         print "类型出错文件："
         print file_name
+        res["badFile"] = file_name
+        return res
     except IOError:
         print "文件损坏文件："
         print file_name
+        res["badFile"] = file_name
+        return res
 
     xlsData = {}
     for sheet in sheets:

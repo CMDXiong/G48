@@ -5,8 +5,9 @@ import hashlib
 import socket
 import base64
 import views
-from views import fuzzy_query_test, update_svn
+from views import fuzzy_query_test, update_svn, send_msg
 import time
+import os
 
 global_data1 = {}
 
@@ -35,10 +36,23 @@ class websocket_thread(threading.Thread):
                             username = query_info_dict['username']
                             password = query_info_dict['password']
                             local_road = query_info_dict['localRoad']
-                            update_svn(query_info_dict)
-                            print local_road
+                            # update_svn(query_info_dict)
+                            local_road = ur'F:\Project\错误的文件'
+                            files_num = sum([len(x) for _, _, x in os.walk(local_road)])
                             global global_data1
-                            global_data1 = views.datas_form_files_test(local_road)
+                            global_data1 = views.datas_form_files_test(local_road, files_num, self.connection)
+                            if "badFiles" in global_data1:
+                                if global_data1["badFiles"]:
+                                    content = {"type": "badFiles", "badFiles": global_data1["badFiles"]}
+
+                                    print "global_data1", global_data1["badFiles"]
+                                    json_str = json.dumps(content)
+                                    send_msg(self.connection, json_str)
+
+                            time.sleep(5)
+                            context = {"type": "finish_data_update"}
+                            json_str = json.dumps(context)
+                            send_msg(self.connection, json_str)
                             print "完成"
                         elif query_info_dict["type"] == "queryInfo":
                             start = time.clock()
@@ -107,11 +121,12 @@ def init_server_websocket():
     # filepath = ur'F:\Project\G48\导表3\01贸易数值表.xls'
     # filepath = ur'F:\Project\test'
     # filepath = ur'F:\Project\数据表'
-    filepath = ur'F:\Project\福哥'
+    # filepath = ur'F:\Project\福哥'
+    filepath = ur'F:\Project\错误的文件'
 
     start = time.clock()
     global global_data1
-    global_data1 = views.datas_form_files_test(filepath)
+    # global_data1 = views.datas_form_files_test(filepath)
     end = time.clock()
     print "数据载入完成, 载入数据时间：", start - end
 
@@ -128,8 +143,6 @@ Connection: Upgrade\r\n\
 Sec-WebSocket-Accept: %s\r\n\r\n' % token)
             thread = websocket_thread(connection)
             thread.start()
-            # process1 = websocket_process(connection)
-            # process1.start()
         except socket.timeout:
             print 'websocket connection timeout'
 

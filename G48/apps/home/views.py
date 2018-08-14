@@ -54,15 +54,23 @@ def index(request):
     return render(request, 'home/index.html', context=context)
 
 
-def datas_form_files_test(file_path):
-    datas = {"xlsx": [], "xls": [], "csv": []}                           # 每一个元素都是一个表的字典
+def datas_form_files_test(file_path, files_num, connect):
+    files = 0  # 已读文件个数
+    content = {"type": "update_files", "finish_precent": "0%"}
+    datas = {"xlsx": [], "xls": [], "csv": [], "badFiles": []}           # 每一个元素都是一个表的字典
     if os.path.isfile(file_path):                                        # 如果是文件
         file_name = os.path.basename(file_path)                          # 得到一个路径下的文件名
         name, ext = os.path.splitext(file_path)                          # ext为文件的扩展名
+        files += 1
+        content["finish_precent"] = str(round((float(files) / files_num), 3) * 100) + '%'
+        send_msg1(connect, content)
         if ext == '.xlsx':                                               # 是.xlsx文件
             xlsx_data = reader.read_file_xlsx(file_path)
             if xlsx_data:
-                datas["xlsx"].append(xlsx_data)
+                if xlsx_data["badFile"]:
+                    datas["badFiles"].append(xlsx_data["badFile"])
+                else:
+                    datas["xlsx"].append(xlsx_data)
         elif ext == '.xls':                                              # 是.xls文件
             xls_result = reader.read_file_xls(file_path)
             if xls_result:
@@ -83,10 +91,16 @@ def datas_form_files_test(file_path):
                 complete_file_name = os.path.join(path, file_name)  # 文件的完整路径名
                 # table_info = {'row_datas': []}
                 # exist = False
+                files += 1
+                content["finish_precent"] = str(round((float(files) / files_num), 3) * 100) + '%'
+                send_msg1(connect, content)
                 if os.path.splitext(file_name)[1] == '.xlsx':  # 是.xlsx文件
                     xlsx_data = reader.read_file_xlsx(complete_file_name)
                     if xlsx_data:
-                        datas["xlsx"].append(xlsx_data)
+                        if xlsx_data["badFile"]:
+                            datas["badFiles"].append(xlsx_data["badFile"])
+                        else:
+                            datas["xlsx"].append(xlsx_data)
                 elif os.path.splitext(file_name)[1] == '.xls':  # 是.xls文件
                     xls_result = reader.read_file_xls(complete_file_name)
                     if xls_result:
@@ -221,6 +235,31 @@ def fuzzy_query_test(datas, connection, query_info):
         pass
 
 
+def send_msg1(conn, msg_bytes):
+    """
+    WebSocket服务端向客户端发送消息
+    :param conn: 客户端连接到服务器端的socket对象,即： conn,address = socket.accept()
+    :param msg_bytes: 向客户端发送的字节
+    :return:
+    """
+    import struct
+
+    if isinstance(msg_bytes, dict):
+        msg_bytes = json.dumps(msg_bytes)
+
+    token = b"\x81"
+    length = len(msg_bytes)
+    if length < 126:
+        token += struct.pack("B", length)
+    elif length <= 0xFFFF:
+        token += struct.pack("!BH", 126, length)
+    else:
+        token += struct.pack("!BQ", 127, length)
+
+    msg = token + msg_bytes
+    conn.send(msg)
+    return True
+
 def send_msg(conn, msg_bytes):
     """
     WebSocket服务端向客户端发送消息
@@ -242,7 +281,6 @@ def send_msg(conn, msg_bytes):
     msg = token + msg_bytes
     conn.send(msg)
     return True
-
 
 def deal_tuple(keyword_tuple, query_mode):
     result = u''
@@ -374,11 +412,11 @@ def ssl_server_trust_prompt( trust_dict ):
 
 
 def update_svn(update_info):
-    svnurl = 'https://github.com/CMDXiong/excel.git'  # 远程仓库
-    outpath = 'F:\Project\pan_test_7'  # 下拉存储到本地的位置
+    # svnurl = 'https://github.com/CMDXiong/excel.git'  # 远程仓库
+    # outpath = 'F:\Project\pan_test_7'  # 下拉存储到本地的位置
     name = update_info['name']
-    # svnurl = update_info['host']
-    # outpath = update_info['localRoad']
+    svnurl = update_info['host']
+    outpath = update_info['localRoad']
     username = update_info['username']
     password = update_info['password']
 
