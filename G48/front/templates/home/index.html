@@ -35,6 +35,13 @@
         <table class="table table-striped table-bordered table-hover">
             <thead>
             <tr>
+                {{ each data.colarray colnum index }}
+                <th>
+                    {{ colnum }}
+                </th>
+                {{ /each }}
+            </tr>
+            <tr>
                 {{ each data.head item index }}
                 <th >
                     {{item }}
@@ -43,13 +50,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                {{ each data.colarray colnum index }}
-                <td>
-                    {{ colnum }}
-                </td>
-                {{ /each }}
-            </tr>
+
             {{ each data.row_datas row_data index }}
             <tr>
                 {{ each row_data item index1 }}

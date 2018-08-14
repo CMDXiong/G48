@@ -32,7 +32,7 @@ def read_file_xls(file_name):
     real_file_name = os.path.basename(file_name)       # 得到一个路径下的文件名
     print file_name
     res = {}
-    res['tname'] = real_file_name                      # 存储表名
+    res['tname'] = file_name                           # 存储表名
     workbook = xlrd.open_workbook(file_name)
     sheets = workbook.sheets()
 
@@ -47,7 +47,28 @@ def read_file_xls(file_name):
             continue
         sheet_data['sname'] = sheet.name                # 存储sheet名
         sheet_data['content'] = [map(toUnicode, sheet.row_values(row)) for row in range(0, rows)]  # 从第一行开始存储
-        sheet_data['header'] = sheet_data['content'][0]
+
+        # 解析表头数据,表头一般在前三行中
+        # 统计前三行中每行非空元素的个数,个数最多的定义为表头(这个寻找表头的方式可进一行探讨).
+        head_len_list = []
+        row_nums = len(sheet_data['content'])  # 总行数
+        head_nums = 0  # 表头可能在前head_nums行
+        print row_nums
+        if row_nums > 3:
+            head_nums = 3
+        else:
+            head_nums = row_nums
+        for i in range(head_nums):
+            length = len(sheet_data['content'][i])
+            print sheet_data['content'][i]
+            for x in sheet_data['content'][i]:
+                if not x or x in [None, u'None']:
+                    length -= 1
+            head_len_list.append(length)
+        head_index = head_len_list.index(max(head_len_list))
+        sheet_data['header'] = sheet_data['content'][head_index]
+
+        # sheet_data['header'] = sheet_data['content'][0]
         sheet_data['rows'] = rows
         sheet_data['cols'] = cols
         xlsData[sheet.name] = sheet_data                # 存储数据内容
@@ -66,7 +87,7 @@ def read_file_xlsx(file_name):
     real_file_name = os.path.basename(file_name)       # 得到一个路径下的文件名
     res = {}
     res["badFile"] = ""                                # 如果是一个坏文件，则存储
-    res['tname'] = real_file_name                      # 存储表名
+    res['tname'] = file_name                           # 存储表名
     sheets = []
     try:
         start = time.clock()
@@ -87,7 +108,7 @@ def read_file_xlsx(file_name):
         res["badFile"] = file_name
         return res
     except IOError:
-        print "文件损坏文件："
+        print "文件正在被其他应用打开: "
         print file_name
         res["badFile"] = file_name
         return res
@@ -100,9 +121,27 @@ def read_file_xlsx(file_name):
         if rows == 0:
             continue
         sheet_data['sname'] = sheet.title                                          # 存储sheet名
-        sheet_data['header'] = [i.value for i in list(sheet.rows)[0]]              # 存储表头
-        # sheet_data['content'] = [[sheet.cell(row, col).value for col in range(1, cols+1)] for row in range(1, rows+1)]  # 从第一行开始存储
         sheet_data['content'] = [map(xlsxToUnicode, line) for line in list(sheet.rows)]  # 从第一行开始存储
+
+        # 解析表头数据,表头一般在前三行中
+        # 统计前三行中每行非空元素的个数,个数最多的定义为表头(这个寻找表头的方式可进一行探讨).
+        head_len_list = []
+        row_nums = len(sheet_data['content'])  # 总行数
+        head_nums = 0                          # 表头可能在前head_nums行
+        print row_nums
+        if row_nums > 3:
+            head_nums = 3
+        else:
+            head_nums = row_nums
+        for i in range(head_nums):
+            length = len(sheet_data['content'][i])
+            print sheet_data['content'][i]
+            for x in sheet_data['content'][i]:
+                if not x or x in [None, u'None']:
+                    length -= 1
+            head_len_list.append(length)
+        head_index = head_len_list.index(max(head_len_list))
+        sheet_data['header'] = sheet_data['content'][head_index]
 
         sheet_data['rows'] = rows
         sheet_data['cols'] = cols
@@ -131,7 +170,7 @@ def read_file_csv(file_name):
 
     res = {}
     xlsData = {}
-    res['tname'] = real_file_name                      # 存储表名
+    res['tname'] = file_name                            # 存储表名
 
     with open(file_name, 'r') as csvfile:
         reader = csv.reader(csvfile, encoding=file_encoding['encoding'])
@@ -140,26 +179,35 @@ def read_file_csv(file_name):
             rows = 0
             cols = 0
             raw_data = [row for row in reader]
-            head_row = raw_data[0]                              # 表头数据
+
+            # 解析表头数据,表头一般在前三行中
+            # 统计前三行中每行非空元素的个数,个数最多的定义为表头(这个寻找表头的方式可进一行探讨).
+            row_nums = len(raw_data)  # 总行数
+            head_nums = 0  # 表头可能在前head_nums行
+            if row_nums > 3:
+                head_nums = 3
+            else:
+                head_nums = row_nums
+            head_len_list = []
+            for i in range(head_nums):
+                length = len(raw_data[i])
+                for x in raw_data[i]:
+                    if not x or x in [None, u'None']:
+                        length -= 1
+                head_len_list.append(length)
+            head_index = head_len_list.index(max(head_len_list))
+            head_row = raw_data[head_index]
+
             for row in raw_data:                                # 从第一行开始遍历
-                # print row
                 rows += 1
                 if cols < len(row):
                     cols = len(row)
-            # print rows, cols
-            sheet_data['sname'] = real_file_name  # 存储sheet名
+            sheet_data['sname'] = os.path.splitext(real_file_name)[0]   # 存储sheet名
             sheet_data['header'] = head_row       # 存储表头
-
-            for aaa in raw_data:
-                for bbb in aaa:
-                    if not isinstance(bbb, unicode):
-                        print type(bbb), bbb
 
             content = []
             for line in raw_data:
                 line = [s.strip() for s in line]
-                if not any(line):
-                    continue
                 m, n = len(line), cols
                 if m < n:
                     line.extend(["" for i in range(n - m)])
@@ -167,7 +215,7 @@ def read_file_csv(file_name):
             sheet_data["content"] = content
             sheet_data['rows'] = rows
             sheet_data['cols'] = cols
-            xlsData[real_file_name] = sheet_data  # 存储数据内容
+            xlsData[sheet_data['sname']] = sheet_data  # 存储数据内容
         except UnicodeDecodeError:
             print '编码出错的文件：'
             print file_name

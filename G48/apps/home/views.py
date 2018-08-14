@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-# from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
 from utils import restful
-# from websocket import run_websocket
 from openpyxl.utils import get_column_letter
 import json
 
@@ -93,11 +91,6 @@ def datas_form_files_test(file_path, files_num, connect):
             for file_name in file_name_list:
                 bad_file_name = ""
                 complete_file_name = os.path.join(path, file_name)  # 文件的完整路径名
-                # table_info = {'row_datas': []}
-                # exist = False
-                # files += 1
-                # content["finish_precent"] = str(round((float(files) / files_num), 3) * 100) + '%'
-                # send_msg1(connect, content)
                 if os.path.splitext(file_name)[1] == '.xlsx':  # 是.xlsx文件
                     xlsx_data = reader.read_file_xlsx(complete_file_name)
                     if xlsx_data:
@@ -208,23 +201,22 @@ def fuzzy_query_test(datas, connection, query_info):
                             for item in row:
                                 if not item:
                                     continue
-                                # resultstr = item
                                 is_match = pattern.match(item)  # 匹配结果
                                 if is_match:  # 如果存在匹配， 则记录该行的所有数据和相关信息
                                     sheet_exist = True  # 该sheet中是否匹配了关键字
                                     row_exist = True  # 该行存在关键字的匹配
                                     # 对存在匹配行的一行数据进行存储
-                                    row_data = [xls['tname'], sheet_name, row_num + 1] + sheet_data['content'][row_num]
+                                    row_data = [row_num + 1] + sheet_data['content'][row_num]
                                     deal_str = deal_tuple(is_match.groups(), query_mode)  # 将匹配的关键字添加相应的html标签,以显示红色
                                     col = row.index(item)
-                                    keyword_position[col + 3] = deal_str  # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
+                                    keyword_position[col + 1] = deal_str  # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
                             if row_exist:
                                 for key, value in keyword_position.items():  # 对所有关键字进行相应的替换
                                     row_data[key] = value
                                 table_info['row_datas'].append(row_data)  # 将本行数据添加至存在关键字行列表中
                         if sheet_exist:
-                            table_info['head'] = ['表名', 'Sheet名', '行号'] + sheet_data['header']  # 存储表头信息
-                            table_info['colarray'] = ['', '', ''] + num_converted_into_letters(cols) # 列标签'',  '', '', 'A', 'B', 'C'...
+                            table_info['head'] = ['行号'] + sheet_data['header']  # 存储表头信息
+                            table_info['colarray'] = [''] + num_converted_into_letters(cols) # 列标签'',  '', '', 'A', 'B', 'C'...
                             table_info['table_name'] = xls['tname']  # 关键字存在的表名
                             table_info['sheet_name'] = sheet_name  # 关键字存在的sheet名
                             context['datas'].append(table_info)  # 将存在关键字的表的相关信息存储
@@ -238,8 +230,58 @@ def fuzzy_query_test(datas, connection, query_info):
             json_str = json.dumps(context)
             send_msg(connection, json_str)
         return res
+    # elif query_info['queryMode'] == '3':
+    #     pass
     elif query_info['queryMode'] == '3':
-        pass
+        for mode in ['xls', 'xlsx', 'csv']:
+            if mode in query_table_type:
+                for xls in datas[mode]:
+                    files_queried += 1
+                    result = str(round((float(files_queried) / files_counts), 3) * 100)
+                    length = len(result)
+                    connection.send('%c%c%s' % (0x81, length, result))
+
+                    xls_data = xls['sheets']
+                    context = {'datas': []}  # 用于存储所有表的相关数据信息
+                    table_info = {'row_datas': []}  # 用于存储存在关键字的行数据
+                    for sheet_name, sheet_data in xls_data.items():
+                        sheet_exist = False  # 某一个sheet中是否匹配了关键字
+                        rows = sheet_data['rows']  # sheet对应的行
+                        cols = sheet_data['cols']  # sheet对应的列
+                        row_num = -1
+
+                        for row in sheet_data['content']:
+                            row_num += 1
+                            keyword_position = {}  # 关键字位置，与对应的值
+                            row_exist = False  # 某一行是否匹配了关键字
+
+                            if keyword in row:
+                                keyword_position = [i for i, v in enumerate(row) if v == keyword]
+                                print "row_num", row_num
+                                sheet_exist = True  # 该sheet中是否匹配了关键字
+                                row_exist = True  # 该行存在关键字的匹配
+                                # 对存在匹配行的一行数据进行存储
+                                row_data = [row_num + 1] + sheet_data['content'][row_num]
+                                deal_str =  u'<span style="color: red">' + keyword + u'</span>'  # 将匹配的关键字添加相应的html标签,以显示红色
+                                for i in keyword_position:
+                                    row_data[i+1] = deal_str
+                                table_info['row_datas'].append(row_data)  # 将本行数据添加至存在关键字行列表中
+                        if sheet_exist:
+                            table_info['head'] = ['行号'] + sheet_data['header']  # 存储表头信息
+                            table_info['colarray'] = [''] + num_converted_into_letters(cols) # 列标签'',  '', '', 'A', 'B', 'C'...
+                            table_info['table_name'] = xls['tname']  # 关键字存在的表名
+                            table_info['sheet_name'] = sheet_name  # 关键字存在的sheet名
+                            context['datas'].append(table_info)  # 将存在关键字的表的相关信息存储
+                    if context['datas']:
+                        not_found = False
+                        json_str = json.dumps(context)
+                        send_msg(connection, json_str)
+                        res['datas'] += context['datas']
+        if not_found:
+            context['type'] = 'not_found'
+            json_str = json.dumps(context)
+            send_msg(connection, json_str)
+        return res
     else:
         pass
 

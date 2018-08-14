@@ -14,7 +14,6 @@ global_data1 = {}
 # 初始化数据
 # filepath = ur'F:\Project\H37\H37_xls_search\03SystemSetting\04单位系统\BOSS缩放表.xlsx'
 # filepath = ur'F:\Project\H37\H37_xls_search\05Data'
-# filepath = ur'F:\Project\H37\H37_xls_search\test_file'
 # filepath = ur'F:\Project\H37\H37_xls_search'
 # filepath = ur'F:\Project\G48\导表3'
 # filepath = ur'F:\Project\G48\导表3\01贸易数值表.xls'
@@ -50,9 +49,11 @@ class websocket_thread(threading.Thread):
                             # update_svn(query_info_dict)
                             end1 = time.clock()
                             print "svn下拉时间: ", end1 - start1
-                            # local_road = ur'F:\Project\错误的文件'
+                            # local_road = ur'F:\Project\test'
+                            # local_road = ur'F:\Project\test\称号数据表.csv'
                             local_road = ur'F:\Project\H37\H37_xls_search\05Data'
                             files_num = sum([len(x) for _, _, x in os.walk(local_road)])
+                            # files_num = 1
                             global global_data1
                             start2 = time.clock()
                             global_data1 = views.datas_form_files_test(local_road, files_num, self.connection)
