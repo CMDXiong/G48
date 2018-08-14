@@ -198,7 +198,18 @@ def fuzzy_query_test(datas, connection, query_info):
                             row_num += 1
                             keyword_position = {}  # 关键字位置，与对应的值
                             row_exist = False  # 某一行是否匹配了关键字
+                            # is_match = map(pattern.match, row)
+                            # if any(is_match):
+                            #     sheet_exist = True       # 该sheet中是否匹配了关键字
+                            #     keyword_position = [i for i, v in enumerate(is_match) if v]       # 匹配关键字的位置
+                            #     row_data = [row_num + 1] + row
+                            #     for i in keyword_position:
+                            #         row_data[i+1] = deal_tuple(is_match[i].groups(), query_mode)  # 将匹配的关键字添加相应的html标签,以显示红色
+                            #     table_info['row_datas'].append(row_data)                          # 将本行数据添加至存在关键字行列表中
+
+                            col = -1
                             for item in row:
+                                col += 1
                                 if not item:
                                     continue
                                 is_match = pattern.match(item)  # 匹配结果
@@ -206,13 +217,9 @@ def fuzzy_query_test(datas, connection, query_info):
                                     sheet_exist = True  # 该sheet中是否匹配了关键字
                                     row_exist = True  # 该行存在关键字的匹配
                                     # 对存在匹配行的一行数据进行存储
-                                    row_data = [row_num + 1] + sheet_data['content'][row_num]
-                                    deal_str = deal_tuple(is_match.groups(), query_mode)  # 将匹配的关键字添加相应的html标签,以显示红色
-                                    col = row.index(item)
-                                    keyword_position[col + 1] = deal_str  # 将关键字标红的数据替换原来的数据，加的是3不是2，注意与openpyxl的区别
+                                    row_data = [row_num + 1] + row
+                                    row_data[col+1] = deal_tuple(is_match.groups(), query_mode)  # 将关键字标红的数据替换原来的数据
                             if row_exist:
-                                for key, value in keyword_position.items():  # 对所有关键字进行相应的替换
-                                    row_data[key] = value
                                 table_info['row_datas'].append(row_data)  # 将本行数据添加至存在关键字行列表中
                         if sheet_exist:
                             table_info['head'] = ['行号'] + sheet_data['header']  # 存储表头信息
@@ -230,8 +237,6 @@ def fuzzy_query_test(datas, connection, query_info):
             json_str = json.dumps(context)
             send_msg(connection, json_str)
         return res
-    # elif query_info['queryMode'] == '3':
-    #     pass
     elif query_info['queryMode'] == '3':
         for mode in ['xls', 'xlsx', 'csv']:
             if mode in query_table_type:
@@ -254,15 +259,13 @@ def fuzzy_query_test(datas, connection, query_info):
                             row_num += 1
                             keyword_position = {}  # 关键字位置，与对应的值
                             row_exist = False  # 某一行是否匹配了关键字
-
                             if keyword in row:
                                 keyword_position = [i for i, v in enumerate(row) if v == keyword]
-                                print "row_num", row_num
                                 sheet_exist = True  # 该sheet中是否匹配了关键字
                                 row_exist = True  # 该行存在关键字的匹配
                                 # 对存在匹配行的一行数据进行存储
-                                row_data = [row_num + 1] + sheet_data['content'][row_num]
-                                deal_str =  u'<span style="color: red">' + keyword + u'</span>'  # 将匹配的关键字添加相应的html标签,以显示红色
+                                row_data = [row_num + 1] + row
+                                deal_str = u'<span style="color: red">' + keyword + u'</span>'  # 将匹配的关键字添加相应的html标签,以显示红色
                                 for i in keyword_position:
                                     row_data[i+1] = deal_str
                                 table_info['row_datas'].append(row_data)  # 将本行数据添加至存在关键字行列表中
