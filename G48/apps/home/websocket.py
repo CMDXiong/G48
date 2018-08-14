@@ -41,13 +41,13 @@ class websocket_thread(threading.Thread):
                             files_num = sum([len(x) for _, _, x in os.walk(local_road)])
                             global global_data1
                             global_data1 = views.datas_form_files_test(local_road, files_num, self.connection)
-                            if "badFiles" in global_data1:
-                                if global_data1["badFiles"]:
-                                    content = {"type": "badFiles", "badFiles": global_data1["badFiles"]}
-
-                                    print "global_data1", global_data1["badFiles"]
-                                    json_str = json.dumps(content)
-                                    send_msg(self.connection, json_str)
+                            # if "badFiles" in global_data1:
+                            #     if global_data1["badFiles"]:
+                            #         content = {"type": "badFiles", "badFiles": global_data1["badFiles"]}
+                            #
+                            #         print "global_data1", global_data1["badFiles"]
+                            #         json_str = json.dumps(content)
+                            #         send_msg(self.connection, json_str)
 
                             time.sleep(5)
                             context = {"type": "finish_data_update"}

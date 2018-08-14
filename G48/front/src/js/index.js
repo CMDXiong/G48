@@ -52,14 +52,14 @@ UpdateData.prototype.onmessage = function(msg){
                 // 显示错误文件的信息
                 if (type === "badFiles")
                 {
-                    var show_error_info = jQuery("#show_error_info");
-                    show_error_info.show();
-                    var show_error_file = jQuery("#show_error_files");
-                    var error_file_list = json_obj["badFiles"];
-                    for (var i = 0; i < error_file_list.length; ++i)
-                    {
-                        show_error_file.append("<li>"+ error_file_list[i] + "</li>");
-                    }
+                    // var show_error_info = jQuery("#show_error_info");
+                    // show_error_info.show();
+                    // var show_error_file = jQuery("#show_error_files");
+                    // var error_file_list = json_obj["badFiles"];
+                    // for (var i = 0; i < error_file_list.length; ++i)
+                    // {
+                    //     show_error_file.append("<li>"+ error_file_list[i] + "</li>");
+                    // }
                 }
                 if (type === "finish_data_update")
                 {
@@ -74,8 +74,16 @@ UpdateData.prototype.onmessage = function(msg){
                     var update_progressbar = jQuery("#update-progressbar");
                     update_progressbar.width(json_obj["finish_precent"]);
                     update_progressbar.text("已更新:" + json_obj["finish_precent"]);
-                }
 
+
+                    var show_error_info = jQuery("#show_error_info");
+                    show_error_info.show();
+                    var show_error_file = jQuery("#show_error_files");
+                    if (json_obj["filename"])
+                    {
+                        show_error_file.append("<li>"+ json_obj["filename"] + "</li>");
+                    }
+                }
             }
             // 有数据
             var datas = json_obj["datas"];
@@ -145,6 +153,9 @@ QueryBtn.prototype.listenClickEnterEvent = function (){
 
 QueryBtn.prototype.connectionEvent = function () {
     var self = this;
+    jQuery("#update-progress-group").hide();
+    jQuery("#show_error_info").hide();
+    jQuery("#modal_info").hide();
     if(window.socket == null){
         var host = "ws://10.240.113.164:9005/";
         self.socket = new WebSocket(host);
@@ -217,7 +228,6 @@ QueryBtn.prototype.connectionEvent = function () {
             log(ex);
         }
     }else{
-        console.log("2");
         jQuery("#not-found").hide();
         self.socket = window.socket;
         jQuery("#progress-group").show();

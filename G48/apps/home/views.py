@@ -56,19 +56,18 @@ def index(request):
 
 def datas_form_files_test(file_path, files_num, connect):
     files = 0  # 已读文件个数
-    content = {"type": "update_files", "finish_precent": "0%"}
+    content = {"type": "update_files", "finish_precent": "0%", "filename": ""}
     datas = {"xlsx": [], "xls": [], "csv": [], "badFiles": []}           # 每一个元素都是一个表的字典
     if os.path.isfile(file_path):                                        # 如果是文件
+        bad_file_name = ""
         file_name = os.path.basename(file_path)                          # 得到一个路径下的文件名
         name, ext = os.path.splitext(file_path)                          # ext为文件的扩展名
-        files += 1
-        content["finish_precent"] = str(round((float(files) / files_num), 3) * 100) + '%'
-        send_msg1(connect, content)
         if ext == '.xlsx':                                               # 是.xlsx文件
             xlsx_data = reader.read_file_xlsx(file_path)
             if xlsx_data:
                 if xlsx_data["badFile"]:
                     datas["badFiles"].append(xlsx_data["badFile"])
+                    bad_file_name = xlsx_data["badFile"]
                 else:
                     datas["xlsx"].append(xlsx_data)
         elif ext == '.xls':                                              # 是.xls文件
@@ -81,6 +80,10 @@ def datas_form_files_test(file_path, files_num, connect):
                 datas["csv"].append(csv_result)
         else:                                                # 不属于.xlsx，.xls，.csv文件格式
             print "文件格式不在.xlsx，.xls, .csv之中"
+        files += 1
+        content["filename"] = bad_file_name
+        content["finish_precent"] = str(round((float(files) / files_num), 3) * 100) + '%'
+        send_msg1(connect, content)
     elif os.path.isdir(file_path):  # 如果是路径
         g = os.walk(file_path)
         # path 一个目录
@@ -88,17 +91,19 @@ def datas_form_files_test(file_path, files_num, connect):
         # filelist: 代表path目录所有的文件(也只包含名字)
         for path, dir_list, file_name_list in g:
             for file_name in file_name_list:
+                bad_file_name = ""
                 complete_file_name = os.path.join(path, file_name)  # 文件的完整路径名
                 # table_info = {'row_datas': []}
                 # exist = False
-                files += 1
-                content["finish_precent"] = str(round((float(files) / files_num), 3) * 100) + '%'
-                send_msg1(connect, content)
+                # files += 1
+                # content["finish_precent"] = str(round((float(files) / files_num), 3) * 100) + '%'
+                # send_msg1(connect, content)
                 if os.path.splitext(file_name)[1] == '.xlsx':  # 是.xlsx文件
                     xlsx_data = reader.read_file_xlsx(complete_file_name)
                     if xlsx_data:
                         if xlsx_data["badFile"]:
                             datas["badFiles"].append(xlsx_data["badFile"])
+                            bad_file_name = xlsx_data["badFile"]
                         else:
                             datas["xlsx"].append(xlsx_data)
                 elif os.path.splitext(file_name)[1] == '.xls':  # 是.xls文件
@@ -111,6 +116,10 @@ def datas_form_files_test(file_path, files_num, connect):
                         datas["csv"].append(csv_result)
                 else:
                     print "文件格式不在.xlsx .xls, .cvs之中"
+                files += 1
+                content["filename"] = bad_file_name
+                content["finish_precent"] = str(round((float(files) / files_num), 3) * 100) + '%'
+                send_msg1(connect, content)
     else:
         print "找不到文件或路径"
     return datas
