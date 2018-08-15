@@ -172,6 +172,8 @@ def fuzzy_query_test(datas, connection, query_info):
 
     print "files_counts = ", files_counts
     if files_counts == 0:
+        context = {'type': 'not_found'}
+        send_msg1(connection, context)
         return
 
     # 查询结果
@@ -191,13 +193,12 @@ def fuzzy_query_test(datas, connection, query_info):
                     table_info = {'row_datas': []}  # 用于存储存在关键字的行数据
                     for sheet_name, sheet_data in xls_data.items():
                         sheet_exist = False  # 某一个sheet中是否匹配了关键字
-                        rows = sheet_data['rows']  # sheet对应的行
-                        cols = sheet_data['cols']  # sheet对应的列
+                        cols = sheet_data['cols']  # sheet对应的列数
                         row_num = -1
                         for row in sheet_data['content']:
                             row_num += 1
-                            keyword_position = {}  # 关键字位置，与对应的值
                             row_exist = False  # 某一行是否匹配了关键字
+                            # keyword_position = {}  # 关键字位置，与对应的值
                             # is_match = map(pattern.match, row)
                             # if any(is_match):
                             #     sheet_exist = True       # 该sheet中是否匹配了关键字
@@ -208,6 +209,7 @@ def fuzzy_query_test(datas, connection, query_info):
                             #     table_info['row_datas'].append(row_data)                          # 将本行数据添加至存在关键字行列表中
 
                             col = -1
+                            row_data = [row_num + 1] + row
                             for item in row:
                                 col += 1
                                 if not item:
@@ -216,8 +218,6 @@ def fuzzy_query_test(datas, connection, query_info):
                                 if is_match:  # 如果存在匹配， 则记录该行的所有数据和相关信息
                                     sheet_exist = True  # 该sheet中是否匹配了关键字
                                     row_exist = True  # 该行存在关键字的匹配
-                                    # 对存在匹配行的一行数据进行存储
-                                    row_data = [row_num + 1] + row
                                     row_data[col+1] = deal_tuple(is_match.groups(), query_mode)  # 将关键字标红的数据替换原来的数据
                             if row_exist:
                                 table_info['row_datas'].append(row_data)  # 将本行数据添加至存在关键字行列表中
@@ -234,8 +234,7 @@ def fuzzy_query_test(datas, connection, query_info):
                         res['datas'] += context['datas']
         if not_found:
             context['type'] = 'not_found'
-            json_str = json.dumps(context)
-            send_msg(connection, json_str)
+            send_msg1(connection, context)
         return res
     elif query_info['queryMode'] == '3':
         for mode in ['xls', 'xlsx', 'csv']:

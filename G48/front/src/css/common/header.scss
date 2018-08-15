@@ -31,10 +31,18 @@
                 height: 100%;
             }
         }
+        .project-name{
+            height: $navHeight;
+            float: left;
+            margin-left: 109px;
+            color: #1abc9c;
+            line-height: 64px;
+            font-size: 22px;
+        }
 
         .nav{
             float: left;
-            margin-left: 328px;
+            margin-left: 200px;
             li{
                 float: left;
                 margin-right: 80px;
@@ -44,6 +52,7 @@
                 a{
                     color: #fff;
                     font-size: 18px;
+                    margin-top: -7px;
                 }
                 &.active{
                     border-bottom: 5px solid #5c87d9;

@@ -93,6 +93,8 @@ UpdateData.prototype.listenShowHideEvent = function() {
         show_error_file.children('li').remove();
         jQuery("#progress-group").hide();
         jQuery("#not-found").hide();
+        var prjName = jQuery("#project-name").val().trim();
+        jQuery(".project-name").text(prjName);
         if (window.socket == null)
         {
             var host = "ws://10.240.113.164:9005/";

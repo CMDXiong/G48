@@ -50,10 +50,10 @@ class websocket_thread(threading.Thread):
                             end1 = time.clock()
                             print "svn下拉时间: ", end1 - start1
                             # local_road = ur'F:\Project\test'
-                            # local_road = ur'F:\Project\test\称号数据表.csv'
-                            local_road = ur'F:\Project\H37\H37_xls_search\05Data'
+                            local_road = ur'F:\Project\test\称号数据表.csv'
+                            # local_road = ur'F:\Project\H37\H37_xls_search\05Data'
                             files_num = sum([len(x) for _, _, x in os.walk(local_road)])
-                            # files_num = 1
+                            files_num = 1
                             global global_data1
                             start2 = time.clock()
                             global_data1 = views.datas_form_files_test(local_road, files_num, self.connection)
