@@ -1,0 +1,6 @@
+unicodecsv==0.14.1
+xlrd==1.1.0
+openpyxl==2.5.3
+Django==1.11.14
+setuptools==39.1.0
+chardet==3.0.4
