@@ -151,6 +151,8 @@ def fuzzy_query_test(datas, connection, query_info):
         print "原始数据为空，请检查数据是否导入"
         return
 
+    send_num = 0  # 发送的文件数，如果大于50，则停止发送
+
     # 关键字的处理
     keyword = query_info["keyword"]
     query_mode = query_info["queryMode"]
@@ -182,33 +184,23 @@ def fuzzy_query_test(datas, connection, query_info):
     if query_info['queryMode'] in ['1', '2']:
         for mode in ['xls', 'xlsx', 'csv']:
             if mode in query_table_type:
-                for xls in datas[mode]:
+                for xls in datas[mode]:        # 查询一张表
                     files_queried += 1
                     result = str(round((float(files_queried) / files_counts), 3) * 100)
                     length = len(result)
                     connection.send('%c%c%s' % (0x81, length, result))
 
                     xls_data = xls['sheets']
-                    context = {'datas': []}  # 用于存储所有表的相关数据信息
-                    table_info = {'row_datas': []}  # 用于存储存在关键字的行数据
-                    for sheet_name, sheet_data in xls_data.items():
+
+                    for sheet_name, sheet_data in xls_data.items():              # 查询一张表中的一个sheet
                         sheet_exist = False  # 某一个sheet中是否匹配了关键字
                         cols = sheet_data['cols']  # sheet对应的列数
                         row_num = -1
-                        for row in sheet_data['content']:
+                        table_info = {'row_datas': []}  # 用于存储存在关键字的行数据
+                        for row in sheet_data['content']:                        # sheet中的每一行
                             row_num += 1
                             row_exist = False  # 某一行是否匹配了关键字
-                            # keyword_position = {}  # 关键字位置，与对应的值
-                            # is_match = map(pattern.match, row)
-                            # if any(is_match):
-                            #     sheet_exist = True       # 该sheet中是否匹配了关键字
-                            #     keyword_position = [i for i, v in enumerate(is_match) if v]       # 匹配关键字的位置
-                            #     row_data = [row_num + 1] + row
-                            #     for i in keyword_position:
-                            #         row_data[i+1] = deal_tuple(is_match[i].groups(), query_mode)  # 将匹配的关键字添加相应的html标签,以显示红色
-                            #     table_info['row_datas'].append(row_data)                          # 将本行数据添加至存在关键字行列表中
-
-                            col = -1
+                            col = -1           # 查询的当前列数
                             row_data = [row_num + 1] + row
                             for item in row:
                                 col += 1
@@ -222,20 +214,21 @@ def fuzzy_query_test(datas, connection, query_info):
                             if row_exist:
                                 table_info['row_datas'].append(row_data)  # 将本行数据添加至存在关键字行列表中
                         if sheet_exist:
+                            not_found = False
                             table_info['head'] = ['行号'] + sheet_data['header']  # 存储表头信息
                             table_info['colarray'] = [''] + num_converted_into_letters(cols) # 列标签'',  '', '', 'A', 'B', 'C'...
                             table_info['table_name'] = xls['tname']  # 关键字存在的表名
                             table_info['sheet_name'] = sheet_name  # 关键字存在的sheet名
-                            context['datas'].append(table_info)  # 将存在关键字的表的相关信息存储
-                    if context['datas']:
-                        not_found = False
-                        json_str = json.dumps(context)
-                        send_msg(connection, json_str)
-                        res['datas'] += context['datas']
+                            send_num += 1
+                            print "send_num", send_num
+                            if send_num <= 50:
+                                send_msg1(connection, {'datas': [table_info]})
+                            else:
+                                content = {"type": "more_data"}
+                                send_msg1(connection, content)
+                                return
         if not_found:
-            context['type'] = 'not_found'
-            send_msg1(connection, context)
-        return res
+            send_msg1(connection, {'type': 'not_found'})
     elif query_info['queryMode'] == '3':
         for mode in ['xls', 'xlsx', 'csv']:
             if mode in query_table_type:
@@ -246,22 +239,18 @@ def fuzzy_query_test(datas, connection, query_info):
                     connection.send('%c%c%s' % (0x81, length, result))
 
                     xls_data = xls['sheets']
-                    context = {'datas': []}  # 用于存储所有表的相关数据信息
-                    table_info = {'row_datas': []}  # 用于存储存在关键字的行数据
+
                     for sheet_name, sheet_data in xls_data.items():
+                        table_info = {'row_datas': []}  # 用于存储存在关键字的行数据
                         sheet_exist = False  # 某一个sheet中是否匹配了关键字
-                        rows = sheet_data['rows']  # sheet对应的行
                         cols = sheet_data['cols']  # sheet对应的列
                         row_num = -1
 
                         for row in sheet_data['content']:
                             row_num += 1
-                            keyword_position = {}  # 关键字位置，与对应的值
-                            row_exist = False  # 某一行是否匹配了关键字
                             if keyword in row:
                                 keyword_position = [i for i, v in enumerate(row) if v == keyword]
                                 sheet_exist = True  # 该sheet中是否匹配了关键字
-                                row_exist = True  # 该行存在关键字的匹配
                                 # 对存在匹配行的一行数据进行存储
                                 row_data = [row_num + 1] + row
                                 deal_str = u'<span style="color: red">' + keyword + u'</span>'  # 将匹配的关键字添加相应的html标签,以显示红色
@@ -269,21 +258,21 @@ def fuzzy_query_test(datas, connection, query_info):
                                     row_data[i+1] = deal_str
                                 table_info['row_datas'].append(row_data)  # 将本行数据添加至存在关键字行列表中
                         if sheet_exist:
+                            not_found = False
                             table_info['head'] = ['行号'] + sheet_data['header']  # 存储表头信息
                             table_info['colarray'] = [''] + num_converted_into_letters(cols) # 列标签'',  '', '', 'A', 'B', 'C'...
                             table_info['table_name'] = xls['tname']  # 关键字存在的表名
                             table_info['sheet_name'] = sheet_name  # 关键字存在的sheet名
-                            context['datas'].append(table_info)  # 将存在关键字的表的相关信息存储
-                    if context['datas']:
-                        not_found = False
-                        json_str = json.dumps(context)
-                        send_msg(connection, json_str)
-                        res['datas'] += context['datas']
+                            send_num += 1
+                            print "send_num", send_num
+                            if send_num <= 50:
+                                send_msg1(connection, {'datas': [table_info]})
+                            else:
+                                content = {"type": "more_data"}
+                                send_msg1(connection, content)
+                                return
         if not_found:
-            context['type'] = 'not_found'
-            json_str = json.dumps(context)
-            send_msg(connection, json_str)
-        return res
+            send_msg1(connection, {'type': 'not_found'})
     else:
         pass
 
@@ -441,7 +430,6 @@ def contain(pattern, row_elements):
 
 def num_converted_into_letters(num):
     # 如将数字1，2，3...转化成A，B，C... 27转化成AA....
-    # 最大列为26*26
     result = []
     for i in range(num):
         result.append(get_column_letter(i+1))
@@ -484,6 +472,7 @@ def update_svn(update_info):
     # changes = client.status('./examples/pysvn')
 
     client.checkout(svnurl, outpath)                  # 检出最新版本
+
     #client.checkout(svnurl, outpath, revision=rv)    # 检出指定版本
 
     # changes = client.status('./test') # 检测状态，获取各种新增、删除、修改、冲突、未版本化的状态

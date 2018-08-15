@@ -20,6 +20,11 @@ UpdateData.prototype.onopen = function () {
     var password = jQuery("#git-password").val().trim();
     var localSaveRoad = jQuery("#svn-save").val().trim();
 
+    if ((prjName === "") || (svnHost === "") || (user === "") || (password === "") || (localSaveRoad == "")) {
+        alert('必填项不能为空！');
+        return;
+    }
+
     var data = {
         type: "svnUpdate",
         name: prjName,
@@ -44,6 +49,12 @@ UpdateData.prototype.onmessage = function(msg){
             if ("type" in json_obj)
             {
                 var type = json_obj["type"];
+                if(type === "path_error")
+                {
+                    alert('保存路径不存在！');
+                    return ;
+                }
+
                 if (type === "not_found")
                 {
                     console.log("not_found");
@@ -51,7 +62,6 @@ UpdateData.prototype.onmessage = function(msg){
                 }
                 if(type === "update_files")
                 {
-                    console.log(json_obj["finish_precent"]);
                     var update_progress_group = jQuery("#update-progress-group");
                     update_progress_group.show();
                     var update_progressbar = jQuery("#update-progressbar");
@@ -190,6 +200,10 @@ QueryBtn.prototype.connectionEvent = function () {
                             {
                                 console.log("badFiles Test");
                             }
+                            if (type ===  "more_data")
+                            {
+                                console.log("more_data");
+                            }
                         }
                         // 有数据
                         var datas = json_obj["datas"];
@@ -229,7 +243,6 @@ QueryBtn.prototype.connectionEvent = function () {
                 queryInfo.keyword = jQuery("#inputKeyword").val();
                 if(queryInfo.keyword.length !== 0)
                 {
-                    console.log("not empyt");
                     queryInfo.queryMode = jQuery("#select-type").val();
                     queryInfo.tableType = jQuery("#table-type1").val();
                     queryInfo.selectScope = jQuery("#select-scope").val();
@@ -304,17 +317,20 @@ $(function () {
         jQuery(".form-horizontal")[0].reset();
     });
 
-    window.socket = null;
+    jQuery("#update").click(function () {
+        if (window.socket == null )
+        {
+            alert("请先配置！！！");
+        }
+        else
+        {
+            var update_info = new Object();
+            update_info.type = "update_request";
+            var json_update_info =  JSON.stringify(update_info);
+            window.socket.send(json_update_info);
+        }
 
-    // jQuery("#svn-save").click(function () {
-    //     console.log("这是一个点击事件");
-    //      var fileSave = new ActiveXObject("MSComDlg.CommonDialog");
-    //     fileSave.MaxFileSize = 128;
-    //     fileSave.Filter = "*.bmp";
-    //     fileSave.FilterIndex = 2;
-    //     fileSave.fileName = mydate.toLocaleString().replace(" ", "").replace("年", "").replace("月", "").replace("日", "").replace(reg, "");
-    //     fileSave.DialogTitle = "选择图片存储路径";
-    //     fileSave.ShowSave();
-    //     var path=fileSave.fileName+".bmp";
-    // });
+    });
+
+    window.socket = null;
 });

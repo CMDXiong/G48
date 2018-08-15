@@ -5,22 +5,12 @@ import hashlib
 import socket
 import base64
 import views
-from views import fuzzy_query_test, update_svn, send_msg
+from views import fuzzy_query_test, update_svn, send_msg, send_msg1
 import time
 import os
 import json
 
 global_data1 = {}
-# 初始化数据
-# filepath = ur'F:\Project\H37\H37_xls_search\03SystemSetting\04单位系统\BOSS缩放表.xlsx'
-# filepath = ur'F:\Project\H37\H37_xls_search\05Data'
-# filepath = ur'F:\Project\H37\H37_xls_search'
-# filepath = ur'F:\Project\G48\导表3'
-# filepath = ur'F:\Project\G48\导表3\01贸易数值表.xls'
-# filepath = ur'F:\Project\test'
-# filepath = ur'F:\Project\数据表'
-# filepath = ur'F:\Project\福哥'
-filepath = ur'F:\Project\错误的文件'
 
 
 class websocket_thread(threading.Thread):
@@ -39,21 +29,25 @@ class websocket_thread(threading.Thread):
                     query_info_dict = json.loads(real_data)
                     print query_info_dict
                     if query_info_dict.has_key('type'):
-                        if query_info_dict["type"] == "svnUpdate":
-                            name = query_info_dict['name']
-                            host = query_info_dict['host']
-                            username = query_info_dict['username']
-                            password = query_info_dict['password']
+                        if query_info_dict["type"] == "svnUpdate":           # svn配置更新
+                            update_config = query_info_dict
                             local_road = query_info_dict['localRoad']
+                            # if not os.path.exists(local_road):                # 路径有问题
+                            #     update_info = {"type": "path_error"}
+                            #     send_msg1(self.connection, update_info)
+                            # else:
+                            #     update_info = {"type": "svn_config_success"}
+                            #     send_msg1(self.connection, update_info)
+                        elif query_info_dict["type"] == "update_request":  # 数据更新请求
                             start1 = time.clock()
-                            # update_svn(query_info_dict)
+                            # update_svn(update_config)
                             end1 = time.clock()
                             print "svn下拉时间: ", end1 - start1
-                            # local_road = ur'F:\Project\test'
-                            local_road = ur'F:\Project\test\称号数据表.csv'
+                            local_road = ur'F:\Project\test'
+                            # local_road = ur'F:\Project\test\称号数据表.csv'
                             # local_road = ur'F:\Project\H37\H37_xls_search\05Data'
                             files_num = sum([len(x) for _, _, x in os.walk(local_road)])
-                            files_num = 1
+                            # files_num = 1
                             global global_data1
                             start2 = time.clock()
                             global_data1 = views.datas_form_files_test(local_road, files_num, self.connection)
