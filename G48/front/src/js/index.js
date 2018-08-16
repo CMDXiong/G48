@@ -192,8 +192,8 @@ QueryBtn.prototype.run = function() {
 };
 
 $(function () {
-    window.svn_config = false;
-    // window.svn_config = true;
+    // window.svn_config = false;
+    window.svn_config = true;
     var queryBtnOj = new QueryBtn();
     queryBtnOj.run();
     var inputKeyword = jQuery("#inputKeyword");
