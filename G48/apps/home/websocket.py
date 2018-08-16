@@ -26,8 +26,10 @@ class websocket_thread(threading.Thread):
             if data:
                 real_data = parse_data(data)
                 if real_data:
-                    query_info_dict = json.loads(real_data)
-                    print query_info_dict
+                    try:
+                        query_info_dict = json.loads(real_data)
+                    except ValueError:
+                        print "ValueError"
                     if query_info_dict.has_key('type'):
                         if query_info_dict["type"] == "svnUpdate":           # svn配置更新
                             update_config = query_info_dict
@@ -58,8 +60,8 @@ class websocket_thread(threading.Thread):
                             fuzzy_query_test(global_data1, self.connection, query_info_dict)
                             end = time.clock()
                             print "查询时间：", start - end
-                    else:
-                        pass
+                        else:
+                            pass
 
 
 def parse_data(msg):

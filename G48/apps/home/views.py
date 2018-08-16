@@ -187,9 +187,9 @@ def fuzzy_query_test(datas, connection, query_info):
                 for xls in datas[mode]:        # 查询一张表
                     files_queried += 1
                     result = str(round((float(files_queried) / files_counts), 3) * 100)
-                    length = len(result)
-                    connection.send('%c%c%s' % (0x81, length, result))
-
+                    # length = len(result)
+                    # connection.send('%c%c%s' % (0x81, length, result))
+                    send_msg1(connection, {'type': 'progressbar', 'value': result})
                     xls_data = xls['sheets']
 
                     for sheet_name, sheet_data in xls_data.items():              # 查询一张表中的一个sheet
@@ -222,7 +222,7 @@ def fuzzy_query_test(datas, connection, query_info):
                             send_num += 1
                             print "send_num", send_num
                             if send_num <= 50:
-                                send_msg1(connection, {'datas': [table_info]})
+                                send_msg1(connection, {'type': 'query_result', 'datas': [table_info]})
                             else:
                                 content = {"type": "more_data"}
                                 send_msg1(connection, content)
@@ -235,8 +235,9 @@ def fuzzy_query_test(datas, connection, query_info):
                 for xls in datas[mode]:
                     files_queried += 1
                     result = str(round((float(files_queried) / files_counts), 3) * 100)
-                    length = len(result)
-                    connection.send('%c%c%s' % (0x81, length, result))
+                    # length = len(result)
+                    # connection.send('%c%c%s' % (0x81, length, result))
+                    send_msg1(connection, {'type': 'progressbar', 'value': result})
 
                     xls_data = xls['sheets']
 
@@ -266,7 +267,7 @@ def fuzzy_query_test(datas, connection, query_info):
                             send_num += 1
                             print "send_num", send_num
                             if send_num <= 50:
-                                send_msg1(connection, {'datas': [table_info]})
+                                send_msg1(connection, {'type': 'query_result', 'datas': [table_info]})
                             else:
                                 content = {"type": "more_data"}
                                 send_msg1(connection, content)
@@ -275,6 +276,8 @@ def fuzzy_query_test(datas, connection, query_info):
             send_msg1(connection, {'type': 'not_found'})
     else:
         pass
+    print "xxx"
+    send_msg1(connection, {'type': 'query_finish'})
 
 
 def send_msg1(conn, msg_bytes):

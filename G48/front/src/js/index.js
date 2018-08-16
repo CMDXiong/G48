@@ -152,152 +152,229 @@ QueryBtn.prototype.connectionEvent = function () {
     jQuery("#update-progress-group").hide();
     jQuery("#show_error_info").hide();
     jQuery("#modal_info").hide();
-    if(window.socket == null){
-        var host = "ws://10.240.113.164:9005/";
-        self.socket = new WebSocket(host);
-        window.socket = self.socket;
-        jQuery("#progress-group").show();
-        var progress = jQuery("#progressbar")
-        progress.css({"width": 0});
-        progress.text('0.0% Complete (success)');
-        var show_excel = jQuery("#show_excel");
-        show_excel.html("");
-        try {
-            self.socket.onopen = function (msg) {
-                var queryInfo = new Object();
-                queryInfo.type = "queryInfo";
-                queryInfo.keyword = jQuery("#inputKeyword").val();
-                if(queryInfo.keyword.length !== 0)
+
+    var host = "ws://10.240.113.164:9005/";
+    var socket = new WebSocket(host);
+    jQuery("#progress-group").show();
+    var progress = jQuery("#progressbar")
+    progress.css({"width": 0});
+    progress.text('0.0% Complete (success)');
+    var show_excel = jQuery("#show_excel");
+    show_excel.html("");
+    try {
+        socket.onopen = function (msg){
+            var queryInfo = new Object();
+            queryInfo.type = "queryInfo";
+            queryInfo.keyword = jQuery("#inputKeyword").val();
+            if(queryInfo.keyword.length !== 0)
+            {
+                console.log("not empyt");
+                queryInfo.queryMode = jQuery("#select-type").val();
+                queryInfo.tableType = jQuery("#table-type1").val();
+                queryInfo.selectScope = jQuery("#select-scope").val();
+
+                var jsonQueryInfo =  JSON.stringify(queryInfo);
+                socket.send(jsonQueryInfo);
+            }else{
+                console.log("empty");
+            }
+        }
+        socket.onmessage = function (msg) {
+            if (typeof msg.data == "string") {
+                if  (isNaN(Number(msg.data)))
                 {
-                    console.log("not empyt");
-                    queryInfo.queryMode = jQuery("#select-type").val();
-                    queryInfo.tableType = jQuery("#table-type1").val();
-                    queryInfo.selectScope = jQuery("#select-scope").val();
-
-                    var jsonQueryInfo =  JSON.stringify(queryInfo);
-                    self.socket.send(jsonQueryInfo);
-                }else{
-                    console.log("empty");
-                }
-            };
-
-            self.socket.onmessage = function (msg) {
-                if (typeof msg.data == "string") {
-                    // displayContent(msg.data);
-                    if  (isNaN(Number(msg.data)))
+                    // 显示查询结果代码
+                    var json_obj = JSON.parse(msg.data);
+                    if ("type" in json_obj)
                     {
-                        // 显示查询结果代码
-                        var json_obj = JSON.parse(msg.data);
-                        if ("type" in json_obj)
+                        var type = json_obj["type"];
+                        if (type === "not_found")          // 未找到相关检索的提示
                         {
-                            var type = json_obj["type"];
-                            if (type === "not_found")
-                            {
-                                console.log("not_found");
-                                jQuery("#not-found").show();
-                            }
-                            if (type === "badFiles")
-                            {
-                                console.log("badFiles Test");
-                            }
-                            if (type ===  "more_data")
-                            {
-                                console.log("more_data");
-                            }
+                            jQuery("#not-found").show();
                         }
-                        // 有数据
-                        var datas = json_obj["datas"];
-                        var html = template('query-item',{"datas": datas});
-                        var show_excel = jQuery("#show_excel");
-                        show_excel.append(html);
-                    }else{
-                        // {#进度条的代码#}
-                        // var progress = jQuery("#progressbar")
-                        progress.text(msg.data +  '% Complete (success)');
-                        progress.css({"width": msg.data + '%'});
+                        if (type === "badFiles")
+                        {
+                            console.log("badFiles Test");
+                        }
+                        if (type ===  "more_data")
+                        {
+                            console.log("more_data");
+                        }
+                        if (type === "query_finish")       // 通信完成
+                        {
+                            socket.close();
+                        }
+                        if (type === "progressbar")        // 进度条的动态显示
+                        {
+                            console.log("progressbar");
+                            progress.text(json_obj["value"] + '% Complete (success)');
+                            progress.width(json_obj["value"] + '%');
+                        }
+
+                        if (type == "query_result")       // 显示查询的结果
+                        {
+                            console.log("查询结果");
+                            var datas = json_obj["datas"];
+                            var html = template('query-item',{"datas": datas});
+                            var show_excel = jQuery("#show_excel");
+                            show_excel.append(html);
+                        }
                     }
-                }
-                else {
-                    alert("非文本消息");
-                }
-            };
-
-            self.socket.onclose = function (msg) { alert("socket closed!") };
-        }
-        catch (ex) {
-            log(ex);
-        }
-    }else{
-        jQuery("#not-found").hide();
-        self.socket = window.socket;
-        jQuery("#progress-group").show();
-        var progress = jQuery("#progressbar")
-        progress.css({"width": 0});
-        progress.text('0.0% Complete (success)');
-        var show_excel = jQuery("#show_excel");
-        show_excel.html("");
-        try {
-            // self.socket.onopen = function (msg) {
-                var queryInfo = new Object();
-                queryInfo.type = "queryInfo";
-                queryInfo.keyword = jQuery("#inputKeyword").val();
-                if(queryInfo.keyword.length !== 0)
-                {
-                    queryInfo.queryMode = jQuery("#select-type").val();
-                    queryInfo.tableType = jQuery("#table-type1").val();
-                    queryInfo.selectScope = jQuery("#select-scope").val();
-
-                    var jsonQueryInfo =  JSON.stringify(queryInfo);
-                    self.socket.send(jsonQueryInfo);
                 }else{
-                    console.log("empty");
+                    console.log("不是json");
                 }
-            // };
-
-            self.socket.onmessage = function (msg) {
-                if (typeof msg.data == "string") {
-                    // displayContent(msg.data);
-                    if  (isNaN(Number(msg.data)))
-                    {
-                        // 显示查询结果代码
-                        var json_obj = JSON.parse(msg.data);
-                        if ("type" in json_obj)
-                        {
-                            var type = json_obj["type"];
-                            if (type === "not_found")
-                            {
-                                console.log("not_found");
-                                jQuery("#not-found").show();
-                            }
-                            if (type === "badFiles")
-                            {
-                                console.log("badFiles Test");
-                            }
-                        }
-                        // 有数据
-                        var datas = json_obj["datas"];
-                        var html = template('query-item',{"datas": datas});
-                        var show_excel = jQuery("#show_excel");
-                        show_excel.append(html);
-                    }else{
-                        // {#进度条的代码#}
-                        // var progress = jQuery("#progressbar")
-                        progress.text(msg.data +  '% Complete (success)');
-                        progress.css({"width": msg.data + '%'});
-                        console.log(progress.width);
-                    }
-                }
-                else {
-                    alert("非文本消息");
-                }
-            };
-
-            self.socket.onclose = function (msg) { alert("socket closed!") };
+            }
         }
-        catch (ex) {
-            log(ex);
-        }
+        // socket.onclose = function (msg) { alert("socket closed!") }
     }
+    catch (e) {
+    }
+
+
+    // if(window.socket == null){
+    //     var host = "ws://10.240.113.164:9005/";
+    //     self.socket = new WebSocket(host);
+    //     window.socket = self.socket;
+    //     jQuery("#progress-group").show();
+    //     var progress = jQuery("#progressbar")
+    //     progress.css({"width": 0});
+    //     progress.text('0.0% Complete (success)');
+    //     var show_excel = jQuery("#show_excel");
+    //     show_excel.html("");
+    //     try {
+    //         self.socket.onopen = function (msg) {
+    //             var queryInfo = new Object();
+    //             queryInfo.type = "queryInfo";
+    //             queryInfo.keyword = jQuery("#inputKeyword").val();
+    //             if(queryInfo.keyword.length !== 0)
+    //             {
+    //                 console.log("not empyt");
+    //                 queryInfo.queryMode = jQuery("#select-type").val();
+    //                 queryInfo.tableType = jQuery("#table-type1").val();
+    //                 queryInfo.selectScope = jQuery("#select-scope").val();
+    //
+    //                 var jsonQueryInfo =  JSON.stringify(queryInfo);
+    //                 self.socket.send(jsonQueryInfo);
+    //             }else{
+    //                 console.log("empty");
+    //             }
+    //         };
+    //
+    //         self.socket.onmessage = function (msg) {
+    //             if (typeof msg.data == "string") {
+    //                 // displayContent(msg.data);
+    //                 if  (isNaN(Number(msg.data)))
+    //                 {
+    //                     // 显示查询结果代码
+    //                     var json_obj = JSON.parse(msg.data);
+    //                     if ("type" in json_obj)
+    //                     {
+    //                         var type = json_obj["type"];
+    //                         if (type === "not_found")
+    //                         {
+    //                             console.log("not_found");
+    //                             jQuery("#not-found").show();
+    //                         }
+    //                         if (type === "badFiles")
+    //                         {
+    //                             console.log("badFiles Test");
+    //                         }
+    //                         if (type ===  "more_data")
+    //                         {
+    //                             console.log("more_data");
+    //                         }
+    //                     }
+    //                     // 有数据
+    //                     var datas = json_obj["datas"];
+    //                     var html = template('query-item',{"datas": datas});
+    //                     var show_excel = jQuery("#show_excel");
+    //                     show_excel.append(html);
+    //                 }else{
+    //                     // {#进度条的代码#}
+    //                     // var progress = jQuery("#progressbar")
+    //                     progress.text(msg.data +  '% Complete (success)');
+    //                     progress.css({"width": msg.data + '%'});
+    //                 }
+    //             }
+    //             else {
+    //                 alert("非文本消息");
+    //             }
+    //         };
+    //
+    //         self.socket.onclose = function (msg) { alert("socket closed!") };
+    //     }
+    //     catch (ex) {
+    //         log(ex);
+    //     }
+    // }else{
+    //     jQuery("#not-found").hide();
+    //     self.socket = window.socket;
+    //     jQuery("#progress-group").show();
+    //     var progress = jQuery("#progressbar")
+    //     progress.css({"width": 0});
+    //     progress.text('0.0% Complete (success)');
+    //     var show_excel = jQuery("#show_excel");
+    //     show_excel.html("");
+    //     try {
+    //         // self.socket.onopen = function (msg) {
+    //             var queryInfo = new Object();
+    //             queryInfo.type = "queryInfo";
+    //             queryInfo.keyword = jQuery("#inputKeyword").val();
+    //             if(queryInfo.keyword.length !== 0)
+    //             {
+    //                 queryInfo.queryMode = jQuery("#select-type").val();
+    //                 queryInfo.tableType = jQuery("#table-type1").val();
+    //                 queryInfo.selectScope = jQuery("#select-scope").val();
+    //
+    //                 var jsonQueryInfo =  JSON.stringify(queryInfo);
+    //                 self.socket.send(jsonQueryInfo);
+    //             }else{
+    //                 console.log("empty");
+    //             }
+    //         // };
+    //
+    //         self.socket.onmessage = function (msg) {
+    //             if (typeof msg.data == "string") {
+    //                 // displayContent(msg.data);
+    //                 if  (isNaN(Number(msg.data)))
+    //                 {
+    //                     // 显示查询结果代码
+    //                     var json_obj = JSON.parse(msg.data);
+    //                     if ("type" in json_obj)
+    //                     {
+    //                         var type = json_obj["type"];
+    //                         if (type === "not_found")
+    //                         {
+    //                             console.log("not_found");
+    //                             jQuery("#not-found").show();
+    //                         }
+    //                         if (type === "badFiles")
+    //                         {
+    //                             console.log("badFiles Test");
+    //                         }
+    //                     }
+    //                     // 有数据
+    //                     var datas = json_obj["datas"];
+    //                     var html = template('query-item',{"datas": datas});
+    //                     var show_excel = jQuery("#show_excel");
+    //                     show_excel.append(html);
+    //                 }else{
+    //                     // {#进度条的代码#}
+    //                     progress.text(msg.data +  '% Complete (success)');
+    //                     progress.css({"width": msg.data + '%'});
+    //                     console.log(progress.width);
+    //                 }
+    //             }
+    //             else {
+    //                 alert("非文本消息");
+    //             }
+    //         };
+    //         self.socket.onclose = function (msg) { alert("socket closed!") };
+    //     }
+    //     catch (ex) {
+    //         log(ex);
+    //     }
+    // }
 };
 
 QueryBtn.prototype.run = function() {
