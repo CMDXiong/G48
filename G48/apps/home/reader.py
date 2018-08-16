@@ -53,14 +53,12 @@ def read_file_xls(file_name):
         head_len_list = []
         row_nums = len(sheet_data['content'])  # 总行数
         head_nums = 0  # 表头可能在前head_nums行
-        print row_nums
         if row_nums > 3:
             head_nums = 3
         else:
             head_nums = row_nums
         for i in range(head_nums):
             length = len(sheet_data['content'][i])
-            print sheet_data['content'][i]
             for x in sheet_data['content'][i]:
                 if not x or x in [None, u'None']:
                     length -= 1
@@ -86,7 +84,7 @@ def read_file_xlsx(file_name):
 
     real_file_name = os.path.basename(file_name)       # 得到一个路径下的文件名
     res = {}
-    res["badFile"] = ""                                # 如果是一个坏文件，则存储
+    res["bad_file_info"] = {}                          # 如果是一个坏文件，则存储
     res['tname'] = file_name                           # 存储表名
     sheets = []
     try:
@@ -100,17 +98,20 @@ def read_file_xlsx(file_name):
     except BadZipfile:
         print "坏文件："
         print file_name
-        res["badFile"] = file_name
+        res["bad_file_info"] = {"error_type": "BadZipfile", "file_name": file_name}
         return res
     except TypeError:
         print "类型出错文件："
         print file_name
-        res["badFile"] = file_name
+        res["bad_file_info"] = {"error_type": "TypeError", "file_name": file_name}
         return res
     except IOError:
         print "文件正在被其他应用打开: "
         print file_name
-        res["badFile"] = file_name
+        res["bad_file_info"] = {"error_type": "IOError", "file_name": file_name}
+        return res
+    except:
+        res["bad_file_info"] = {"error_type": "OtherError", "file_name": file_name}
         return res
 
     xlsData = {}
@@ -128,14 +129,12 @@ def read_file_xlsx(file_name):
         head_len_list = []
         row_nums = len(sheet_data['content'])  # 总行数
         head_nums = 0                          # 表头可能在前head_nums行
-        print row_nums
         if row_nums > 3:
             head_nums = 3
         else:
             head_nums = row_nums
         for i in range(head_nums):
             length = len(sheet_data['content'][i])
-            print sheet_data['content'][i]
             for x in sheet_data['content'][i]:
                 if not x or x in [None, u'None']:
                     length -= 1

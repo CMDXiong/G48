@@ -146,18 +146,42 @@
                         0%
                     </div>
                 </div>
+                <div id="modal_info" style="display: none">
+                数据正在更新中......
+                </div>
             </div >
             <div id="not-found" style="display: none">
                 未检索到相关信息......
             </div>
-            <div id="modal_info" style="display: none">
-                数据正在更新中......
-            </div>
+{#            <div id="modal_info" style="display: none">#}
+{#                数据正在更新中......#}
+{#            </div>#}
 
             <div id="show_error_info" style="display: none">
                 <h4 style='color: red;'> 不能正确读取的文件：</h4>
-                <ol id="show_error_files">
-                </ol>
+                <div id="TypeError" style="display: none">
+                    <div id="TypeErrorinfo">
+                        不能识别文件内容的文件(如图片)：
+                    </div>
+                    <ol id="show_TypeError_files">
+                    </ol>
+                </div>
+                <div id="BadZipFile" style="display: none">
+                    <div id="BadZipFileErrorinfo">
+                        损坏文件：
+                    </div>
+                    <ol id="show_BadZipFile_files">
+                    </ol>
+                </div>
+                <div id="IOError" style="display: none">
+                    <div id="IOErrorinfo">
+                       正在被其它应用打开的文件：
+                    </div>
+                    <ol id="show_IOError_files">
+                    </ol>
+                </div>
+{#                <ol id="show_error_files">#}
+{#                </ol>#}
             </div>
         </div>
 
@@ -227,43 +251,43 @@
         </div>
 
         <div class="show_excel" id="show_excel">
-            {% for data in datas %}
-                <div class="table_info">
-                    <span><strong>来源表:</strong> {{ data.table_name }} ,  </span>
-                    <span> <strong>来源SHEET: </strong>{{ data.sheet_name }}</span>
-                </div>
-                <table class="table table-striped table-bordered table-hover" style="overflow:scroll;">
-                    <thead>
-                    <tr>
-                        {% for item in data.head %}
-                            <th >
-                                {{item }}
-                            </th>
-                        {% endfor %}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        {% for colnum in data.colarray %}
-                            <td>{{ colnum }}</td>
-                        {% endfor %}
-                    </tr>
-
-                    {% for row_data in data.row_datas %}
-                        <tr>
-                            {% for item in row_data %}
-                                <td>
-                                    {% autoescape off %}
-                                        {{item }}
-                                    {% endautoescape %}
-                                </td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-
-                    </tbody>
-                </table>
-            {% endfor %}
+{#            {% for data in datas %}#}
+{#                <div class="table_info">#}
+{#                    <span><strong>来源表:</strong> {{ data.table_name }} ,  </span>#}
+{#                    <span> <strong>来源SHEET: </strong>{{ data.sheet_name }}</span>#}
+{#                </div>#}
+{#                <table class="table table-striped table-bordered table-hover" style="overflow:scroll;">#}
+{#                    <thead>#}
+{#                    <tr>#}
+{#                        {% for item in data.head %}#}
+{#                            <th >#}
+{#                                {{item }}#}
+{#                            </th>#}
+{#                        {% endfor %}#}
+{#                    </tr>#}
+{#                    </thead>#}
+{#                    <tbody>#}
+{#                    <tr>#}
+{#                        {% for colnum in data.colarray %}#}
+{#                            <td>{{ colnum }}</td>#}
+{#                        {% endfor %}#}
+{#                    </tr>#}
+{##}
+{#                    {% for row_data in data.row_datas %}#}
+{#                        <tr>#}
+{#                            {% for item in row_data %}#}
+{#                                <td>#}
+{#                                    {% autoescape off %}#}
+{#                                        {{item }}#}
+{#                                    {% endautoescape %}#}
+{#                                </td>#}
+{#                            {% endfor %}#}
+{#                        </tr>#}
+{#                    {% endfor %}#}
+{##}
+{#                    </tbody>#}
+{#                </table>#}
+{#            {% endfor %}#}
         </div>
     </div>
 {% endblock %}

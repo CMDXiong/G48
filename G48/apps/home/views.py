@@ -22,29 +22,7 @@ import reader
 
 
 def search_result(request):
-    # 搜索结果函数
-    keyword = request.POST['content']                   # 获取关键字
-    keyword = keyword.replace(' ', '')                  # 去掉关键字中的所有空格
-    inquiry_mode = request.POST['inquiry_mode']         # 获取查询方式
-    filename = request.POST['filename']                 #
-    print filename
-    # print request.POST['tableType']
-    context = {}                                        # 传入到html模板中的数据
-    print keyword
-    print inquiry_mode
-
-    if cmp(inquiry_mode, '1') == 0:                      # 模糊查询
-        print '1'
-    elif cmp(inquiry_mode, '2') == 0:                    # 精确查询
-        print '2'
-    elif cmp(inquiry_mode, '3') == 0:                    # 高级查询
-        print '3'
-        keyword1 = u'商会'.replace(' ', '')
-        keyword2 = u'队伍'.replace(' ', '')
-        context = advanced_search(keyword1, keyword2)  # 高级查询，可以同时查询多个关键字
-    else:
-        print "4"
-    return render(request, 'home/index.html', context=context)
+    return render(request, 'home/index.html')
 
 
 def index(request):
@@ -53,19 +31,19 @@ def index(request):
 
 
 def datas_form_files_test(file_path, files_num, connect):
+    print "总数：", files_num
     files = 0  # 已读文件个数
-    content = {"type": "update_files", "finish_precent": "0%", "filename": ""}
-    datas = {"xlsx": [], "xls": [], "csv": [], "badFiles": []}           # 每一个元素都是一个表的字典
+    content = {"type": "update_files", "finish_precent": "0%", "bad_file_info": {}}
+    datas = {"xlsx": [], "xls": [], "csv": []}           # 每一个元素都是一个表的字典
     if os.path.isfile(file_path):                                        # 如果是文件
-        bad_file_name = ""
+        bad_file_info = {}
         file_name = os.path.basename(file_path)                          # 得到一个路径下的文件名
         name, ext = os.path.splitext(file_path)                          # ext为文件的扩展名
         if ext == '.xlsx':                                               # 是.xlsx文件
             xlsx_data = reader.read_file_xlsx(file_path)
             if xlsx_data:
-                if xlsx_data["badFile"]:
-                    datas["badFiles"].append(xlsx_data["badFile"])
-                    bad_file_name = xlsx_data["badFile"]
+                if xlsx_data["bad_file_info"]:
+                    bad_file_info = xlsx_data["bad_file_info"]
                 else:
                     datas["xlsx"].append(xlsx_data)
         elif ext == '.xls':                                              # 是.xls文件
@@ -79,7 +57,7 @@ def datas_form_files_test(file_path, files_num, connect):
         else:                                                # 不属于.xlsx，.xls，.csv文件格式
             print "文件格式不在.xlsx，.xls, .csv之中"
         files += 1
-        content["filename"] = bad_file_name
+        content["bad_file_info"] = bad_file_info
         content["finish_precent"] = str(round((float(files) / files_num), 3) * 100) + '%'
         send_msg1(connect, content)
     elif os.path.isdir(file_path):  # 如果是路径
@@ -89,14 +67,13 @@ def datas_form_files_test(file_path, files_num, connect):
         # filelist: 代表path目录所有的文件(也只包含名字)
         for path, dir_list, file_name_list in g:
             for file_name in file_name_list:
-                bad_file_name = ""
+                bad_file_info = {}
                 complete_file_name = os.path.join(path, file_name)  # 文件的完整路径名
                 if os.path.splitext(file_name)[1] == '.xlsx':  # 是.xlsx文件
                     xlsx_data = reader.read_file_xlsx(complete_file_name)
                     if xlsx_data:
-                        if xlsx_data["badFile"]:
-                            datas["badFiles"].append(xlsx_data["badFile"])
-                            bad_file_name = xlsx_data["badFile"]
+                        if xlsx_data["bad_file_info"]:
+                            bad_file_info = xlsx_data["bad_file_info"]
                         else:
                             datas["xlsx"].append(xlsx_data)
                 elif os.path.splitext(file_name)[1] == '.xls':  # 是.xls文件
@@ -110,7 +87,7 @@ def datas_form_files_test(file_path, files_num, connect):
                 else:
                     print "文件格式不在.xlsx .xls, .cvs之中"
                 files += 1
-                content["filename"] = bad_file_name
+                content["bad_file_info"] = bad_file_info
                 content["finish_precent"] = str(round((float(files) / files_num), 3) * 100) + '%'
                 send_msg1(connect, content)
     else:
@@ -173,9 +150,8 @@ def fuzzy_query_test(datas, connection, query_info):
             files_counts += len(datas[mode])
 
     print "files_counts = ", files_counts
-    if files_counts == 0:
-        context = {'type': 'not_found'}
-        send_msg1(connection, context)
+    if files_counts == 0:    # 没有检索到相关的信息
+        send_msg1(connection, {'type': 'not_found'})
         return
 
     # 查询结果
@@ -221,7 +197,7 @@ def fuzzy_query_test(datas, connection, query_info):
                             table_info['sheet_name'] = sheet_name  # 关键字存在的sheet名
                             send_num += 1
                             print "send_num", send_num
-                            if send_num <= 50:
+                            if send_num <= 100:
                                 send_msg1(connection, {'type': 'query_result', 'datas': [table_info]})
                             else:
                                 content = {"type": "more_data"}
@@ -276,7 +252,6 @@ def fuzzy_query_test(datas, connection, query_info):
             send_msg1(connection, {'type': 'not_found'})
     else:
         pass
-    print "xxx"
     send_msg1(connection, {'type': 'query_finish'})
 
 
@@ -305,27 +280,6 @@ def send_msg1(conn, msg_bytes):
     conn.send(msg)
     return True
 
-def send_msg(conn, msg_bytes):
-    """
-    WebSocket服务端向客户端发送消息
-    :param conn: 客户端连接到服务器端的socket对象,即： conn,address = socket.accept()
-    :param msg_bytes: 向客户端发送的字节
-    :return:
-    """
-    import struct
-
-    token = b"\x81"
-    length = len(msg_bytes)
-    if length < 126:
-        token += struct.pack("B", length)
-    elif length <= 0xFFFF:
-        token += struct.pack("!BH", 126, length)
-    else:
-        token += struct.pack("!BQ", 127, length)
-
-    msg = token + msg_bytes
-    conn.send(msg)
-    return True
 
 def deal_tuple(keyword_tuple, query_mode):
     result = u''
@@ -346,71 +300,6 @@ def deal_tuple(keyword_tuple, query_mode):
         return keyword_prefix + keyword_tuple[0] + keyword_suffix
     else:
         pass
-
-
-def advanced_search(keyword1, keyword2):
-    # 高级检索
-    # 表中一行数据包含多个关键字
-    # 表中一行数据包含多个关键字中的至少一个
-
-    context = {}
-    context['datas'] = []
-    exist = False
-    exist_row = False
-
-    keyword1_re = building_regular_expressions(keyword1)
-    keyword2_re = building_regular_expressions(keyword2)
-
-    keywords_re = [keyword1_re, keyword2_re]
-
-    start = time.clock()
-    filepath = r'F:\Project\G48\导表3'  # 自动转化成utf-8的字节字符串
-    filepath = filepath.decode('utf-8')  # 形成无编码的unicode字符集
-    pathDir = os.listdir(filepath)  # 目录下的所有文件
-
-    for allDir in pathDir:
-        child = os.path.join(filepath, allDir)  # 文件的完整路径
-        if os.path.isfile(child):  # 判断路径是不是文件
-            exist = False
-            table_info = {}
-            table_info['row_datas'] = []
-            table_info['col'] = []
-            workbook = xlrd.open_workbook(child)  # excel表
-            sheets = workbook.sheets()  # 表中所有sheet
-            for sheet in sheets:
-                rows = sheet.nrows  # sheet对应的行
-                cols = sheet.ncols  # sheet对应的列
-                for row in range(rows):
-                    exist_row = True               # exist表示一行元素包含所有的关键字
-                    col_list = []
-                    for keyword in keywords_re:
-                        is_contain, col = contain(keyword, sheet.row_values(row))
-                        if not is_contain:  # 一行元素不包含关键字keyword的模糊查询
-                            exist_row = False
-                            break
-                        else:
-                            if col >= 0:
-                                col_list.append(col+3)
-                    if exist_row:
-                        # print sheet.row_values(row)
-                        print col_list
-                        exist = True
-                        row_data = [allDir, sheet.name, row + 1] + sheet.row_values(row)
-                        table_info['row_datas'].append(row_data)
-                        table_head = ['表名', 'Sheet名', '行号']
-                        table_info['head'] = table_head + sheet.row_values(0)
-                        # table_info['col'] = col_list
-                        table_info['col'].append(col_list)                   # 显示红色的位置
-                        table_info['colarray'] = ['', '', '']
-                        table_info['colarray'] += num_converted_into_letters(len(sheet.row_values(row)))
-                        table_info['table_name'] = allDir
-                        table_info['sheet_name'] = sheet.name
-            if exist:
-                context['datas'].append(table_info)
-                print context['datas']
-    end = time.clock()
-    print "查询所花费的时间：%f" % (end - start)
-    return context
 
 
 def contain(pattern, row_elements):

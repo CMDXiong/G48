@@ -23,8 +23,20 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/home/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="224" column="76" selection-start-line="224" selection-start-column="64" selection-end-line="224" selection-end-column="76" />
+            <state relative-caret-position="7641">
+              <caret line="302" selection-start-line="302" selection-end-line="302" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="reader.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/home/reader.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="27">
+              <caret line="108" column="29" selection-start-line="108" selection-start-column="29" selection-end-line="108" selection-end-column="29" />
+              <folding>
+                <element signature="e#24#33#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -32,17 +44,24 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/front/templates/home/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2943">
-              <caret line="109" column="34" selection-start-line="109" selection-start-column="34" selection-end-line="109" selection-end-column="34" />
+            <state relative-caret-position="3834">
+              <caret line="142" column="42" selection-start-line="142" selection-start-column="21" selection-end-line="142" selection-end-column="42" />
               <folding>
-                <element signature="e#5676#5711#0#HTML" expanded="true" />
-                <element signature="e#5806#5842#0#HTML" expanded="true" />
-                <element signature="e#5457#5479#0#HTML" expanded="true" />
-                <element signature="e#6077#6095#0#HTML" expanded="true" />
-                <element signature="e#5936#5957#0#HTML" expanded="true" />
-                <element signature="e#6047#6068#0#HTML" expanded="true" />
-                <element signature="e#6068#6087#0#HTML" expanded="true" />
+                <element signature="e#6112#6134#0#HTML" expanded="true" />
+                <element signature="e#7113#7134#0#HTML" expanded="true" />
+                <element signature="e#7614#7635#0#HTML" expanded="true" />
+                <element signature="e#7888#7909#0#HTML" expanded="true" />
+                <element signature="e#7896#7917#0#HTML" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/front/src/js/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="166">
+              <caret line="196" column="31" lean-forward="true" selection-start-line="196" selection-start-column="31" selection-end-line="196" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -56,23 +75,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="websocket.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="websocket.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apps/home/websocket.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="297">
-              <caret line="59" column="35" lean-forward="true" selection-start-line="59" selection-start-column="35" selection-end-line="59" selection-end-column="35" />
-              <folding>
-                <element signature="e#25#41#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/front/src/js/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="326">
-              <caret line="223" column="42" lean-forward="true" selection-start-line="223" selection-start-column="42" selection-end-line="223" selection-end-column="42" />
+            <state relative-caret-position="621">
+              <caret line="57" column="67" lean-forward="true" selection-start-line="57" selection-start-column="67" selection-end-line="57" selection-end-column="67" />
             </state>
           </provider>
         </entry>
@@ -86,38 +93,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="init.scss" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/front/src/css/common/init.scss">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="81">
-              <caret line="3" column="63" selection-start-line="3" selection-start-column="63" selection-end-line="3" selection-end-column="63" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.scss" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/front/src/css/home/index.scss">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="7" column="9" selection-start-line="7" selection-start-column="2" selection-end-line="7" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="front_base.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/front/templates/base/front_base.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="648">
               <caret line="24" column="32" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="header.scss" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/front/src/css/common/header.scss">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="891">
-              <caret line="33" column="21" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -136,36 +116,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>btn-search</find>
-      <find>files_counts</find>
-      <find>auth</find>
-      <find>socket</find>
-      <find>z-index</find>
-      <find>time</find>
-      <find>connection</find>
-      <find>找不到文件或路径</find>
-      <find>listenShowHideEvent</find>
-      <find>update_svn</find>
-      <find>datas_form_files_test</find>
-      <find>progress</find>
-      <find>finish_data_update</find>
-      <find>总成就配置表.csv</find>
-      <find>query-item</find>
-      <find>220</find>
-      <find>48</find>
-      <find>keyword_position</find>
-      <find>chardet</find>
-      <find>row_data</find>
-      <find>update</find>
-      <find>send</find>
-      <find>show_pro_name</find>
-      <find>modal_info</find>
-      <find>配置</find>
-      <find>F:\Project\H37\H37_xls_search\05Data\挖宝素材掉率表.xlsx</find>
       <find>sub</find>
       <find>res</find>
       <find>fuzzy_query_test</find>
       <find>connectionEvent</find>
+      <find>more_data</find>
+      <find>F:\Project\test</find>
+      <find>mask-wrapper</find>
+      <find>send_msg1</find>
+      <find>send_msg</find>
+      <find>window.socket</find>
+      <find>onopen</find>
+      <find>maskWrapper</find>
+      <find>svn_config_success</find>
+      <find>jQuery(&quot;#myModal&quot;).modal('show');</find>
+      <find>modal</find>
+      <find>not-found</find>
+      <find>文件正在被其他应用打开</find>
+      <find>show_error_files</find>
+      <find>show_error_info</find>
+      <find>query-item</find>
+      <find>progress-group</find>
+      <find>update</find>
+      <find>btn-search</find>
+      <find>filename</find>
+      <find>print</find>
+      <find>search_result</find>
+      <find>badFile</find>
+      <find>badFiles</find>
+      <find>4s</find>
+      <find>update_finish</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -209,13 +189,13 @@
         <option value="C:/Anaconda2/envs/py27_django/Lib/site-packages/PyInstaller/hooks/hook-django.py" />
         <option value="$PROJECT_DIR$/G48/settings.py" />
         <option value="$PROJECT_DIR$/front/src/css/common/init.scss" />
-        <option value="$PROJECT_DIR$/apps/home/reader.py" />
         <option value="$PROJECT_DIR$/front/src/css/common/header.scss" />
         <option value="$PROJECT_DIR$/front/templates/base/front_base.html" />
         <option value="$PROJECT_DIR$/front/templates/home/index.html" />
-        <option value="$PROJECT_DIR$/apps/home/websocket.py" />
+        <option value="$PROJECT_DIR$/apps/home/reader.py" />
         <option value="$PROJECT_DIR$/apps/home/views.py" />
         <option value="$PROJECT_DIR$/front/src/js/index.js" />
+        <option value="$PROJECT_DIR$/apps/home/websocket.py" />
       </list>
     </option>
   </component>
@@ -233,9 +213,8 @@
       <path value="$PROJECT_DIR$/front/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="166" />
-    <option name="y" value="34" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="212" />
     <option name="width" value="1400" />
     <option name="height" value="980" />
   </component>
@@ -244,7 +223,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -252,10 +230,40 @@
               <item name="G48" type="b2602c69:ProjectViewProjectNode" />
               <item name="G48" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="G48" type="b2602c69:ProjectViewProjectNode" />
+              <item name="G48" type="462c0819:PsiDirectoryNode" />
+              <item name="apps" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="G48" type="b2602c69:ProjectViewProjectNode" />
+              <item name="G48" type="462c0819:PsiDirectoryNode" />
+              <item name="apps" type="462c0819:PsiDirectoryNode" />
+              <item name="home" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="G48" type="b2602c69:ProjectViewProjectNode" />
+              <item name="G48" type="462c0819:PsiDirectoryNode" />
+              <item name="front" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="G48" type="b2602c69:ProjectViewProjectNode" />
+              <item name="G48" type="462c0819:PsiDirectoryNode" />
+              <item name="front" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="G48" type="b2602c69:ProjectViewProjectNode" />
+              <item name="G48" type="462c0819:PsiDirectoryNode" />
+              <item name="front" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -443,17 +451,17 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.35185185" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="11" weight="0.30827886" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.41394335" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.32897604" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15138593" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15458423" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="4" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39904988" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="manage.py@G48" order="13" weight="0.29024675" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -462,6 +470,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3278496" />
+      <window_info anchor="right" id="Coverage" order="5" side_tool="true" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -472,7 +481,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="17" />
+      <option name="time" value="18" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -679,16 +688,6 @@
     <entry file="file://$PROJECT_DIR$/apps/home/models.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/home/reader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="12" column="34" lean-forward="true" selection-start-line="12" selection-start-column="34" selection-end-line="12" selection-end-column="34" />
-          <folding>
-            <element signature="e#24#33#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/front/src/css/common/constants.scss">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -713,33 +712,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front/templates/base/front_base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="648">
-          <caret line="24" column="32" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front/templates/home/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2943">
-          <caret line="109" column="34" selection-start-line="109" selection-start-column="34" selection-end-line="109" selection-end-column="34" />
-          <folding>
-            <element signature="e#5676#5711#0#HTML" expanded="true" />
-            <element signature="e#5806#5842#0#HTML" expanded="true" />
-            <element signature="e#5457#5479#0#HTML" expanded="true" />
-            <element signature="e#6077#6095#0#HTML" expanded="true" />
-            <element signature="e#5936#5957#0#HTML" expanded="true" />
-            <element signature="e#6047#6068#0#HTML" expanded="true" />
-            <element signature="e#6068#6087#0#HTML" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/front/src/css/common/footer.scss">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
           <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front/templates/base/front_base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="648">
+          <caret line="24" column="32" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="32" />
         </state>
       </provider>
     </entry>
@@ -750,27 +733,48 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/home/websocket.py">
+    <entry file="file://$PROJECT_DIR$/front/templates/home/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="59" column="35" lean-forward="true" selection-start-line="59" selection-start-column="35" selection-end-line="59" selection-end-column="35" />
+        <state relative-caret-position="3834">
+          <caret line="142" column="42" selection-start-line="142" selection-start-column="21" selection-end-line="142" selection-end-column="42" />
           <folding>
-            <element signature="e#25#41#0" expanded="true" />
+            <element signature="e#6112#6134#0#HTML" expanded="true" />
+            <element signature="e#7113#7134#0#HTML" expanded="true" />
+            <element signature="e#7614#7635#0#HTML" expanded="true" />
+            <element signature="e#7888#7909#0#HTML" expanded="true" />
+            <element signature="e#7896#7917#0#HTML" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/home/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="224" column="76" selection-start-line="224" selection-start-column="64" selection-end-line="224" selection-end-column="76" />
+        <state relative-caret-position="7641">
+          <caret line="302" selection-start-line="302" selection-end-line="302" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/front/src/js/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="223" column="42" lean-forward="true" selection-start-line="223" selection-start-column="42" selection-end-line="223" selection-end-column="42" />
+        <state relative-caret-position="166">
+          <caret line="196" column="31" lean-forward="true" selection-start-line="196" selection-start-column="31" selection-end-line="196" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/home/reader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27">
+          <caret line="108" column="29" selection-start-line="108" selection-start-column="29" selection-end-line="108" selection-end-column="29" />
+          <folding>
+            <element signature="e#24#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/home/websocket.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="621">
+          <caret line="57" column="67" lean-forward="true" selection-start-line="57" selection-start-column="67" selection-end-line="57" selection-end-column="67" />
         </state>
       </provider>
     </entry>
