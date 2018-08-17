@@ -192,8 +192,8 @@ QueryBtn.prototype.run = function() {
 };
 
 $(function () {
-    // window.svn_config = false;
-    window.svn_config = true;
+    window.svn_config = false;
+    // window.svn_config = true;
     var queryBtnOj = new QueryBtn();
     queryBtnOj.run();
     var inputKeyword = jQuery("#inputKeyword");
@@ -217,8 +217,9 @@ $(function () {
             var show_excel = jQuery("#show_excel");
             jQuery("#not-found").hide();
             jQuery("#progress-group").hide();
-            jQuery("#update-progress-group").show();
+            jQuery("#circle-progress-info").show();
             show_excel.html("");
+
 
             var host = "ws://10.240.113.164:9005/";
             var socket = new WebSocket(host);
@@ -245,6 +246,8 @@ $(function () {
                         }
                         if(type === "update_files")              // 更新进度条的显示
                         {
+                            jQuery("#circle-progress-info").hide();
+                            jQuery("#update-progress-group").show();
                             var update_progress_group = jQuery("#update-progress-group");
                             update_progress_group.show();
                             var update_progressbar = jQuery("#update-progressbar");

@@ -7,65 +7,65 @@
 .main{
   z-index: 88;
   .wrapper{
-      width: $pageWidth;
-      background: #fff;
-      .search-form{
-        form{
-          width: 1000px;
-          background: #e6ebef;
-          margin: 20px auto;
-          border-radius: 4px;
-          padding: 20px;
-          .form1{
-            width: 400px;
-            margin: 0 auto;
-            .search{
-              width: 191px;
-              padding: 3px;
-              margin-left: 107px;
-              border-radius: 1px;
-              background: paleturquoise;
+    width: $pageWidth;
+    background: #fff;
+    .search-form{
+      form{
+        width: 1000px;
+        background: #e6ebef;
+        margin: 20px auto;
+        border-radius: 4px;
+        padding: 20px;
+        .form1{
+          width: 400px;
+          margin: 0 auto;
+          .search{
+            width: 191px;
+            padding: 3px;
+            margin-left: 107px;
+            border-radius: 1px;
+            background: paleturquoise;
+          }
+          select{
+            margin-left: 100px;
+            margin-top: 10px;
+            width: 200px;
+            padding: 3px;
+            border-radius: 1px;
+            background: paleturquoise;
+          }
+          .table-type{
+            margin-left: 107px;
+          }
+          .submit{
+            width: 390px;
+            height: 40px;
+
+            .button1{
+              float: right;
             }
-            select{
-              margin-left: 100px;
-              margin-top: 10px;
-              width: 200px;
-              padding: 3px;
-              border-radius: 1px;
-              background: paleturquoise;
-              }
-            .table-type{
-              margin-left: 107px;
+
+            .button2{
+              float: right;
             }
-            .submit{
-              width: 390px;
-              height: 40px;
 
-              .button1{
-                float: right;
-              }
+            .button3{
+              float: right;
+            }
 
-              .button2{
-                float: right;
-              }
-
-              .button3{
-                float: right;
-              }
-
-              .button{
-                background: #1abc9c;
-                color: #fff;
-                padding: 5px;
-                font-size: 14px;
-                margin-top: 20px;
-                margin-left: 20px;
-                border-radius: 4px;
-              }
+            .button{
+              background: #1abc9c;
+              color: #fff;
+              padding: 5px;
+              font-size: 14px;
+              margin-top: 20px;
+              margin-left: 20px;
+              border-radius: 4px;
             }
           }
         }
       }
+    }
   }
 
   .show_excel{
@@ -212,3 +212,63 @@
     }
   }
 }
+
+//.main {
+//  .circle_process{
+//    position: relative;
+//    width: 160px;
+//    height : 160px;
+//
+//    .wrapper1{
+//      width: 80px;
+//      height: 160px;
+//      position: absolute;
+//      top:0;
+//      overflow: hidden;
+//    }
+//    .right{
+//      right:0;
+//    }
+//    .left{
+//      left:0;
+//    }
+//    .circle{
+//      width: 160px;
+//      height: 160px;
+//      border:20px solid transparent;
+//      border-radius: 50%;
+//      position: absolute;
+//      top:0;
+//      transform : rotate(-135deg);
+//    }
+//    .rightcircle{
+//      border-top:20px solid green;
+//      border-right:20px solid green;
+//      right:0;
+//      -webkit-animation: circle_right 5s linear infinite;
+//    }
+//    .leftcircle{
+//      border-bottom:20px solid green;
+//      border-left:20px solid green;
+//      left:0;
+//      -webkit-animation: circle_left 5s linear infinite;
+//    }
+//    @-webkit-keyframes circle_right{
+//      0%{
+//        -webkit-transform: rotate(-135deg);
+//      }
+//      50%,100%{
+//        -webkit-transform: rotate(45deg);
+//      }
+//    }
+//    @-webkit-keyframes circle_left{
+//      0%,50%{
+//        -webkit-transform: rotate(-135deg);
+//      }
+//      100%{
+//        -webkit-transform: rotate(45deg);
+//      }
+//    }
+//  }
+//}
+

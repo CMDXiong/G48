@@ -44,17 +44,17 @@ class websocket_thread(threading.Thread):
                                 send_msg1(self.connection, update_info)
                         elif query_info_dict["type"] == "update_request":  # 数据更新请求
                             start1 = time.clock()
-                            # update_svn(update_config)
+                            update_svn(update_config)
                             end1 = time.clock()
                             print "svn下拉时间: ", end1 - start1
                             # local_road = ur'F:\Project\test'
                             # local_road = ur'F:\Project\错误的文件'
                             # local_road = ur'F:\Project\数据表'
-                            local_road = ur'F:\Project\H37\H37_xls_search\05Data'
+                            # local_road = ur'F:\Project\H37\H37_xls_search\05Data'
                             #local_road = ur'F:\Project\H37\H37_xls_search'
                             # local_road = ur'F:\Project\H37\H37_xls_search\00BasicalSetting\07任务设定\主线任务流程.xlsx'
 
-                            # local_road = update_config['localRoad']
+                            local_road = update_config['localRoad']
                             files_num = sum([len(x) for _, _, x in os.walk(local_road)])
                             # files_num = 1
                             global global_data1
