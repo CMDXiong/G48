@@ -106,9 +106,9 @@ def generate_token(msg):
 def init_server_websocket():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind(('127.0.0.1', 9005))
+    # sock.bind(('127.0.0.1', 9005))
     # sock.bind(('10.240.113.164', 9005))
-    # sock.bind(('0.0.0.0', 9005))
+    sock.bind(('0.0.0.0', 9005))
     sock.listen(100)
     while True:
         connection, address = sock.accept()

@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['manage.spec'],
+a = Analysis(['manage.py'],
              pathex=['E:\\G48\\G48'],
              binaries=[],
              datas=[(r'E:\G48\G48\front\static_root',r'.\front\static_root'), (r'E:\G48\G48\front\templates', r'.\front\templates')],
