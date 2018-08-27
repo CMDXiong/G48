@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 import os
 import sys
+import multiprocessing
 from multiprocessing import Process
 from apps.home.websocket import init_server_websocket
 
 if __name__ == "__main__":
+    multiprocessing.freeze_support()
+
     websocke_process = Process(target=init_server_websocket)
     websocke_process.start()
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "G48.settings")

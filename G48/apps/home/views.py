@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from utils import restful
 from openpyxl.utils import get_column_letter
 import json
+import django.template.context_processors
 
 # 一般我是这样去设计json格式的
 # {"code": 200, "message": "", "data": {}, }
@@ -26,8 +27,7 @@ def search_result(request):
 
 
 def index(request):
-    context = {}
-    return render(request, 'home/index.html', context=context)
+    return render(request, 'home/index.html')
 
 
 def datas_form_files_test(file_path, files_num, connect):
@@ -340,7 +340,7 @@ def get_login(realm, username, may_save):
     return True, '1357211280@qq.com', 'p1357211280x', False
 
 
-def ssl_server_trust_prompt( trust_dict ):
+def ssl_server_trust_prompt(trust_dict):
     return (True, trust_dict["failures"], True)
 
 

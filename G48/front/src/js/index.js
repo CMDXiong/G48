@@ -16,7 +16,10 @@ UpdateData.prototype.listenShowHideEvent = function() {
         jQuery(".project-name").text(prjName);
 
 
-        var host = "ws://10.240.113.164:9005/";
+        // var host = "ws://10.240.113.164:9005/";
+        var host = "ws://127.0.0.1:9005/";
+        console.log("test");
+        // var host = "ws://0.0.0.0:9005/";
         var socket = new WebSocket(host);
         try {
             socket.onopen = function (msg) {
@@ -88,19 +91,19 @@ function QueryBtn() {
 QueryBtn.prototype.listenClickEnterEvent = function (){
     var self = this;
     self.queryBtn.click(function () {
-        if (window.svn_config == false )
-        {
-            alert("请先配置！！！");
-            return;
-        }
+        // if (window.svn_config == false )
+        // {
+        //     alert("请先配置！！！");
+        //     return;
+        // }
         self.connectionEvent();
     });
     self.queryBtn.keypress(function (e) {
-        if (window.svn_config == false )
-        {
-            alert("请先配置！！！");
-            return;
-        }
+        // if (window.svn_config == false )
+        // {
+        //     alert("请先配置！！！");
+        //     return;
+        // }
         if (e.keyCode == 13)
             self.connectionEvent();
     });
@@ -112,7 +115,9 @@ QueryBtn.prototype.connectionEvent = function () {
     jQuery("#show_error_info").hide();
     jQuery("#modal_info").hide();
 
-    var host = "ws://10.240.113.164:9005/";
+    // var host = "ws://10.240.113.164:9005/";
+    var host = "ws://127.0.0.1:9005/";
+    // var host = "ws://0.0.0.0:9005/";
     var socket = new WebSocket(host);
     jQuery("#progress-group").show();
     var progress = jQuery("#progressbar")
@@ -206,11 +211,11 @@ $(function () {
     });
 
     jQuery("#update").click(function () {                     // 点击热更新
-        if (window.svn_config == false )
-        {
-            alert("请先配置！！！");
-        }
-        else
+        // if (window.svn_config == false )
+        // {
+        //     alert("请先配置！！！");
+        // }
+        // else
         {
             var show_error_info = jQuery("#show_error_info");
             show_error_info.find("li").remove();
@@ -221,7 +226,9 @@ $(function () {
             show_excel.html("");
 
 
-            var host = "ws://10.240.113.164:9005/";
+            // var host = "ws://10.240.113.164:9005/";
+            var host = "ws://127.0.0.1:9005/";
+            // var host = "ws://0.0.0.0:9005/";
             var socket = new WebSocket(host);
             var update_info = new Object();
             update_info.type = "update_request";
@@ -234,6 +241,12 @@ $(function () {
                     if (typeof msg.data == "string") {
                         var json_obj = JSON.parse(msg.data);
                         var type = json_obj["type"];
+                        if (type === "svn_config_needing")      // 需要svn的配置文件
+                        {
+                            jQuery("#circle-progress-info").hide();
+                            alert("请先配置！！！！！");
+                            return;
+                        }
                         if(type === "path_error")               // 填写的路径不正确的提示
                         {
                             alert('保存路径不存在！');
@@ -280,9 +293,9 @@ $(function () {
                         }
                         if (type === "load_data_finish")
                         {
-                            jQuery("#update-progress-group").hide();
+                            // jQuery("#update-progress-group").hide();
                             socket.close();
-                            alert("数据更新完成");
+                            // alert("数据更新完成");
                         }
                     }
                 }
