@@ -15,9 +15,9 @@ UpdateData.prototype.listenShowHideEvent = function() {
         var prjName = jQuery("#project-name").val().trim();
         jQuery(".project-name").text(prjName);
 
-
         // var host = "ws://10.240.113.164:9005/";
-        var host = "ws://127.0.0.1:9005/";
+        var address = window.location.hostname;
+        var host = "ws://" + address + ":9005/";
         var socket = new WebSocket(host);
         try {
             socket.onopen = function (msg) {
@@ -125,7 +125,8 @@ QueryBtn.prototype.connectionEvent = function () {
     jQuery("#modal_info").hide();
 
     // var host = "ws://10.240.113.164:9005/";
-    var host = "ws://127.0.0.1:9005/";
+    var address = window.location.hostname;
+    var host = "ws://" + address + ":9005/";
     var socket = new WebSocket(host);
     jQuery("#progress-group").show();
     var progress = jQuery("#progressbar")
@@ -234,9 +235,9 @@ $(function () {
             jQuery("#circle-progress-info").show();
             show_excel.html("");
 
-
             // var host = "ws://10.240.113.164:9005/";
-            var host = "ws://127.0.0.1:9005/";
+            var address = window.location.hostname;
+            var host = "ws://" + address + ":9005/";
             var socket = new WebSocket(host);
             var update_info = new Object();
             update_info.type = "update_request";
