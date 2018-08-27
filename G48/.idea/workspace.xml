@@ -20,11 +20,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/home/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-626">
-              <caret line="394" column="23" lean-forward="true" selection-start-line="394" selection-start-column="23" selection-end-line="394" selection-end-column="23" />
+            <state relative-caret-position="-32">
+              <caret line="347" column="53" selection-start-line="347" selection-start-column="16" selection-end-line="347" selection-end-column="53" />
             </state>
           </provider>
         </entry>
@@ -33,7 +33,7 @@
         <entry file="file://$PROJECT_DIR$/G48/settings.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="3510">
-              <caret line="130" column="58" selection-start-line="130" selection-start-column="58" selection-end-line="130" selection-end-column="58" />
+              <caret line="131" column="9" selection-start-line="131" selection-start-column="9" selection-end-line="131" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -41,8 +41,8 @@
       <file leaf-file-name="manage.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/manage.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="14" column="23" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
+            <state relative-caret-position="297">
+              <caret line="16" column="23" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
               <folding>
                 <element signature="e#22#31#0" expanded="true" />
               </folding>
@@ -53,8 +53,8 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/front/src/js/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6426">
-              <caret line="238" column="38" selection-start-line="238" selection-start-column="38" selection-end-line="238" selection-end-column="38" />
+            <state relative-caret-position="6831">
+              <caret line="253" column="38" selection-start-line="253" selection-start-column="38" selection-end-line="253" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -67,11 +67,8 @@
       <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/G48/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="594">
+            <state relative-caret-position="540">
               <caret line="23" selection-start-line="23" selection-end-line="23" />
-              <folding>
-                <element signature="e#637#686#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -94,11 +91,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/front/templates/home/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="27">
-              <caret line="1" selection-start-line="1" selection-end-line="1" />
+            <state relative-caret-position="86">
+              <caret line="241" column="41" lean-forward="true" selection-start-line="241" selection-start-column="41" selection-end-line="241" selection-end-column="41" />
             </state>
           </provider>
         </entry>
@@ -117,8 +114,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>send_msg1</find>
-      <find>send_msg</find>
       <find>window.socket</find>
       <find>onopen</find>
       <find>maskWrapper</find>
@@ -143,10 +138,12 @@
       <find>queryBtn</find>
       <find>update</find>
       <find>btn-search</find>
-      <find>var host = &quot;ws://127.0.0.1:9005/&quot;;</find>
-      <find>var host = &quot;ws://10.240.113.164:9005/&quot;;</find>
+      <find />
+      <find />
       <find>btn</find>
-      <find>var host = &quot;ws://0.0.0.0:9005/&quot;;</find>
+      <find />
+      <find>git</find>
+      <find>svn</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -189,7 +186,6 @@
         <option value="$PROJECT_DIR$/front/src/css/common/header.scss" />
         <option value="$PROJECT_DIR$/apps/home/reader.py" />
         <option value="$PROJECT_DIR$/front/src/css/home/index.scss" />
-        <option value="$PROJECT_DIR$/front/templates/home/index.html" />
         <option value="$PROJECT_DIR$/G48/urls.py" />
         <option value="$PROJECT_DIR$/manage.py" />
         <option value="$PROJECT_DIR$/front/templates/base/front_base.html" />
@@ -197,6 +193,7 @@
         <option value="$PROJECT_DIR$/front/src/js/index.js" />
         <option value="$PROJECT_DIR$/G48/settings.py" />
         <option value="$PROJECT_DIR$/apps/home/views.py" />
+        <option value="$PROJECT_DIR$/front/templates/home/index.html" />
       </list>
     </option>
   </component>
@@ -214,9 +211,9 @@
       <path value="$PROJECT_DIR$/front/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="339" />
-    <option name="y" value="7" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="370" />
+    <option name="y" value="94" />
     <option name="width" value="1400" />
     <option name="height" value="980" />
   </component>
@@ -237,6 +234,25 @@
               <item name="G48" type="b2602c69:ProjectViewProjectNode" />
               <item name="G48" type="462c0819:PsiDirectoryNode" />
               <item name="front" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="G48" type="b2602c69:ProjectViewProjectNode" />
+              <item name="G48" type="462c0819:PsiDirectoryNode" />
+              <item name="front" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="G48" type="b2602c69:ProjectViewProjectNode" />
+              <item name="G48" type="462c0819:PsiDirectoryNode" />
+              <item name="front" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="G48" type="b2602c69:ProjectViewProjectNode" />
+              <item name="G48" type="462c0819:PsiDirectoryNode" />
+              <item name="front" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="home" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="G48" type="b2602c69:ProjectViewProjectNode" />
@@ -428,31 +444,31 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="339" y="7" width="1400" height="980" extended-state="0" />
+    <frame x="370" y="94" width="1400" height="980" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.4049881" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="11" weight="0.30827886" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.4049881" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.32897604" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23507462" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23880596" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="4" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39904988" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="manage.py@G48" order="13" weight="0.523753" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3278496" />
       <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3278496" />
       <window_info anchor="right" id="Coverage" order="5" side_tool="true" />
     </layout>
   </component>
@@ -613,11 +629,8 @@
     <entry file="file://$PROJECT_DIR$/front/src/css/common/footer.scss" />
     <entry file="file://$PROJECT_DIR$/G48/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
+        <state relative-caret-position="540">
           <caret line="23" selection-start-line="23" selection-end-line="23" />
-          <folding>
-            <element signature="e#637#686#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -626,25 +639,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/manage.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="14" column="23" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
+        <state relative-caret-position="297">
+          <caret line="16" column="23" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
           <folding>
             <element signature="e#22#31#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front/templates/base/front_base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="56" selection-start-column="56" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front/templates/home/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
         </state>
       </provider>
     </entry>
@@ -658,21 +657,35 @@
     <entry file="file://$PROJECT_DIR$/G48/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3510">
-          <caret line="130" column="58" selection-start-line="130" selection-start-column="58" selection-end-line="130" selection-end-column="58" />
+          <caret line="131" column="9" selection-start-line="131" selection-start-column="9" selection-end-line="131" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/front/src/js/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6426">
-          <caret line="238" column="38" selection-start-line="238" selection-start-column="38" selection-end-line="238" selection-end-column="38" />
+        <state relative-caret-position="6831">
+          <caret line="253" column="38" selection-start-line="253" selection-start-column="38" selection-end-line="253" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front/templates/base/front_base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="56" selection-start-column="56" selection-end-column="56" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/home/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-626">
-          <caret line="394" column="23" lean-forward="true" selection-start-line="394" selection-start-column="23" selection-end-line="394" selection-end-column="23" />
+        <state relative-caret-position="-32">
+          <caret line="347" column="53" selection-start-line="347" selection-start-column="16" selection-end-line="347" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front/templates/home/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="86">
+          <caret line="241" column="41" lean-forward="true" selection-start-line="241" selection-start-column="41" selection-end-line="241" selection-end-column="41" />
         </state>
       </provider>
     </entry>
