@@ -40,40 +40,29 @@ class websocket_thread(threading.Thread):
                                 update_info = {"type": "path_error"}
                                 send_msg1(self.connection, update_info)
                             else:
-                                json_svn_data = json.dumps(query_info_dict, indent=4)
-                                fileObject = open('svnconfig.json', 'w')
-                                fileObject.write(json_svn_data)
-                                fileObject.close()
-                                send_msg1(self.connection, {"type": "svn_config_success"})
+                                update_info = {"type": "svn_config_success"}
+                                send_msg1(self.connection, update_info)
                         elif query_info_dict["type"] == "update_request":  # 数据更新请求
-                            if os.access("svnconfig.json", os.F_OK):
-                                print "文件存在"
-                                start1 = time.clock()
-                                with open("svnconfig.json", 'r') as load_f:
-                                    update_config = json.load(load_f)
-                                # update_svn(update_config)
-                                end1 = time.clock()
-                                print "svn下拉时间: ", end1 - start1
-                                # local_road = ur'F:\Project\G48\导表363屏蔽字库.xls'
-                                local_road = ur'F:\Project\错误的文件'
-                                # local_road = ur'F:\Project\数据表'
-                                # local_road = ur'F:\Project\H37\H37_xls_search\05Data'
-                                # local_road = ur'F:\Project\H37\H37_xls_search'
-                                # local_road = ur'F:\Project\H37\H37_xls_search\00BasicalSetting\07任务设定\主线任务流程.xlsx'
+                            start1 = time.clock()
+                            update_svn(update_config)
+                            end1 = time.clock()
+                            print "svn下拉时间: ", end1 - start1
+                            # local_road = ur'F:\Project\test'
+                            # local_road = ur'F:\Project\错误的文件'
+                            # local_road = ur'F:\Project\数据表'
+                            # local_road = ur'F:\Project\H37\H37_xls_search\05Data'
+                            #local_road = ur'F:\Project\H37\H37_xls_search'
+                            # local_road = ur'F:\Project\H37\H37_xls_search\00BasicalSetting\07任务设定\主线任务流程.xlsx'
 
-                                # local_road = update_config['localRoad']
-                                files_num = sum([len(x) for _, _, x in os.walk(local_road)])
-                                # files_num = 1
-                                global global_data1
-                                start2 = time.clock()
-                                global_data1 = views.datas_form_files_test(local_road, files_num, self.connection)
-                                send_msg1(self.connection, {"type": "load_data_finish"})
-                                end2 = time.clock()
-                                print "数据载入内存时间: ", end2 - start2
-                            else:
-                                print "不存在配置文件"
-                                send_msg1(self.connection, {"type": "svn_config_needing"})
-
+                            local_road = update_config['localRoad']
+                            files_num = sum([len(x) for _, _, x in os.walk(local_road)])
+                            # files_num = 1
+                            global global_data1
+                            start2 = time.clock()
+                            global_data1 = views.datas_form_files_test(local_road, files_num, self.connection)
+                            send_msg1(self.connection, {"type": "load_data_finish"})
+                            end2 = time.clock()
+                            print "数据载入内存时间: ", end2 - start2
                         elif query_info_dict["type"] == "queryInfo":
                             start = time.clock()
                             fuzzy_query_test(global_data1, self.connection, query_info_dict)

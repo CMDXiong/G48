@@ -69,11 +69,8 @@ TEMPLATES = [
             ],
             # 将static标签配置为内置的标签
             'builtins':[
-                'django.templatetags.static',
-            ],
-            'libraries':{
-                'staticfiles': 'django.templatetags.static',
-            }
+                'django.templatetags.static'
+            ]
         },
     },
 ]
@@ -130,13 +127,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'front', 'static_root')
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'front', 'static_root')
 # 静态文件的配置
-
-# STATICFILES_DIRS指定了一个工程里面哪个目录存放了与这个工程相关的静态文件，这是一个列表
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'front', 'dist'),
-    # os.path.join(BASE_DIR, 'front', 'src'),
-    # os.path.join(BASE_DIR, 'front', 'templates'),
+    os.path.join(BASE_DIR, 'front', 'src'),
+    os.path.join(BASE_DIR, 'front', 'templates'),
 ]

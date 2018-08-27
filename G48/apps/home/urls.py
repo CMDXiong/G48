@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^search_result/', views.search_result, name='search_result'),
     url(r'^config/$', views.config, name='config'),
     url(r'^common/auth.html$', views.config, name='config'),
+
 ]
