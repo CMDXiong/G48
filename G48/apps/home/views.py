@@ -49,11 +49,17 @@ def datas_form_files_test(file_path, files_num, connect):
         elif ext == '.xls':                                              # 是.xls文件
             xls_result = reader.read_file_xls(file_path)
             if xls_result:
-                datas["xls"].append(xls_result)
+                if xls_result["bad_file_info"]:
+                    bad_file_info = xls_result["bad_file_info"]
+                else:
+                    datas["xls"].append(xls_result)
         elif ext == '.csv':                                              # 是.xlsx文件
             csv_result = reader.read_file_csv(file_path)
             if csv_result:
-                datas["csv"].append(csv_result)
+                if csv_result["bad_file_info"]:
+                    bad_file_info = csv_result["bad_file_info"]
+                else:
+                    datas["xls"].append(csv_result)
         else:                                                # 不属于.xlsx，.xls，.csv文件格式
             print "文件格式不在.xlsx，.xls, .csv之中"
         files += 1
@@ -79,11 +85,17 @@ def datas_form_files_test(file_path, files_num, connect):
                 elif os.path.splitext(file_name)[1] == '.xls':  # 是.xls文件
                     xls_result = reader.read_file_xls(complete_file_name)
                     if xls_result:
-                        datas["xls"].append(xls_result)
+                        if xls_result["bad_file_info"]:
+                            bad_file_info = xls_result["bad_file_info"]
+                        else:
+                            datas["xls"].append(xls_result)
                 elif os.path.splitext(file_name)[1] == '.csv':  # 是.csv文件
                     csv_result = reader.read_file_csv(complete_file_name)
                     if csv_result:
-                        datas["csv"].append(csv_result)
+                        if csv_result["bad_file_info"]:
+                            bad_file_info = csv_result["bad_file_info"]
+                        else:
+                            datas["xls"].append(csv_result)
                 else:
                     print "文件格式不在.xlsx .xls, .cvs之中"
                 files += 1
@@ -104,9 +116,11 @@ def building_regular_expressions(keyword, query_mode):
     # 1: 模糊查找; 2:精确查找; 其余保留
     keyword = keyword.replace(' ', '')
     if query_mode == '1':
-        insert_pattern = u'([\s\w|\u4e00-\u9fa5|，。；;,.:？！]*?)'  # 非贪婪匹配 基本汉字的unicode编码是4E00-9FA5
+        # insert_pattern = u'([\s\w|\u4e00-\u9fa5|，。；;,.:？！]*?)'  # 非贪婪匹配 基本汉字的unicode编码是4E00-9FA5
+        insert_pattern = u'(.*?)'  # 非贪婪匹配 基本汉字的unicode编码是4E00-9FA5
         pattern = insert_pattern
-        last_pattern = u'([\s\w|\u4e00-\u9fa5|，。；;,.:？！]*)'
+        # last_pattern = u'([\s\w|\u4e00-\u9fa5|，。；;,.:？！]*)'
+        last_pattern = u'(.*)'
         for i in range(len(keyword)):
             if i != len(keyword) - 1:
                 pattern += (u'(' + keyword[i] + u')' + insert_pattern)
